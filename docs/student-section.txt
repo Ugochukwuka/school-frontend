@@ -1,0 +1,5 @@
+﻿<h1>Student Functionality</h1>
+
+<p>The Student module provides students with access to their academic information, attendance records, results, fees, class schedules, and personal profile management.</p>
+
+<div class=\

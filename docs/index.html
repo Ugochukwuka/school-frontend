@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="documentation-container">
+        <!-- Header -->
+        <header class="doc-header">
+            <div class="header-content">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <img src="../public/render.png" alt="Logo" style="width: 40px; height: 40px; object-fit: contain;">
+                    <h1>Documentation</h1>
+                </div>
+                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark/light mode">
+                    <span class="theme-icon">🌙</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="doc-wrapper">
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <button class="mobile-close" id="mobileClose" aria-label="Close sidebar">×</button>
+                <nav class="sidebar-nav">
+                    <ul class="nav-menu">
+                        <li><a href="#" data-section="introduction" class="nav-link active">Introduction</a></li>
+                        <li><a href="#" data-section="authentication" class="nav-link">Authentication & Authorization</a></li>
+                        <li><a href="#" data-section="student" class="nav-link">Student Functionality</a></li>
+                        <li><a href="#" data-section="teacher" class="nav-link">Teacher Functionality</a></li>
+                        <li><a href="#" data-section="admin" class="nav-link">Admin Functionality</a></li>
+                        <li><a href="#" data-section="parent" class="nav-link">Parent Functionality</a></li>
+                        <li><a href="#" data-section="database" class="nav-link">Database Design Overview</a></li>
+                        <li><a href="#" data-section="enhancements" class="nav-link">Future Enhancements</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">☰</button>
+                <div id="contentLoading" class="content-loading" style="display: none;">
+                    <div class="loading-spinner"></div>
+                    <p>Loading content...</p>
+                </div>
+                <div id="contentBody" class="content-body">
+                    <!-- Content will be loaded here dynamically -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="sections-data.js"></script>
+    <script src="sidebar.js"></script>
+    <script src="screenshot.js"></script>
+</body>
+</html>

@@ -1,0 +1,428 @@
+<h1>Admin Functionality</h1>
+
+<p>The Admin module provides comprehensive system administration capabilities, including user management, class and subject configuration, fee management, results oversight, bookshop management, announcements, and system-wide settings. Administrators have full control over all aspects of the school management system.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin login.png" alt="Admin Login Interface" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 1: Admin Login Interface</div>
+</div>
+
+<h2>Admin Dashboard</h2>
+
+<p>The admin dashboard provides a comprehensive overview of the entire school management system with key statistics and quick access to all administrative functions. It displays real-time data on students, teachers, fees, results, and other critical metrics.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin dashboard.png" alt="Admin Dashboard" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 2: Admin Dashboard Overview</div>
+</div>
+
+<h2>Core Features</h2>
+
+<h3>1. Student Management</h3>
+
+<p>Administrators can manage all student records, including adding new students, viewing student lists, filtering students by various criteria, and promoting students to new classes.</p>
+
+<h4>Add Student</h4>
+
+<p>Administrators can add new students to the system by entering their personal information, contact details, and class assignment. The system validates all required fields and ensures data integrity.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin addstudent.png" alt="Add Student" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 3: Add New Student</div>
+</div>
+
+<h4>View All Students</h4>
+
+<p>View a comprehensive list of all students in the system with their details, including name, class, contact information, and enrollment status.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin view all students.png" alt="View All Students" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 4: View All Students</div>
+</div>
+
+<h4>View Filtered Students</h4>
+
+<p>Filter and view students based on various criteria such as class, session, term, or other attributes to quickly find specific student records.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin view all filtered students.png" alt="View Filtered Students" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 5: View Filtered Students</div>
+</div>
+
+<h4>Promote Students</h4>
+
+<p>Promote students to new classes or sessions. This feature allows bulk promotion of students and maintains academic progression records.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin promote student.png" alt="Promote Students" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 6: Promote Students to New Class</div>
+</div>
+
+<h3>2. Teacher Management</h3>
+
+<p>Administrators can manage teacher accounts, assign classes and subjects, and configure teacher permissions within the system.</p>
+
+<h4>Add Teacher</h4>
+
+<p>Add new teachers to the system by entering their personal information, contact details, and initial assignments.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin add teacher.png" alt="Add Teacher" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 7: Add New Teacher</div>
+</div>
+
+<h4>View All Teachers</h4>
+
+<p>View a comprehensive list of all teachers in the system with their details, assignments, and status.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin view all teachers.png" alt="View All Teachers" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 8: View All Teachers</div>
+</div>
+
+<h4>Edit Teacher</h4>
+
+<p>Update teacher information, modify assignments, and manage teacher account details.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin edit teacher.png" alt="Edit Teacher" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 9: Edit Teacher Information</div>
+</div>
+
+<h4>Assign Subjects to Teachers</h4>
+
+<p>Assign specific subjects to teachers for different classes and sessions. This determines which subjects each teacher can teach and manage.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin assign subjects.png" alt="Assign Subjects" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 10: Assign Subjects to Teachers</div>
+</div>
+
+<h4>Assign Class to Teacher</h4>
+
+<p>Assign form teacher responsibilities to teachers, designating them as the primary teacher for a specific class.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin assign class to teacher.png" alt="Assign Class to Teacher" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 11: Assign Class to Teacher</div>
+</div>
+
+<h4>Add Subject to Class</h4>
+
+<p>Configure which subjects are taught in each class, establishing the curriculum structure for different class levels.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin add subject to class.png" alt="Add Subject to Class" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 12: Add Subject to Class</div>
+</div>
+
+<h3>3. Fee Management</h3>
+
+<p>Comprehensive fee management system allowing administrators to create fees, track payments, view payment history, and manage fee obligations for students.</p>
+
+<h4>Add Fee</h4>
+
+<p>Create new fee entries for students, specifying fee type, amount, due date, and associated class or session.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin Add fee.png" alt="Add Fee" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 13: Add New Fee</div>
+</div>
+
+<h4>View Unpaid Fees</h4>
+
+<p>View all outstanding fees that have not been paid, allowing administrators to track payment status and follow up on overdue payments.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin view unpaid fees.png" alt="View Unpaid Fees" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 14: View Unpaid Fees</div>
+</div>
+
+<h4>View Part Paid Fees</h4>
+
+<p>View fees that have been partially paid, showing the remaining balance and payment progress for each fee entry.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin part paid .png" alt="View Part Paid Fees" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 15: View Partially Paid Fees</div>
+</div>
+
+<h4>View Completed Payments</h4>
+
+<p>View all fees that have been fully paid, providing a record of completed transactions.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin view completed payments.png" alt="View Completed Payments" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 16: View Completed Payments</div>
+</div>
+
+<h4>Pay Fee</h4>
+
+<p>Process fee payments for students, recording payment amounts, methods, and dates. Supports partial and full payments.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin pay fee.png" alt="Pay Fee" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 17: Process Fee Payment</div>
+</div>
+
+<h4>View Student Payment History</h4>
+
+<p>View complete payment history for individual students, showing all transactions, payment dates, and amounts.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin view student payment history.png" alt="View Payment History" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 18: View Student Payment History</div>
+</div>
+
+<h4>View Fee Obligation for Student</h4>
+
+<p>View all fee obligations for a specific student, including due dates, amounts, and payment status.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin view fee obligation for student .png" alt="View Fee Obligations" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 19: View Fee Obligations for Student</div>
+</div>
+
+<h3>4. Results Management</h3>
+
+<p>Administrators can enter, view, and update student results across all classes and subjects, providing oversight of academic performance.</p>
+
+<h4>Enter Result</h4>
+
+<p>Enter student results including CA1, CA2, and exam scores. The system automatically calculates totals and assigns grades.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin enter result.png" alt="Enter Result" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 20: Enter Student Result</div>
+</div>
+
+<h4>View All Results</h4>
+
+<p>View all student results across the system, with filtering options by session, term, class, and subject.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin view all results.png" alt="View All Results" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 21: View All Results</div>
+</div>
+
+<h4>Update Result</h4>
+
+<p>Update existing result entries to correct scores, modify grades, or adjust assessment components.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin update result.png" alt="Update Result" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 22: Update Student Result</div>
+</div>
+
+<h3>5. Bookshop Management</h3>
+
+<p>Complete bookshop management system for managing textbooks, assignments, and book sales across classes and terms.</p>
+
+<h4>Add Book</h4>
+
+<p>Add new books to the bookshop inventory, specifying book details, price, class level, and term.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin add book.png" alt="Add Book" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 23: Add New Book</div>
+</div>
+
+<h4>View All Books</h4>
+
+<p>View all books in the bookshop inventory, with details on availability, pricing, and class assignments.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin view all books.png" alt="View All Books" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 24: View All Books</div>
+</div>
+
+<h4>Edit Book</h4>
+
+<p>Update book information including title, author, price, and availability status.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin edit book.png" alt="Edit Book" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 25: Edit Book Information</div>
+</div>
+
+<h4>Assign Book to Class</h4>
+
+<p>Assign specific books to classes, determining which books are required for each class level and term.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin assign book to class.png" alt="Assign Book to Class" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 26: Assign Book to Class</div>
+</div>
+
+<h4>View Book Requirements</h4>
+
+<p>View book requirements for different classes, showing which books are needed for each class level.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin view book requirment.png" alt="View Book Requirements" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 27: View Book Requirements</div>
+</div>
+
+<h4>View Book Status</h4>
+
+<p>View the status of books including availability, stock levels, and assignment status across classes.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin bookstatus.png" alt="View Book Status" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 28: View Book Status</div>
+</div>
+
+<h4>View All Books Sold</h4>
+
+<p>View sales records for all books, tracking purchases, revenue, and sales statistics.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin view all books sold.png" alt="View All Books Sold" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 29: View All Books Sold</div>
+</div>
+
+<h3>6. Announcements Management</h3>
+
+<p>Create and manage school-wide announcements to communicate important information to students, teachers, and parents.</p>
+
+<h4>Add Announcement</h4>
+
+<p>Create new announcements with titles, content, target audience, and publication dates.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin add announcment .png" alt="Add Announcement" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 30: Add New Announcement</div>
+</div>
+
+<h4>View Announcements</h4>
+
+<p>View all announcements in the system, including active, archived, and scheduled announcements.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin view announcement.png" alt="View Announcements" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 31: View All Announcements</div>
+</div>
+
+<h3>7. Profile Management</h3>
+
+<p>Administrators can view and update their own profile information, including personal details and account settings.</p>
+
+<h4>View Profile</h4>
+
+<p>View administrator profile information including name, email, phone number, role, and account creation date.</p>
+
+<div class="screenshot-container">
+    <img src="../docimages/admin view profile.png" alt="View Profile" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 32: View Admin Profile</div>
+</div>
+
+<h2>API Endpoints</h2>
+
+<h3>Student Management Endpoints</h3>
+
+<ul>
+    <li><strong>POST /api/admin/students</strong> - Add new student</li>
+    <li><strong>GET /api/admin/viewstudents</strong> - View all students (with optional filters)</li>
+    <li><strong>POST /api/admin/students/promote</strong> - Promote students to new class</li>
+</ul>
+
+<h3>Teacher Management Endpoints</h3>
+
+<ul>
+    <li><strong>POST /api/admin/teachers</strong> - Add new teacher</li>
+    <li><strong>GET /api/admin/teachers</strong> - View all teachers</li>
+    <li><strong>PUT /api/admin/teachers/{uuid}</strong> - Update teacher information</li>
+    <li><strong>POST /api/admin/teachers/assign-subject</strong> - Assign subject to teacher</li>
+    <li><strong>POST /api/admin/teachers/assign-class</strong> - Assign class to teacher</li>
+    <li><strong>POST /api/admin/classes/{class_id}/subjects</strong> - Add subject to class</li>
+</ul>
+
+<h3>Fee Management Endpoints</h3>
+
+<ul>
+    <li><strong>POST /api/admin/fees</strong> - Add new fee</li>
+    <li><strong>GET /api/admin/fees/unpaid</strong> - View unpaid fees</li>
+    <li><strong>GET /api/admin/fees/part-paid</strong> - View partially paid fees</li>
+    <li><strong>GET /api/admin/fees/paid</strong> - View completed payments</li>
+    <li><strong>POST /api/admin/fees/pay</strong> - Process fee payment</li>
+    <li><strong>GET /api/admin/fees/payment-history</strong> - View payment history</li>
+    <li><strong>GET /api/admin/fees/obligations</strong> - View fee obligations</li>
+</ul>
+
+<h3>Results Management Endpoints</h3>
+
+<ul>
+    <li><strong>POST /api/results/enter</strong> - Enter student result</li>
+    <li><strong>POST /api/results/view</strong> - View all results</li>
+    <li><strong>PUT /api/results/update/{id}</strong> - Update result</li>
+    <li><strong>GET /api/results/single/{id}</strong> - View single result</li>
+</ul>
+
+<h3>Bookshop Management Endpoints</h3>
+
+<ul>
+    <li><strong>POST /api/bookshop/books</strong> - Add new book</li>
+    <li><strong>GET /api/bookshop/books</strong> - View all books</li>
+    <li><strong>PUT /api/bookshop/books/{id}</strong> - Update book</li>
+    <li><strong>POST /api/bookshop/books/assign</strong> - Assign book to class</li>
+    <li><strong>GET /api/bookshop/books/requirements</strong> - View book requirements</li>
+    <li><strong>GET /api/bookshop/books/status</strong> - View book status</li>
+    <li><strong>GET /api/bookshop/sales</strong> - View all books sold</li>
+</ul>
+
+<h3>Announcements Endpoints</h3>
+
+<ul>
+    <li><strong>POST /api/admin/announcements</strong> - Add new announcement</li>
+    <li><strong>GET /api/admin/announcements</strong> - View all announcements</li>
+</ul>
+
+<h2>Key Features</h2>
+
+<div class="feature-grid">
+    <div class="feature-card">
+        <h4>👥 Student Management</h4>
+        <p>Complete student lifecycle management from enrollment to graduation with promotion capabilities</p>
+    </div>
+    <div class="feature-card">
+        <h4>👨‍🏫 Teacher Management</h4>
+        <p>Manage teacher accounts, assignments, and class-subject configurations</p>
+    </div>
+    <div class="feature-card">
+        <h4>💰 Fee Management</h4>
+        <p>Comprehensive fee tracking, payment processing, and financial reporting</p>
+    </div>
+    <div class="feature-card">
+        <h4>📊 Results Oversight</h4>
+        <p>Enter, view, and update student results across all classes and subjects</p>
+    </div>
+    <div class="feature-card">
+        <h4>📚 Bookshop Management</h4>
+        <p>Complete book inventory, assignment, and sales management system</p>
+    </div>
+    <div class="feature-card">
+        <h4>📢 Announcements</h4>
+        <p>Create and manage school-wide announcements for all stakeholders</p>
+    </div>
+    <div class="feature-card">
+        <h4>🔍 Advanced Filtering</h4>
+        <p>Filter and search across all modules by session, term, class, and more</p>
+    </div>
+    <div class="feature-card">
+        <h4>📈 Dashboard Analytics</h4>
+        <p>Real-time statistics and insights on all system activities</p>
+    </div>
+</div>
+
+<h2>Best Practices</h2>
+
+<ul>
+    <li>Regularly review and update student and teacher records to maintain data accuracy</li>
+    <li>Process fee payments promptly and keep accurate financial records</li>
+    <li>Use filtering and search features effectively to quickly locate specific records</li>
+    <li>Verify book assignments match curriculum requirements before publishing</li>
+    <li>Keep announcements clear, concise, and targeted to appropriate audiences</li>
+    <li>Review dashboard statistics regularly to monitor system health and usage</li>
+    <li>Maintain proper access controls and user permissions for security</li>
+    <li>Back up important data regularly and maintain audit trails for critical operations</li>
+</ul>

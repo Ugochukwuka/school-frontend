@@ -1,0 +1,195 @@
+﻿<h1>Teacher Functionality</h1>
+
+<p>The Teacher module empowers educators to manage their classes, mark attendance, enter results, and track student performance. Teachers have access to tools specifically designed for classroom management and academic assessment.</p>
+
+<div class="screenshot-container">
+    <img src="assets/screenshots/login-page.png" alt="User Login Interface" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 1: User Login Interface</div>
+</div>
+
+<h2>Teacher Dashboard</h2>
+
+<p>The teacher dashboard provides a comprehensive overview of teaching activities, including statistics on students, classes, subjects, attendance, and results. Teachers can quickly access key information and navigate to important features.</p>
+
+<div class="screenshot-container">
+    <img src="assets/screenshots/teacher%20dashboard.png" alt="Teacher Dashboard" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 2: Teacher Dashboard Overview</div>
+</div>
+
+<h2>Core Features</h2>
+
+<h3>1. Attendance Management</h3>
+
+<p>Teachers can mark and manage student attendance for their assigned classes. The attendance system supports daily marking, viewing attendance history, and generating attendance summaries.</p>
+
+<h4>Mark Attendance</h4>
+
+<p>Teachers can mark attendance for students in their assigned classes. The system allows selecting a session, term, class, and date to mark attendance.</p>
+
+<div class="screenshot-container">
+    <img src="assets/screenshots/teacher%20mark%20attendance.png" alt="Mark Attendance" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 3: Mark Student Attendance</div>
+</div>
+
+<h4>Update Attendance</h4>
+
+<p>Teachers can update previously marked attendance records if corrections are needed.</p>
+
+<div class="screenshot-container">
+    <img src="assets/screenshots/teacher%20update%20attendance.png" alt="Update Attendance" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 4: Update Attendance Records</div>
+</div>
+
+<h4>Attendance Summary</h4>
+
+<p>View comprehensive attendance summaries with statistics and reports for students in assigned classes.</p>
+
+<div class="screenshot-container">
+    <img src="assets/screenshots/teacher%20attendance%20summary.png" alt="Attendance Summary" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 5: Attendance Summary Report</div>
+</div>
+
+<h3>2. Results Management</h3>
+
+<p>Teachers can enter, view, and update student results for subjects they teach. The results management system supports CA1, CA2, and exam scores with automatic grade calculation.</p>
+
+<h4>Enter Results</h4>
+
+<p>Teachers can enter student results including CA1, CA2, and exam scores. The system automatically calculates totals and assigns grades based on configured grading scales.</p>
+
+<div class="screenshot-container">
+    <img src="assets/screenshots/teacher%20enter%20result.png" alt="Enter Results" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 6: Enter Student Results</div>
+</div>
+
+<h4>View All Results</h4>
+
+<p>Teachers can view all results for students in their assigned classes, filtered by session, term, class, and subject.</p>
+
+<div class="screenshot-container">
+    <img src="assets/screenshots/teacher%20view%20all%20results.png" alt="View All Results" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 7: View All Student Results</div>
+</div>
+
+<h4>View Single Result</h4>
+
+<p>Teachers can view detailed information for a single student's result, including all assessment components and teacher comments.</p>
+
+<div class="screenshot-container">
+    <img src="assets/screenshots/teacher%20view%20single%20result.png" alt="View Single Result" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 8: View Single Student Result</div>
+</div>
+
+<h4>Update Results</h4>
+
+<p>Teachers can update existing result entries to correct scores or modify comments.</p>
+
+<div class="screenshot-container">
+    <img src="assets/screenshots/teacher%20update%20result.png" alt="Update Results" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 9: Update Student Results</div>
+</div>
+
+<h3>3. Class and Student Management</h3>
+
+<p>Teachers can view students in classes they are assigned to teach or serve as form teachers.</p>
+
+<h4>View Students in Classes Taught</h4>
+
+<p>Teachers can view all students in classes where they teach assigned subjects.</p>
+
+<div class="screenshot-container">
+    <img src="assets/screenshots/teacher%20view%20students%20in%20class%20taught.png" alt="View Students in Class Taught" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 10: View Students in Classes Taught</div>
+</div>
+
+<h4>View Students in Form Class</h4>
+
+<p>Form teachers can view all students in their assigned form class.</p>
+
+<div class="screenshot-container">
+    <img src="assets/screenshots/teacher%20view%20students%20in%20class%20he%20is%20form%20Teacher.png" alt="View Form Class Students" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 11: View Form Class Students</div>
+</div>
+
+<h3>4. Subject Management</h3>
+
+<p>Teachers can view all subjects assigned to them for teaching.</p>
+
+<h4>View Assigned Subjects</h4>
+
+<p>Teachers can view a list of all subjects they are assigned to teach, organized by session.</p>
+
+<div class="screenshot-container">
+    <img src="assets/screenshots/teacher%20view%20assigned%20subjects.png" alt="View Assigned Subjects" class="screenshot-image" loading="lazy">
+    <div class="screenshot-caption">Figure 12: View Assigned Subjects</div>
+</div>
+
+<h2>API Endpoints</h2>
+
+<h3>Attendance Endpoints</h3>
+
+<ul>
+    <li><strong>POST /api/teacher/attendance/mark</strong> - Mark attendance for students</li>
+    <li><strong>GET /api/teacher/attendance/summary</strong> - Get attendance summary</li>
+    <li><strong>PUT /api/teacher/attendance/update</strong> - Update attendance records</li>
+</ul>
+
+<h3>Results Endpoints</h3>
+
+<ul>
+    <li><strong>POST /api/results/enter</strong> - Enter student results</li>
+    <li><strong>POST /api/results/view</strong> - View all results (requires session_id and term_id)</li>
+    <li><strong>GET /api/results/single/{id}</strong> - View single result</li>
+    <li><strong>PUT /api/results/update/{id}</strong> - Update result</li>
+</ul>
+
+<h3>Class and Student Endpoints</h3>
+
+<ul>
+    <li><strong>GET /api/teacher/classes/students</strong> - Get students in assigned classes</li>
+    <li><strong>GET /api/teacher/formclass/students</strong> - Get students in form class</li>
+    <li><strong>GET /api/teacher/subjects</strong> - Get assigned subjects</li>
+</ul>
+
+<h2>Key Features</h2>
+
+<div class="feature-grid">
+    <div class="feature-card">
+        <h4>ðŸ“… Attendance Tracking</h4>
+        <p>Mark daily attendance, view summaries, and generate reports for assigned classes</p>
+    </div>
+    <div class="feature-card">
+        <h4>ðŸ“Š Results Management</h4>
+        <p>Enter, view, and update student results with automatic grade calculation</p>
+    </div>
+    <div class="feature-card">
+        <h4>ðŸ‘¥ Class Management</h4>
+        <p>View students in classes you teach or serve as form teacher</p>
+    </div>
+    <div class="feature-card">
+        <h4>ðŸ“š Subject Assignment</h4>
+        <p>View all subjects assigned to you for teaching</p>
+    </div>
+    <div class="feature-card">
+        <h4>ðŸ” Filtering & Search</h4>
+        <p>Filter results and attendance by session, term, class, and subject</p>
+    </div>
+    <div class="feature-card">
+        <h4>ðŸ“ˆ Statistics Dashboard</h4>
+        <p>View comprehensive statistics on students, classes, attendance, and results</p>
+    </div>
+</div>
+
+<h2>Dark Mode</h2>
+
+<p>The teacher dashboard features a built-in dark mode interface that provides a comfortable viewing experience with dark backgrounds and light text. Dark mode is automatically enabled for all teacher users.</p>
+
+<h2>Best Practices</h2>
+
+<ul>
+    <li>Mark attendance daily to maintain accurate records</li>
+    <li>Enter results promptly after assessments to keep records up-to-date</li>
+    <li>Use filters effectively to find specific student information quickly</li>
+    <li>Review attendance summaries regularly to identify patterns</li>
+    <li>Update results when corrections are needed to maintain data accuracy</li>
+</ul>

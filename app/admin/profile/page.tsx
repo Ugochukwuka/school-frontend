@@ -67,16 +67,16 @@ export default function AdminProfilePage() {
     }
   }, [adminUuid]);
 
-  // Sync form values when profile changes
+  // Sync form values when profile changes and modal is open
   useEffect(() => {
-    if (profile) {
+    if (profile && isEditModalVisible) {
       form.setFieldsValue({
         name: profile.name,
         email: profile.email,
         phone: profile.phone || "",
       });
     }
-  }, [profile, form]);
+  }, [profile, isEditModalVisible, form]);
 
   const fetchProfile = async () => {
     if (!adminUuid) {
@@ -275,6 +275,16 @@ export default function AdminProfilePage() {
           open={isEditModalVisible}
           onCancel={() => setIsEditModalVisible(false)}
           footer={null}
+          afterOpenChange={(open) => {
+            // Set form values when modal opens
+            if (open && profile) {
+              form.setFieldsValue({
+                name: profile.name,
+                email: profile.email,
+                phone: profile.phone || "",
+              });
+            }
+          }}
         >
           <Form form={form} onFinish={handleUpdate} layout="vertical">
             <Form.Item

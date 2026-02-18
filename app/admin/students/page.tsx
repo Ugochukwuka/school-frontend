@@ -46,6 +46,8 @@ interface ApiResponse {
 }
 
 export default function AdminStudentsPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [students, setStudents] = useState<Student[]>([]);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [classes, setClasses] = useState<Class[]>([]);
@@ -53,8 +55,15 @@ export default function AdminStudentsPage() {
   const [loadingSessions, setLoadingSessions] = useState(true);
   const [loadingClasses, setLoadingClasses] = useState(false);
   const [error, setError] = useState("");
-  const [sessionId, setSessionId] = useState<number | null>(null);
-  const [classId, setClassId] = useState<number | undefined>(undefined);
+  // Initialize from URL params if available
+  const [sessionId, setSessionId] = useState<number | null>(() => {
+    const sid = searchParams.get("session_id");
+    return sid ? parseInt(sid, 10) : null;
+  });
+  const [classId, setClassId] = useState<number | undefined>(() => {
+    const cid = searchParams.get("class_id");
+    return cid ? parseInt(cid, 10) : undefined;
+  });
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
@@ -62,6 +71,21 @@ export default function AdminStudentsPage() {
   useEffect(() => {
     fetchSessions();
   }, []);
+
+  // Update URL when filters change
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (sessionId) {
+      params.set("session_id", sessionId.toString());
+    }
+    if (classId !== undefined) {
+      params.set("class_id", classId.toString());
+    }
+    const newUrl = params.toString() 
+      ? `${window.location.pathname}?${params.toString()}`
+      : window.location.pathname;
+    window.history.replaceState({}, "", newUrl);
+  }, [sessionId, classId]);
 
   useEffect(() => {
     if (sessions.length > 0 && !sessionId) {

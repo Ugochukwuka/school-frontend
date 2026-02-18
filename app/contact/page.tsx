@@ -1,24 +1,94 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Navigation from "./../components/Navigation";
 import Footer from "./../components/Footer";
-import Hero from "./../components/Hero";
+import PlayfulHero from "./../components/PlayfulHero";
 import Section from "./../components/Section";
+import ColorfulSection from "./../components/ColorfulSection";
 import Image from "next/image";
+import { useSchoolProfile } from "@/app/lib/useSchoolProfile";
+import { useHomepageDarkMode } from "@/app/lib/useHomepageDarkMode";
 
 export default function Contact() {
+  const { schoolName, address, phone, email } = useSchoolProfile();
+  const { isDarkMode } = useHomepageDarkMode();
+
   return (
-    <div className="min-h-screen">
+    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? "bg-gray-900" : "bg-white"}`}>
       <Navigation />
       
-      <Hero
-        greeting="We're Here to Help - Your Questions, Our Priority"
+      <PlayfulHero
         title="Contact Us"
         subtitle="We're Here to Help - Get in Touch"
-        description="Welcome to Elite Academy - we're here to help you discover quality education and exceptional school experience. Have questions about our programs, admissions, or facilities? Our friendly and knowledgeable team is ready to assist you. Whether you're interested in admissions, have academic inquiries, or need support, reach out through any of our convenient channels, and we'll get back to you promptly. Let's start your journey to excellence together."
-        imagePath="/FrontEndImages/freepik__the-style-is-candid-image-photography-with-natural__3246.png"
-        simple={true}
+        description={`Welcome to ${schoolName} - we're here to help you discover quality education and exceptional school experience. Have questions? Our friendly team is ready to assist you.`}
+        ctaText="Send Message"
+        ctaLink="#contact-form"
+        imageUrl="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800&h=800&fit=crop&crop=faces"
+        gradientFrom="from-emerald-600"
+        gradientTo="to-teal-500"
       />
+
+      {/* Ask About Kids Acts Section */}
+      <ColorfulSection bgColor="yellow" title="Ask About Kids Acts">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          {/* Left Side - Image */}
+          <div className="relative">
+            <div className="relative w-full h-96 lg:h-[500px] rounded-3xl overflow-hidden shadow-2xl">
+              <Image
+                src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=800&h=800&fit=crop&crop=faces"
+                alt="Children exploring"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                suppressHydrationWarning
+              />
+            </div>
+            <div className="absolute -top-4 -right-4 text-4xl">⭐</div>
+            <div className="absolute -bottom-4 -left-4 text-3xl">🌍</div>
+          </div>
+          
+          {/* Right Side - Form */}
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-xl">
+            <h3 className="text-2xl font-bold text-gray-900 mb-6">Send Us a Message</h3>
+            <form className="space-y-4" id="contact-form">
+              <input
+                type="text"
+                placeholder="Your Name"
+                required
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+              />
+              <input
+                type="email"
+                placeholder="Email Address"
+                required
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+              />
+              <input
+                type="tel"
+                placeholder="Phone number"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+              />
+              <input
+                type="text"
+                placeholder="Studying Class"
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+              />
+              <textarea
+                placeholder="Your Message"
+                rows={4}
+                className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+              ></textarea>
+              <button
+                type="submit"
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300"
+              >
+                Submit
+              </button>
+            </form>
+          </div>
+        </div>
+      </ColorfulSection>
 
       <Section title="Get in Touch With Us" subtitle="We're here to help. Reach out through any of these convenient channels">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -31,11 +101,8 @@ export default function Contact() {
                 </div>
                 <div className="ml-4">
                   <h4 className="font-semibold text-gray-900 mb-1">Address</h4>
-                  <p className="text-gray-600">
-                    123 Education Street<br />
-                    Academic District<br />
-                    City, State 12345<br />
-                    Country
+                  <p className="text-gray-600" style={{ whiteSpace: "pre-line" }}>
+                    {address}
                   </p>
                 </div>
               </div>
@@ -46,9 +113,7 @@ export default function Contact() {
                 <div className="ml-4">
                   <h4 className="font-semibold text-gray-900 mb-1">Phone</h4>
                   <p className="text-gray-600">
-                    Main Office: (123) 456-7890<br />
-                    Admissions: (123) 456-7891<br />
-                    Fax: (123) 456-7892
+                    Main Office: {phone}
                   </p>
                 </div>
               </div>
@@ -59,9 +124,7 @@ export default function Contact() {
                 <div className="ml-4">
                   <h4 className="font-semibold text-gray-900 mb-1">Email</h4>
                   <p className="text-gray-600">
-                    General: info@eliteacademy.edu<br />
-                    Admissions: admissions@eliteacademy.edu<br />
-                    Support: support@eliteacademy.edu
+                    General: <a href={`mailto:${email}`} className="text-blue-600 hover:underline">{email}</a>
                   </p>
                 </div>
               </div>
@@ -220,7 +283,7 @@ export default function Contact() {
         </div>
       </Section>
 
-      <Section title="Schedule a Campus Visit" subtitle="Experience Elite Academy firsthand">
+      <Section title="Schedule a Campus Visit" subtitle={`Experience ${schoolName} firsthand`}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           <div>
             <h3 className="text-2xl font-bold text-gray-900 mb-4">Schedule a Campus Tour</h3>
@@ -251,21 +314,6 @@ export default function Contact() {
               className="object-cover"
             />
           </div>
-        </div>
-      </Section>
-
-      <Section bgColor="blue" title="Emergency Contact">
-        <div className="max-w-2xl mx-auto text-center">
-          <p className="text-white text-lg mb-4">
-            For emergencies during school hours, please contact:
-          </p>
-          <p className="text-white text-2xl font-bold mb-6">
-            Emergency Hotline: (123) 456-7899
-          </p>
-          <p className="text-white text-sm">
-            Available 24/7 during school days. For non-emergency inquiries, please use our
-            regular contact channels during office hours.
-          </p>
         </div>
       </Section>
 

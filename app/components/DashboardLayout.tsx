@@ -79,6 +79,57 @@ const breadcrumbMap: { [key: string]: string } = {
   // Admin routes - Announcement
   "/admin/announcements": "View Announcements",
   "/admin/announcements/add": "Add Announcement",
+  // Admin routes - Timetable Management
+  "/admin/timetable/weekly/add": "Add Weekly Timetable",
+  "/admin/students/viewtimetable": "View Weekly Timetable",
+  "/admin/timetable/weekly/edit": "Edit Weekly Timetable",
+  "/admin/timetable/weekly/update": "Update Weekly Timetable",
+  "/admin/timetable/weekly/single": "View Single Timetable",
+  "/admin/exam/timetable/add": "Add Exam Timetable",
+  "/admin/viewexam/timetable": "View Exam Timetable",
+  "/admin/exam/timetable/edit": "Edit Exam Timetable",
+  "/admin/exam/timetable/update": "Update Exam Timetable",
+  "/admin/students/viewsingleexamtimetable": "View Single Exam Timetable",
+  // Admin routes - Blog Management
+  "/admin/blog/create": "Create Blog",
+  "/admin/blog/view-all": "View All Blogs",
+  "/admin/blog/view-single": "View Single Blog",
+  "/admin/blog/edit": "Edit Blog",
+  "/admin/blog/update": "Update Blog",
+  // Admin routes - FrontEnd Tuition Fee Management
+  "/admin/tuitionfee/add": "Add Tuition Fee",
+  "/admin/tuitionfee/viewall": "View All Tuition Fees",
+  "/admin/tuition-fee/view-single": "View Single Tuition Fee",
+  "/admin/viewSingleTuitionFee": "View Single Tuition Fee",
+  "/admin/tuition-fee/update": "Update Tuition Fee",
+  "/admin/updateTuitionFee": "Update Tuition Fee",
+  "/admin/tuition-fee/edit": "Edit Tuition Fee",
+  // Admin routes - Academic Session Management
+  "/admin/session/add": "Add Session",
+  "/admin/session/view-all": "View All Sessions",
+  "/admin/session/view-single": "View Single Session",
+  "/admin/session/edit": "Edit Session",
+  "/admin/session/update": "Update Session",
+  // Admin routes - Testimonial Management
+  "/admin/addTestimonial": "Add Testimonial",
+  "/admin/viewAllTestimonials": "View All Testimonials",
+  "/admin/editTestimonial": "Edit Testimonial",
+  "/admin/testimonial/add": "Add Testimonial",
+  "/admin/testimonial/view-all": "View All Testimonials",
+  "/admin/testimonial/view-single": "View Single Testimonial",
+  "/admin/testimonial/update": "Update Testimonial",
+  "/admin/testimonial/edit": "Edit Testimonial",
+  // Admin routes - Front End Leadership Management
+  "/admin/leadership/add": "Add Leader",
+  "/admin/leadership/viewall": "View All Leaders",
+  "/admin/leadership/view-single": "View Single Leader",
+  "/admin/leadership/update": "Update Leader",
+  "/admin/leadership/edit": "Edit Leader",
+  // Admin routes - School Profile Management
+  "/admin/schoolprofile/add": "Add School Profile",
+  "/admin/schoolprofile/view": "View School Profile",
+  "/admin/schoolprofile/edit": "Edit School Profile",
+  "/admin/schoolprofile/update": "Update School Profile",
   // Admin routes - Profile
   "/admin/profile": "Profile Settings",
   
@@ -184,27 +235,36 @@ const getBreadcrumbItems = (pathname: string, role: string) => {
   return items;
 };
 
+// Sidebar width: mobile = drawer (0), tablet = collapsed 80px (lg breakpoint 992), desktop = 250px
+const SIDEBAR_WIDTH = 250;
+const SIDEBAR_COLLAPSED_WIDTH = 80;
+const MOBILE_BREAKPOINT = 768;
+const SIDEBAR_LG_BREAKPOINT = 992;
+
 export default function DashboardLayout({ children, role }: DashboardLayoutProps) {
   const [isMobile, setIsMobile] = useState(false);
+  const [sidebarWidth, setSidebarWidth] = useState(SIDEBAR_WIDTH);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+    const updateLayout = () => {
+      const w = typeof window !== "undefined" ? window.innerWidth : 1024;
+      setIsMobile(w < MOBILE_BREAKPOINT);
+      // Match Sidebar: mobile = 0 (drawer), < lg = collapsed 80, >= lg = 250
+      setSidebarWidth(w < MOBILE_BREAKPOINT ? 0 : w < SIDEBAR_LG_BREAKPOINT ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_WIDTH);
     };
-    
-    checkMobile();
+    updateLayout();
     setMounted(true);
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    window.addEventListener("resize", updateLayout);
+    return () => window.removeEventListener("resize", updateLayout);
   }, []);
 
   const breadcrumbItems = getBreadcrumbItems(pathname, role);
   
-  // Always apply dark mode for teacher and admin dashboards, or for student when toggle is enabled
-  const shouldUseDarkMode = role === "teacher" || role === "admin" || (role === "student" && isDarkMode);
+  // Apply dark mode based on user preference for all dashboards
+  const shouldUseDarkMode = isDarkMode;
   const bgColor = shouldUseDarkMode ? "#141414" : "#f0f2f5";
   const contentBgColor = shouldUseDarkMode ? "#1f1f1f" : "#fff";
   const textColor = shouldUseDarkMode ? "#ffffff" : undefined;
@@ -220,9 +280,9 @@ export default function DashboardLayout({ children, role }: DashboardLayoutProps
     },
   };
 
-  // Use consistent values for SSR - default to desktop view
-  const marginLeft = isMobile ? 0 : 250;
-  const margin = isMobile ? "8px" : "16px";
+  // Responsive: match sidebar width so content is never clipped; safe padding
+  const marginLeft = sidebarWidth;
+  const margin = isMobile ? 8 : 12;
   const padding = isMobile ? 16 : 24;
 
   return (
@@ -235,6 +295,10 @@ export default function DashboardLayout({ children, role }: DashboardLayoutProps
             style={{ 
               marginLeft, 
               minHeight: "100vh",
+              minWidth: 0,
+              flex: 1,
+              width: "100%",
+              maxWidth: "100%",
               transition: mounted ? "margin-left 0.2s" : "none",
               background: bgColor,
             }}
@@ -246,6 +310,8 @@ export default function DashboardLayout({ children, role }: DashboardLayoutProps
                 padding: 0,
                 background: bgColor,
                 minHeight: 280,
+                minWidth: 0,
+                overflow: "visible",
               }}
             >
               <div
@@ -254,7 +320,15 @@ export default function DashboardLayout({ children, role }: DashboardLayoutProps
                   background: contentBgColor,
                   borderRadius: "8px",
                   padding,
+                  paddingLeft: isMobile ? padding : Math.max(padding, 20),
+                  paddingRight: isMobile ? padding : Math.max(padding, 20),
                   minHeight: "calc(100vh - 32px)",
+                  minWidth: 0,
+                  width: "100%",
+                  maxWidth: "100%",
+                  boxSizing: "border-box",
+                  overflowX: "visible",
+                  overflowY: "visible",
                   ...(textColor && { color: textColor }),
                   transition: "background-color 0.3s ease, color 0.3s ease",
                 }}
@@ -267,8 +341,9 @@ export default function DashboardLayout({ children, role }: DashboardLayoutProps
                 <Breadcrumb
                   items={breadcrumbItems}
                   style={{ 
-                    marginBottom: 24,
+                    marginBottom: isMobile ? 16 : 24,
                     ...(textColor && { color: textColor }),
+                    overflow: "hidden",
                   }}
                 />
                 {children}

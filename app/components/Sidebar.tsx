@@ -16,11 +16,18 @@ import {
   EditOutlined,
   EyeOutlined,
   PlusOutlined,
+  ClockCircleOutlined,
+  GlobalOutlined,
+  BankOutlined,
+  CommentOutlined,
+  CrownOutlined,
+  BuildOutlined,
 } from "@ant-design/icons";
 import { useResponsive } from "@/app/lib/responsive";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Logo from "./Logo";
+import { useSchoolProfile } from "@/app/lib/useSchoolProfile";
 
 const { Sider } = Layout;
 
@@ -33,21 +40,81 @@ export default function Sidebar({ role, isDarkMode = false }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
-  const [selectedKey, setSelectedKey] = useState("");
-  const [openKeys, setOpenKeys] = useState<string[]>([]);
+  
+  // Initialize state based on pathname to ensure consistent SSR
+  const getInitialOpenKeys = () => {
+    if (!pathname) return [];
+    if (pathname.startsWith("/teachers/results")) return ["results"];
+    if (pathname.startsWith("/teachers/attendance")) return ["attendance-management"];
+    if (pathname.startsWith("/admin/timetable") || pathname.startsWith("/admin/students/timetable") || pathname.startsWith("/admin/exam/timetable") || pathname.startsWith("/admin/viewexam/timetable")) return ["contents-management", "timetable-management"];
+    if (pathname.startsWith("/admin/blog") || pathname.startsWith("/admin/createBlog") || pathname.startsWith("/admin/viewAllBlogs") || pathname.startsWith("/admin/viewSingleBlog") || pathname.startsWith("/admin/updateBlog")) return ["contents-management", "blog-management"];
+    if (pathname.startsWith("/admin/tuitionfee") || pathname.startsWith("/admin/updateTuitionFee") || pathname.startsWith("/admin/viewSingleTuitionFee")) return ["contents-management", "tuition-fee-management"];
+    if (pathname.startsWith("/admin/session")) return ["academic-session-management"];
+    if (pathname.startsWith("/admin/testimonial") || pathname.startsWith("/admin/addTestimonial") || pathname.startsWith("/admin/viewAllTestimonials")) return ["contents-management", "testimonial-management"];
+    if (pathname.startsWith("/admin/leadership") || pathname.startsWith("/admin/addLeader") || pathname.startsWith("/admin/viewAllLeaders") || pathname.startsWith("/admin/viewSingleLeader")) return ["contents-management", "leadership-management"];
+    if (pathname.startsWith("/admin/schoolprofile")) return ["contents-management", "school-profile-management"];
+    return [];
+  };
+  
+  const [selectedKey, setSelectedKey] = useState(pathname || "");
+  const [openKeys, setOpenKeys] = useState<string[]>(getInitialOpenKeys());
+  // Initialize lastSelectedMenuKey from sessionStorage if available
+  const [lastSelectedMenuKey, setLastSelectedMenuKey] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      return sessionStorage.getItem("lastSelectedMenuKey") || "";
+    }
+    return "";
+  });
   const [mobileDrawerVisible, setMobileDrawerVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { isMobile: responsiveMobile } = useResponsive();
+  const { schoolName, logoPath } = useSchoolProfile();
+  
+  // Helper to update lastSelectedMenuKey and persist to sessionStorage
+  const updateLastSelectedMenuKey = (key: string) => {
+    setLastSelectedMenuKey(key);
+    if (typeof window !== "undefined" && key) {
+      sessionStorage.setItem("lastSelectedMenuKey", key);
+    }
+  };
 
   useEffect(() => {
-    setSelectedKey(pathname);
-    
-    // Handle submenu open keys
-    if (pathname.startsWith("/teachers/results")) {
-      setOpenKeys(["results"]);
-    }
-    if (pathname.startsWith("/teachers/attendance")) {
-      setOpenKeys(["attendance-management"]);
+    setMounted(true);
+    if (pathname) {
+      // Get the best matching menu state for the current pathname
+      const menuState = getMenuStateForPath(pathname);
+      
+      // PRIORITY 1: If pathname is an exact menu item match, use it and update lastSelectedMenuKey
+      if (menuState.selectedKey === pathname && menuState.selectedKey.startsWith("/")) {
+        setSelectedKey(menuState.selectedKey);
+        setOpenKeys(menuState.openKeys);
+        updateLastSelectedMenuKey(menuState.selectedKey);
+        return;
+      }
+      
+      // PRIORITY 2: If we have a lastSelectedMenuKey, keep it selected (for detail pages, etc.)
+      // This ensures the last clicked menu item stays selected when navigating to related pages
+      if (lastSelectedMenuKey) {
+        const lastSelectedState = getMenuStateForPath(lastSelectedMenuKey);
+        setSelectedKey(lastSelectedMenuKey);
+        setOpenKeys(lastSelectedState.openKeys);
+        
+        // Only update lastSelectedMenuKey if we found a better exact match
+        if (menuState.selectedKey.startsWith("/") && menuState.selectedKey === pathname) {
+          updateLastSelectedMenuKey(menuState.selectedKey);
+        }
+        return;
+      }
+      
+      // PRIORITY 3: No lastSelectedMenuKey - use best match from pathname
+      setSelectedKey(menuState.selectedKey);
+      setOpenKeys(menuState.openKeys);
+      
+      // Update last selected if we found a menu item match
+      if (menuState.selectedKey.startsWith("/")) {
+        updateLastSelectedMenuKey(menuState.selectedKey);
+      }
     }
     
     const checkMobile = () => {
@@ -366,6 +433,142 @@ export default function Sidebar({ role, isDarkMode = false }: SidebarProps) {
       ],
     },
     {
+key: "academic-session-management",
+          icon: <CalendarOutlined />,
+          label: "Academic Session Management",
+          children: [
+            {
+              key: "/admin/session/add",
+              icon: <PlusOutlined />,
+              label: "Add Session",
+            },
+            {
+              key: "/admin/session/view-all",
+              icon: <EyeOutlined />,
+              label: "View All Sessions",
+            },
+          ],
+    },
+    {
+      key: "contents-management",
+      icon: <FileTextOutlined />,
+      label: "Contents",
+      children: [
+        {
+          key: "timetable-management",
+          icon: <ClockCircleOutlined />,
+          label: "Timetable Management",
+          children: [
+            {
+              key: "/admin/students/timetable",
+              icon: <PlusOutlined />,
+              label: "Add Weekly Timetable",
+            },
+            {
+              key: "/admin/students/viewtimetable",
+              icon: <EyeOutlined />,
+              label: "View Weekly Timetable",
+            },
+            {
+              key: "/admin/exam/timetable/add",
+              icon: <PlusOutlined />,
+              label: "Add Exam Timetable",
+            },
+            {
+              key: "/admin/viewexam/timetable",
+              icon: <EyeOutlined />,
+              label: "View Exam Timetable",
+            },
+          ],
+        },
+        {
+          key: "blog-management",
+          icon: <FileTextOutlined />,
+          label: "Blog Management",
+          children: [
+            {
+              key: "/admin/createBlog",
+              icon: <PlusOutlined />,
+              label: "Create Blog",
+            },
+            {
+              key: "/admin/viewAllBlogs",
+              icon: <EyeOutlined />,
+              label: "View All Blogs",
+            },
+          ],
+        },
+        {
+          key: "tuition-fee-management",
+          icon: <BankOutlined />,
+          label: "FrontEnd Tuition Fee Management",
+          children: [
+            {
+              key: "/admin/tuitionfee/add",
+              icon: <PlusOutlined />,
+              label: "Add Tuition Fee",
+            },
+            {
+              key: "/admin/tuitionfee/viewall",
+              icon: <EyeOutlined />,
+              label: "View All Tuition Fees",
+            },
+          ],
+        },
+        {
+          key: "testimonial-management",
+          icon: <CommentOutlined />,
+          label: "Testimonial Management",
+          children: [
+            {
+              key: "/admin/addTestimonial",
+              icon: <PlusOutlined />,
+              label: "Add Testimonial",
+            },
+            {
+              key: "/admin/viewAllTestimonials",
+              icon: <EyeOutlined />,
+              label: "View All Testimonials",
+            },
+          ],
+        },
+        {
+          key: "leadership-management",
+          icon: <CrownOutlined />,
+          label: "Front End Leadership Management",
+          children: [
+            {
+              key: "/admin/addLeader",
+              icon: <PlusOutlined />,
+              label: "Add Leader",
+            },
+            {
+              key: "/admin/leadership/viewall",
+              icon: <EyeOutlined />,
+              label: "View All Leaders",
+            },
+          ],
+        },
+        {
+          key: "school-profile-management",
+          icon: <BuildOutlined />,
+          label: "School Profile Management",
+          children: [
+            {
+              key: "/admin/schoolprofile/add",
+              icon: <PlusOutlined />,
+              label: "Add School Profile",
+            },
+            {
+              key: "/admin/schoolprofile/view",
+              icon: <EyeOutlined />,
+              label: "View School Profile",
+            },
+          ],
+        },
+      ],
+    },
+    {
       key: "/admin/profile",
       icon: <SettingOutlined />,
       label: "Profile Settings",
@@ -453,42 +656,166 @@ export default function Sidebar({ role, isDarkMode = false }: SidebarProps) {
     }
   };
 
+  // Helper function to find parent menu keys for a given menu item key
+  const findParentKeys = (items: any[], targetKey: string, parentKeys: string[] = []): string[] | null => {
+    for (const item of items) {
+      if (item.key === targetKey) {
+        return parentKeys;
+      }
+      if (item.children) {
+        const result = findParentKeys(item.children, targetKey, [...parentKeys, item.key]);
+        if (result !== null) {
+          return result;
+        }
+      }
+    }
+    return null;
+  };
+
+  // Helper function to find the best matching menu item for a pathname
+  // This handles cases where the pathname might not be an exact menu item (e.g., detail pages)
+  const findBestMatchingMenuKey = (items: any[], pathname: string, parentKeys: string[] = [], bestMatch: { key: string; parentKeys: string[]; score: number } | null = null): { key: string; parentKeys: string[] } | null => {
+    for (const item of items) {
+      // Check if this is a menu item with a route (starts with /)
+      if (item.key.startsWith("/")) {
+        // Exact match - return immediately
+        if (item.key === pathname) {
+          return { key: item.key, parentKeys };
+        }
+        
+        // Calculate similarity score
+        const pathParts = pathname.split("/").filter(Boolean);
+        const keyParts = item.key.split("/").filter(Boolean);
+        let score = 0;
+        
+        // Check how many path segments match from the beginning
+        const minLength = Math.min(pathParts.length, keyParts.length);
+        for (let i = 0; i < minLength; i++) {
+          if (pathParts[i] === keyParts[i]) {
+            score += 1;
+          } else {
+            break;
+          }
+        }
+        
+        // Prefer matches where pathname starts with menu key or they share significant base path
+        if (pathname.startsWith(item.key + "/") || pathname.startsWith(item.key + "?")) {
+          score = keyParts.length + 10; // High score for sub-paths
+        } else if (score >= 2 && pathname.includes(keyParts.slice(0, -1).join("/"))) {
+          // Good match if they share base path (e.g., /admin/students/viewtimetable and /admin/students/viewsingletimetable)
+          score = score + 5;
+        }
+        
+        // Update best match if this is better
+        if (score >= 2 && (!bestMatch || score > bestMatch.score)) {
+          bestMatch = { key: item.key, parentKeys, score };
+        }
+      }
+      
+      // Recursively check children
+      if (item.children) {
+        const childMatch = findBestMatchingMenuKey(item.children, pathname, [...parentKeys, item.key], bestMatch);
+        if (childMatch && (!bestMatch || (childMatch as any).score > bestMatch.score)) {
+          bestMatch = childMatch as any;
+        }
+      }
+    }
+    return bestMatch ? { key: bestMatch.key, parentKeys: bestMatch.parentKeys } : null;
+  };
+
+  // Helper function to get open keys and selected key based on the pathname
+  const getMenuStateForPath = (pathname: string): { selectedKey: string; openKeys: string[] } => {
+    const menuItems = getMenuItems();
+    
+    // First, try to find exact match
+    const exactParentKeys = findParentKeys(menuItems, pathname);
+    if (exactParentKeys !== null) {
+      return { selectedKey: pathname, openKeys: exactParentKeys };
+    }
+    
+    // If no exact match, find the best matching menu item
+    const bestMatch = findBestMatchingMenuKey(menuItems, pathname);
+    if (bestMatch) {
+      return { selectedKey: bestMatch.key, openKeys: bestMatch.parentKeys };
+    }
+    
+    // Fallback to initial open keys logic
+    const initialKeys = getInitialOpenKeys();
+    return { selectedKey: pathname, openKeys: initialKeys };
+  };
+
+  // Helper function to get open keys based on the clicked key
+  const getOpenKeysForPath = (key: string): string[] => {
+    const menuItems = getMenuItems();
+    const parentKeys = findParentKeys(menuItems, key);
+    return parentKeys || [];
+  };
+
   const handleMenuClick = ({ key }: { key: string }) => {
-    router.push(key);
-    if (isMobile) {
-      setMobileDrawerVisible(false);
+    // Only navigate if it's a valid route (starts with /)
+    if (key.startsWith("/")) {
+      // Store this as the last selected menu key (persists to sessionStorage)
+      updateLastSelectedMenuKey(key);
+      
+      // Update selected key immediately
+      setSelectedKey(key);
+      
+      // Find and open parent menu items
+      const parentKeys = getOpenKeysForPath(key);
+      if (parentKeys.length > 0) {
+        setOpenKeys(parentKeys);
+      }
+      
+      // Navigate to the route
+      router.push(key);
+      
+      if (isMobile) {
+        setMobileDrawerVisible(false);
+      }
     }
   };
 
   const menuContent = (
     <>
       <div
+        suppressHydrationWarning
         style={{
-          height: "64px",
+          height: "56px",
+          minHeight: "56px",
+          flexShrink: 0,
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
-          borderBottom: "1px solid #f0f0f0",
-          padding: collapsed && !isMobile ? "8px" : "12px",
+          justifyContent: collapsed && !isMobile ? "center" : "flex-start",
+          borderBottom: isDarkMode ? "1px solid #303030" : "1px solid #f0f0f0",
+          padding: collapsed && !isMobile ? "6px" : "10px 12px",
           flexDirection: collapsed && !isMobile ? "column" : "row",
-          gap: collapsed && !isMobile ? "4px" : "12px",
+          gap: collapsed && !isMobile ? "4px" : "10px",
+          overflow: "hidden",
         }}
       >
-        <Logo
-          width={collapsed && !isMobile ? 36 : 40}
-          height={collapsed && !isMobile ? 36 : 40}
-          showFallback={true}
-        />
+        <div style={{ flexShrink: 0, width: collapsed && !isMobile ? 28 : 32, height: collapsed && !isMobile ? 28 : 32 }}>
+          <Logo
+            width={collapsed && !isMobile ? 28 : 32}
+            height={collapsed && !isMobile ? 28 : 32}
+            showFallback={true}
+            logoPath={logoPath}
+          />
+        </div>
         {(!collapsed || isMobile) && (
           <span
+            suppressHydrationWarning
             style={{
               fontWeight: "bold",
-              fontSize: collapsed && !isMobile ? "12px" : "16px",
-              color: "#1a1a1a",
+              fontSize: collapsed && !isMobile ? "12px" : "14px",
+              color: isDarkMode ? "#fafafa" : "#1a1a1a",
               whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              minWidth: 0,
+              flex: 1,
             }}
           >
-            {collapsed && !isMobile ? "SMS" : "School Management"}
+            {collapsed && !isMobile ? "SMS" : schoolName}
           </span>
         )}
       </div>
@@ -500,10 +827,17 @@ export default function Sidebar({ role, isDarkMode = false }: SidebarProps) {
         items={getMenuItems()}
         onClick={handleMenuClick}
         style={{ borderRight: 0, marginTop: "8px" }}
+        suppressHydrationWarning
       />
     </>
   );
 
+  // Only render after component is mounted to prevent hydration mismatch
+  if (!mounted) {
+    return null;
+  }
+
+  // Only render mobile drawer after component is mounted to prevent hydration mismatch
   if (isMobile) {
     return (
       <>
@@ -527,6 +861,7 @@ export default function Sidebar({ role, isDarkMode = false }: SidebarProps) {
           open={mobileDrawerVisible}
           styles={{ body: { padding: 0 } }}
           size={250}
+          suppressHydrationWarning
         >
           {menuContent}
         </Drawer>
@@ -542,13 +877,14 @@ export default function Sidebar({ role, isDarkMode = false }: SidebarProps) {
       width={250}
       breakpoint="lg"
       collapsedWidth={80}
+      suppressHydrationWarning
       style={{
         overflow: "auto",
         height: "100vh",
         position: "fixed",
-        left: 0,
-        top: 0,
-        bottom: 0,
+        left: "0px",
+        top: "0px",
+        bottom: "0px",
         zIndex: 1000,
         background: isDarkMode ? "#141414" : "#fff",
       }}

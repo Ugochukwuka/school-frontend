@@ -2,39 +2,109 @@
 
 import Navigation from "./../components/Navigation";
 import Footer from "./../components/Footer";
-import Hero from "./../components/Hero";
+import PlayfulHero from "./../components/PlayfulHero";
 import Section from "./../components/Section";
+import ColorfulSection from "./../components/ColorfulSection";
+import ValueCard from "./../components/ValueCard";
+import TeamCarousel from "./../components/TeamCarousel";
 import Card from "./../components/Card";
+import CardCarousel from "./../components/CardCarousel";
+import DecorativeElements from "./../components/DecorativeElements";
+import Image from "next/image";
+import { useSchoolProfile } from "@/app/lib/useSchoolProfile";
 
 export default function Primary() {
+  const { schoolName } = useSchoolProfile();
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
       <Navigation />
       
-      <Hero
-        greeting="Building Strong Foundations - Where Every Child's Potential Shines"
+      <PlayfulHero
         title="Primary Education"
         subtitle="Building Strong Foundations, Grades 1-6"
-        description="Welcome to Elite Academy's Primary Education Program - where quality education builds strong foundations for lifelong success. Experience our comprehensive curriculum that develops critical thinking, creativity, and character in students from Grades 1-6. Our primary program ensures every child receives personalized attention and support to reach their full potential while fostering a genuine love for learning. Join us for an exceptional school experience that prepares students for academic excellence."
-        imagePath="/FrontEndImages/freepik__the-style-is-candid-image-photography-with-natural__3234.png"
-        simple={true}
+        description={`Welcome to ${schoolName}'s Primary Education Program - where quality education builds strong foundations for lifelong success. Experience our comprehensive curriculum that develops critical thinking, creativity, and character.`}
+        ctaText="Learn More"
+        ctaLink="/academics"
+        imageUrl="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=800&fit=crop&crop=faces"
+        gradientFrom="from-blue-600"
+        gradientTo="to-purple-500"
       />
 
-      <Section title="Primary School Program" subtitle="A comprehensive education that builds knowledge, skills, and character">
-        <div className="max-w-4xl mx-auto">
-          <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-            Our Primary program provides a solid academic foundation while nurturing each child's
-            unique talents and interests. We focus on developing critical thinking, creativity,
-            and a love for learning that will serve students throughout their educational journey.
-          </p>
-          <p className="text-lg text-gray-600 leading-relaxed">
-            With small class sizes, dedicated teachers, and a balanced curriculum, we ensure
-            every student receives the attention and support they need to succeed.
-          </p>
+      {/* Who We Are Section */}
+      <Section title="Who We Are" subtitle="A comprehensive education that builds knowledge, skills, and character">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          {/* Left Side - Image */}
+          <div className="relative">
+            <div className="relative w-full h-96 lg:h-[500px] rounded-full overflow-hidden border-8 border-blue-100 shadow-2xl">
+              <Image
+                src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=800&fit=crop&crop=faces"
+                alt="Teacher with students"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                suppressHydrationWarning
+              />
+            </div>
+            {/* Decorative elements */}
+            <div className="absolute -top-4 -right-4 w-20 h-20 bg-pink-300 rounded-full opacity-60"></div>
+            <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-yellow-300 rounded-full opacity-60"></div>
+          </div>
+          
+          {/* Right Side - Program Cards */}
+          <div className="grid grid-cols-2 gap-4">
+            <ValueCard
+              icon="📄"
+              title="Self-contained Gifted Programs"
+              description="By creating a safe, consistent and welcoming environment"
+              bgColor="bg-pink-50"
+            />
+            <ValueCard
+              icon="✅"
+              title="Honors Classes"
+              description="By creating a safe, consistent and welcoming environment"
+              bgColor="bg-green-50"
+            />
+            <ValueCard
+              icon="🏢"
+              title="Traditional Academies"
+              description="By creating a safe, consistent and welcoming environment"
+              bgColor="bg-orange-50"
+            />
+            <ValueCard
+              icon="📊"
+              title="Advanced Placement Courses"
+              description="By creating a safe, consistent and welcoming environment"
+              bgColor="bg-blue-50"
+            />
+          </div>
         </div>
       </Section>
 
-      <Section bgColor="gray" title="Curriculum Overview">
+      <Section bgColor="gray" title="Curriculum">
+        <DecorativeElements />
+        <CardCarousel
+          cards={[
+            {
+              title: "Lower Primary (Grades 1-3)",
+              description: "By creating a safe, consistent and welcoming environment",
+              imagePath: "/FrontEndImages/freepik__the-style-is-candid-image-photography-with-natural__3234.png",
+              imageAlt: "Lower primary",
+              gradientFrom: "from-blue-500",
+              gradientTo: "to-blue-700",
+            },
+            {
+              title: "Upper Primary (Grades 4-6)",
+              description: "By creating a safe, consistent and welcoming environment",
+              imagePath: "/FrontEndImages/freepik__the-style-is-candid-image-photography-with-natural__3251.png",
+              imageAlt: "Upper primary",
+              gradientFrom: "from-green-500",
+              gradientTo: "to-green-700",
+            },
+          ]}
+        />
+      </Section>
+
+      <Section title="Curriculum Overview">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card
             title="Mathematics"
@@ -73,6 +143,69 @@ export default function Primary() {
             imageAlt="Physical Education"
           />
         </div>
+      </Section>
+
+      {/* Passionate Team Section */}
+      <ColorfulSection bgColor="blue" title="Passionate Team">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          {/* Left Side - Image */}
+          <div className="relative">
+            <div className="relative w-full h-96 lg:h-[500px] rounded-3xl overflow-hidden shadow-2xl">
+              <Image
+                src="/FrontEndImages/freepik__35mm-film-photography-art-class-in-a-private-schoo__3244.png"
+                alt="Colorful pencils"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                suppressHydrationWarning
+              />
+            </div>
+            <div className="absolute -top-6 -left-6 w-24 h-24 bg-pink-400 rounded-full opacity-60"></div>
+          </div>
+          
+          {/* Right Side - Text */}
+          <div className="space-y-6 text-white">
+            <p className="text-lg leading-relaxed">
+              Our Primary program provides a solid academic foundation while nurturing each child's
+              unique talents and interests. We focus on developing critical thinking, creativity,
+              and a love for learning that will serve students throughout their educational journey.
+            </p>
+            <p className="text-lg leading-relaxed">
+              With small class sizes, dedicated teachers, and a balanced curriculum, we ensure
+              every student receives the attention and support they need to succeed.
+            </p>
+            <p className="text-lg leading-relaxed">
+              Our passionate team of educators is committed to continuous improvement and innovation
+              in teaching methods to provide the best learning experience.
+            </p>
+          </div>
+        </div>
+      </ColorfulSection>
+
+      {/* Our Team Section */}
+      <Section title="Our Team" subtitle="Meet our dedicated primary educators">
+        <TeamCarousel
+          members={[
+            {
+              name: "David Thompson",
+              role: "Mathematics Specialist",
+              imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=faces",
+              bgColor: "bg-yellow-400",
+            },
+            {
+              name: "Lisa Anderson",
+              role: "Language Arts Teacher",
+              imageUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop&crop=faces",
+              bgColor: "bg-pink-400",
+            },
+            {
+              name: "James Wilson",
+              role: "Science Teacher",
+              imageUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop&crop=faces",
+              bgColor: "bg-blue-400",
+            },
+          ]}
+        />
       </Section>
 
       <Section title="Grade Levels">

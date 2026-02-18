@@ -2,40 +2,174 @@
 
 import Navigation from "./../components/Navigation";
 import Footer from "./../components/Footer";
-import Hero from "./../components/Hero";
+import PlayfulHero from "./../components/PlayfulHero";
 import Section from "./../components/Section";
+import ColorfulSection from "./../components/ColorfulSection";
+import ValueCard from "./../components/ValueCard";
+import TeamCarousel from "./../components/TeamCarousel";
 import Card from "./../components/Card";
+import CardCarousel from "./../components/CardCarousel";
+import DecorativeElements from "./../components/DecorativeElements";
+import Image from "next/image";
+import Link from "next/link";
+import { useSchoolProfile } from "@/app/lib/useSchoolProfile";
 
 export default function Nursery() {
+  const { schoolName } = useSchoolProfile();
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
       <Navigation />
       
-      <Hero
-        greeting="Nurturing Tomorrow's Leaders - Where Learning Begins with Joy"
+      <PlayfulHero
         title="Nursery Program"
         subtitle="Nurturing Young Minds, Ages 2-5"
-        description="Welcome to Elite Academy's Nursery Program - where quality early childhood education meets exceptional care. Experience the perfect start to your child's educational journey through our play-based learning approach. We celebrate every child's first steps in learning, ensuring young learners develop essential skills while having fun, building confidence, and discovering the joy of learning in a safe, nurturing environment designed for their success."
-        imagePath="/FrontEndImages/freepik__35mm-film-photography-toddlers-in-a-bright-african__3239.png"
-        simple={true}
+        description={`Welcome to ${schoolName}'s Nursery Program - where quality early childhood education meets exceptional care. Experience the perfect start to your child's educational journey through our play-based learning approach.`}
+        ctaText="Enroll Now"
+        ctaLink="/admissions"
+        imageUrl="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=800&h=800&fit=crop&crop=faces"
+        gradientFrom="from-purple-600"
+        gradientTo="to-pink-500"
       />
 
-      <Section title="Early Childhood Education" subtitle="A foundation for lifelong learning">
-        <div className="max-w-4xl mx-auto">
-          <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-            Our Nursery program provides a safe, nurturing, and stimulating environment where
-            young children can explore, discover, and grow. We believe that early childhood
-            education sets the foundation for all future learning, and our play-based approach
-            ensures children develop essential skills while having fun.
-          </p>
-          <p className="text-lg text-gray-600 leading-relaxed">
-            Our experienced early childhood educators create engaging activities that promote
-            cognitive, social, emotional, and physical development in age-appropriate ways.
-          </p>
+      {/* Our Core Value Section - Colorful Purple Background */}
+      <ColorfulSection bgColor="purple" title="Our Core Value">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
+          {/* Left Side - Values */}
+          <div className="space-y-4 sm:space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <ValueCard
+                icon="☀️"
+                title="Self-contained Gifted Programs"
+                description="Specialized programs for gifted children"
+                bgColor="bg-white"
+              />
+              <ValueCard
+                icon="📦"
+                title="Extra Activities"
+                description="Wide range of extracurricular activities"
+                bgColor="bg-white"
+              />
+              <ValueCard
+                icon="📍"
+                title="Complete Tracking"
+                description="Comprehensive progress monitoring"
+                bgColor="bg-white"
+              />
+              <ValueCard
+                icon="🚌"
+                title="Individual Bus"
+                description="Safe and reliable transportation"
+                bgColor="bg-white"
+              />
+            </div>
+            <Link
+              href="/admissions"
+              className="inline-block bg-purple-800 hover:bg-purple-900 text-white font-semibold px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base rounded-lg transition-all duration-300 hover:scale-105 transform"
+            >
+              View All
+            </Link>
+          </div>
+          
+          {/* Right Side - Image */}
+          <div className="relative">
+            <div className="relative w-full h-64 sm:h-80 md:h-96 lg:h-[500px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl">
+              <Image
+                src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=800&h=800&fit=crop&crop=faces"
+                alt="Happy child with colorful paint"
+                fill
+                className="object-cover"
+                priority
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                suppressHydrationWarning
+              />
+            </div>
+            {/* Decorative red balloon */}
+            <div className="absolute -top-6 -left-6 w-16 h-20 bg-red-400 rounded-full opacity-80 transform rotate-12 shadow-lg"></div>
+            <div className="absolute -bottom-4 -right-4 w-20 h-20 border-4 border-white/50 rounded-full"></div>
+          </div>
         </div>
+      </ColorfulSection>
+
+      {/* Curriculum Section */}
+      <Section title="Curriculum" subtitle="Popular Classes">
+        <DecorativeElements />
+        <CardCarousel
+          cards={[
+            {
+              title: "Toddlers (Ages 2-3)",
+              description: "By creating a safe, consistent and welcoming environment",
+              imagePath: "/FrontEndImages/freepik__35mm-film-photography-toddlers-in-a-bright-african__3239.png",
+              imageAlt: "Toddlers class",
+              gradientFrom: "from-blue-500",
+              gradientTo: "to-blue-700",
+            },
+            {
+              title: "Pre-K (Ages 3-4)",
+              description: "By creating a safe, consistent and welcoming environment",
+              imagePath: "/FrontEndImages/freepik__the-style-is-candid-image-photography-with-natural__3248.png",
+              imageAlt: "Pre-K class",
+              gradientFrom: "from-green-500",
+              gradientTo: "to-green-700",
+            },
+            {
+              title: "Kindergarten (Ages 4-5)",
+              description: "By creating a safe, consistent and welcoming environment",
+              imagePath: "/FrontEndImages/freepik__the-style-is-candid-image-photography-with-natural__3249.png",
+              imageAlt: "Kindergarten class",
+              gradientFrom: "from-orange-500",
+              gradientTo: "to-orange-700",
+            },
+          ]}
+        />
       </Section>
 
-      <Section bgColor="gray" title="Program Highlights">
+      {/* We're Redefining Section */}
+      <ColorfulSection bgColor="yellow" title="We're Redefining Early Child Care Education">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          {/* Left Side - Active Learning Points */}
+          <div className="space-y-6">
+            {[
+              { num: "01", title: "Active Learning", desc: "Children love this classroom as it has many toys and educational games." },
+              { num: "02", title: "Active Learning", desc: "Children love this classroom as it has many toys and educational games." },
+              { num: "03", title: "Active Learning", desc: "Children love this classroom as it has many toys and educational games." },
+              { num: "04", title: "Active Learning", desc: "Children love this classroom as it has many toys and educational games." },
+            ].map((item, idx) => (
+              <div key={idx} className="bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-lg">
+                <div className="flex items-start gap-4">
+                  <div className={`flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center font-bold text-white ${
+                    idx === 0 ? "bg-blue-400" : idx === 1 ? "bg-teal-400" : idx === 2 ? "bg-pink-400" : "bg-blue-500"
+                  }`}>
+                    {item.num}
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">{item.title}</h3>
+                    <p className="text-gray-700">{item.desc}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Right Side - Classroom Image */}
+          <div className="relative">
+            <div className="relative w-full h-96 lg:h-[500px] rounded-3xl overflow-hidden shadow-2xl">
+              <Image
+                src="/FrontEndImages/freepik__the-style-is-candid-image-photography-with-natural__3247.png"
+                alt="Classroom with children"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                suppressHydrationWarning
+              />
+            </div>
+            {/* Decorative yellow circle */}
+            <div className="absolute -top-8 -left-8 w-32 h-32 bg-yellow-300 rounded-full opacity-60 blur-xl"></div>
+            <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-blue-300 rounded-full opacity-40 blur-xl"></div>
+          </div>
+        </div>
+      </ColorfulSection>
+
+      <Section title="Program Highlights">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <Card
             title="Play-Based Learning"
@@ -160,6 +294,32 @@ export default function Nursery() {
             </div>
           </div>
         </div>
+      </Section>
+
+      {/* Our Team Section */}
+      <Section title="Our Team" subtitle="Meet our passionate educators">
+        <TeamCarousel
+          members={[
+            {
+              name: "Sarah Johnson",
+              role: "Nursery Specialist",
+              imageUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop&crop=faces",
+              bgColor: "bg-pink-400",
+            },
+            {
+              name: "Michael Chen",
+              role: "Early Childhood Educator",
+              imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=faces",
+              bgColor: "bg-yellow-400",
+            },
+            {
+              name: "Emily Rodriguez",
+              role: "Creative Arts Teacher",
+              imageUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=faces",
+              bgColor: "bg-blue-400",
+            },
+          ]}
+        />
       </Section>
 
       <Section title="Facilities & Resources">

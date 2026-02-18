@@ -81,14 +81,26 @@ interface ClassResponse {
 }
 
 export default function PaymentHistoryPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { isMobile } = useResponsive();
   const [sessions, setSessions] = useState<Session[]>([]);
   const [terms, setTerms] = useState<Term[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
   
-  const [selectedSessionId, setSelectedSessionId] = useState<number | null>(null);
-  const [selectedTermId, setSelectedTermId] = useState<number | null>(null);
-  const [classId, setClassId] = useState<number | null>(null);
+  // Initialize from URL params if available
+  const [selectedSessionId, setSelectedSessionId] = useState<number | null>(() => {
+    const sid = searchParams.get("session_id");
+    return sid ? parseInt(sid, 10) : null;
+  });
+  const [selectedTermId, setSelectedTermId] = useState<number | null>(() => {
+    const tid = searchParams.get("term_id");
+    return tid ? parseInt(tid, 10) : null;
+  });
+  const [classId, setClassId] = useState<number | null>(() => {
+    const cid = searchParams.get("class_id");
+    return cid ? parseInt(cid, 10) : null;
+  });
   const [className, setClassName] = useState<string>("");
   
   const [loadingSessions, setLoadingSessions] = useState(true);
@@ -118,6 +130,24 @@ export default function PaymentHistoryPage() {
   };
 
   const studentUuid = getStudentUuid();
+
+  // Update URL when filters change
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (selectedSessionId) {
+      params.set("session_id", selectedSessionId.toString());
+    }
+    if (selectedTermId) {
+      params.set("term_id", selectedTermId.toString());
+    }
+    if (classId) {
+      params.set("class_id", classId.toString());
+    }
+    const newUrl = params.toString() 
+      ? `${window.location.pathname}?${params.toString()}`
+      : window.location.pathname;
+    window.history.replaceState({}, "", newUrl);
+  }, [selectedSessionId, selectedTermId, classId]);
 
   // Fetch sessions on mount
   useEffect(() => {

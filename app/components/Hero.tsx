@@ -122,7 +122,7 @@ export default function Hero({
   return (
     <section
       ref={parallaxRef}
-      className="relative w-full h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden"
+      className="relative w-full h-[550px] md:h-[650px] lg:h-[750px] xl:h-[800px] overflow-hidden"
       onKeyDown={handleKeyDown}
       tabIndex={0}
       role="region"
@@ -149,53 +149,54 @@ export default function Hero({
               priority={index === 0}
               quality={90}
               sizes="100vw"
+              suppressHydrationWarning
             />
           </div>
         ))}
       </div>
 
-      {/* Gradient overlay for text readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" style={{ zIndex: 10, pointerEvents: 'none' }} />
+      {/* Modern gradient overlay for text readability */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/60" style={{ zIndex: 10, pointerEvents: 'none' }} />
+      
+      {/* Decorative gradient accents */}
+      <div className="absolute inset-0 bg-gradient-to-r from-orange-500/10 via-transparent to-blue-500/10" style={{ zIndex: 11, pointerEvents: 'none' }} />
 
       {/* Optional additional overlay */}
       {overlay && (
         <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-black/10 z-10" />
       )}
 
-      {/* Greeting - Centered with random slide-in animation - Above overlay */}
+      {/* Greeting - Modern styled with gradient text */}
       {greeting && (
         <div 
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full px-4 sm:px-6 md:px-8 lg:px-12"
+          className="absolute top-20 sm:top-24 md:top-28 left-1/2 -translate-x-1/2 w-full px-4 sm:px-6 md:px-8 lg:px-12 z-50"
           style={{ 
-            position: 'absolute',
-            zIndex: 100,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            visibility: 'visible',
             pointerEvents: 'none'
           }}
         >
           <p
-            className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-extrabold text-center max-w-3xl sm:max-w-4xl lg:max-w-5xl mx-auto animate-slide-in-from-bottom"
+            className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-center max-w-4xl mx-auto animate-slide-in-from-bottom"
             style={{ 
-              textShadow: '5px 5px 15px rgba(0, 0, 0, 1), 0 0 40px rgba(0, 0, 0, 1), 4px 4px 8px rgba(0, 0, 0, 1), -2px -2px 4px rgba(0, 0, 0, 0.8)',
-              opacity: 1,
-              color: '#FFFFFF',
-              fontWeight: 900,
-              margin: 0,
+              background: 'linear-gradient(135deg, #f97316 0%, #fb923c 50%, #fbbf24 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              textShadow: '0 0 30px rgba(249, 115, 22, 0.5)',
+              animation: 'slideInFromBottom 1s ease-out forwards',
+              lineHeight: '1.5',
+              letterSpacing: '0.05em',
               padding: '8px 16px',
-              animation: 'slideInFromBottom 1.2s ease-out forwards',
-              lineHeight: '1.4',
-              willChange: 'transform',
-              WebkitTextStroke: '0.5px rgba(0, 0, 0, 0.3)',
-              filter: 'drop-shadow(0 0 10px rgba(0, 0, 0, 0.8))'
             }}
+            suppressHydrationWarning
           >
             {greeting}
           </p>
         </div>
       )}
+
+      {/* Decorative floating elements */}
+      <div className="absolute top-20 right-10 w-20 h-20 bg-orange-500/20 rounded-full blur-2xl animate-pulse z-20" style={{ animationDuration: '3s' }}></div>
+      <div className="absolute bottom-20 left-10 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl animate-pulse z-20" style={{ animationDuration: '4s', animationDelay: '1s' }}></div>
 
       {/* Content */}
       <div className="relative h-full flex items-center justify-center px-4 sm:px-6 md:px-8" style={{ zIndex: 50 }}>
@@ -205,27 +206,40 @@ export default function Hero({
           }`}
         >
           <h1
-            className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4 drop-shadow-2xl transition-all duration-500 delay-100 ${
+            className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-4 drop-shadow-2xl transition-all duration-700 delay-100 ${
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4"
             }`}
-            style={{ textShadow: '2px 2px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5)' }}
+            style={{ 
+              textShadow: '3px 3px 12px rgba(0, 0, 0, 0.9), 0 0 30px rgba(0, 0, 0, 0.6), 0 0 60px rgba(0, 0, 0, 0.3)',
+              letterSpacing: '-0.02em',
+              lineHeight: '1.1'
+            }}
           >
-            {title}
+            {title.split(' ').length > 1 ? (
+              <>
+                <span className="inline-block">{title.split(' ').slice(0, -1).join(' ')} </span>
+                <span className="inline-block text-orange-400">{title.split(' ').slice(-1)[0]}</span>
+              </>
+            ) : (
+              <span className="inline-block">{title}</span>
+            )}
           </h1>
           {subtitle && (
             <p
-              className={`text-lg sm:text-xl md:text-2xl text-white mb-3 sm:mb-4 drop-shadow-md transition-all duration-500 delay-300 ${
+              className={`text-lg sm:text-xl md:text-2xl lg:text-3xl text-orange-200 font-semibold mb-3 sm:mb-4 drop-shadow-lg transition-all duration-700 delay-300 ${
                 isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
               }`}
+              style={{ textShadow: '2px 2px 8px rgba(0, 0, 0, 0.8)' }}
             >
               {subtitle}
             </p>
           )}
           {description && (
             <p
-              className={`text-sm sm:text-base md:text-lg text-white mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-md transition-all duration-500 delay-500 px-2 ${
+              className={`text-sm sm:text-base md:text-lg lg:text-xl text-gray-100 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-md transition-all duration-700 delay-500 px-2 ${
                 isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
               }`}
+              style={{ textShadow: '1px 1px 4px rgba(0, 0, 0, 0.8)' }}
             >
               {description}
             </p>
@@ -238,10 +252,21 @@ export default function Hero({
             >
               <Link
                 href={ctaLink}
-                className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base rounded-lg transition-all duration-300 hover:scale-105 transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-transparent shadow-lg hover:shadow-xl"
+                className="inline-block bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold px-8 sm:px-10 py-3 sm:py-4 text-base sm:text-lg rounded-lg transition-all duration-300 hover:scale-110 transform focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-transparent shadow-xl hover:shadow-2xl relative overflow-hidden group"
                 aria-label={ctaText}
               >
-                {ctaText}
+                <span className="relative z-10 flex items-center">
+                  {ctaText}
+                  <svg 
+                    className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
+                <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
               </Link>
             </div>
           )}
@@ -259,7 +284,7 @@ export default function Hero({
                 goToPrevious();
               }
             }}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-white/90 hover:bg-white text-gray-800 p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-white/95 hover:bg-white text-gray-800 p-3 rounded-full shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 backdrop-blur-sm"
             aria-label="Previous image"
             disabled={isTransitioning}
           >
@@ -269,6 +294,7 @@ export default function Hero({
               stroke="currentColor"
               viewBox="0 0 24 24"
               aria-hidden="true"
+              suppressHydrationWarning
             >
               <path
                 strokeLinecap="round"
@@ -286,7 +312,7 @@ export default function Hero({
                 goToNext();
               }
             }}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-white/90 hover:bg-white text-gray-800 p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-white/95 hover:bg-white text-gray-800 p-3 rounded-full shadow-xl transition-all duration-300 hover:scale-110 hover:shadow-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 backdrop-blur-sm"
             aria-label="Next image"
             disabled={isTransitioning}
           >
@@ -296,6 +322,7 @@ export default function Hero({
               stroke="currentColor"
               viewBox="0 0 24 24"
               aria-hidden="true"
+              suppressHydrationWarning
             >
               <path
                 strokeLinecap="round"
@@ -325,10 +352,10 @@ export default function Hero({
                   goToSlide(index);
                 }
               }}
-              className={`h-2 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 ${
+              className={`h-2.5 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 ${
                 index === currentIndex
-                  ? "w-8 bg-white"
-                  : "w-2 bg-white/50 hover:bg-white/75"
+                  ? "w-10 bg-orange-500 shadow-lg shadow-orange-500/50"
+                  : "w-2.5 bg-white/60 hover:bg-white/80"
               }`}
               aria-label={`Go to slide ${index + 1}`}
               aria-selected={index === currentIndex}

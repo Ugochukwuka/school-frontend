@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { Card, Spin, Alert, Select, Table, Button, Space } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { getAuthHeaders } from "@/app/lib/auth";
 import DashboardLayout from "@/app/components/DashboardLayout";
@@ -75,13 +75,23 @@ interface ApiResponse {
 
 export default function ParentAcademicResultsPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [children, setChildren] = useState<Child[]>([]);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [terms, setTerms] = useState<Term[]>([]);
   const [results, setResults] = useState<Result[]>([]);
-  const [selectedChildUuid, setSelectedChildUuid] = useState<string | null>(null);
-  const [selectedSessionId, setSelectedSessionId] = useState<number | null>(null);
-  const [selectedTermId, setSelectedTermId] = useState<number | null>(null);
+  // Initialize from URL params if available
+  const [selectedChildUuid, setSelectedChildUuid] = useState<string | null>(() => {
+    return searchParams.get("child_uuid");
+  });
+  const [selectedSessionId, setSelectedSessionId] = useState<number | null>(() => {
+    const sid = searchParams.get("session_id");
+    return sid ? parseInt(sid, 10) : null;
+  });
+  const [selectedTermId, setSelectedTermId] = useState<number | null>(() => {
+    const tid = searchParams.get("term_id");
+    return tid ? parseInt(tid, 10) : null;
+  });
   const [loadingChildren, setLoadingChildren] = useState(true);
   const [loadingSessions, setLoadingSessions] = useState(true);
   const [loadingTerms, setLoadingTerms] = useState(false);
@@ -91,6 +101,24 @@ export default function ParentAcademicResultsPage() {
   const [sessionName, setSessionName] = useState<string>("");
   const [className, setClassName] = useState<string>("");
   const [selectedTermName, setSelectedTermName] = useState<string>("");
+
+  // Update URL when filters change
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (selectedChildUuid) {
+      params.set("child_uuid", selectedChildUuid);
+    }
+    if (selectedSessionId) {
+      params.set("session_id", selectedSessionId.toString());
+    }
+    if (selectedTermId) {
+      params.set("term_id", selectedTermId.toString());
+    }
+    const newUrl = params.toString() 
+      ? `${window.location.pathname}?${params.toString()}`
+      : window.location.pathname;
+    window.history.replaceState({}, "", newUrl);
+  }, [selectedChildUuid, selectedSessionId, selectedTermId]);
 
   useEffect(() => {
     fetchChildren();

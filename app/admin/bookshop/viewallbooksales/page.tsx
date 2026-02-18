@@ -51,6 +51,8 @@ export default function ViewAllBookSalesPage() {
   const [sales, setSales] = useState<BookSale[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 20;
 
   useEffect(() => {
     fetchSales();
@@ -106,9 +108,12 @@ export default function ViewAllBookSalesPage() {
   const columns = [
     {
       title: "ID",
-      dataIndex: "id",
       key: "id",
       width: 80,
+      render: (_: any, __: any, index: number) => {
+        // Calculate sequential ID based on pagination (1, 2, 3...)
+        return (currentPage - 1) * pageSize + index + 1;
+      },
     },
     {
       title: "Student Name",
@@ -186,7 +191,9 @@ export default function ViewAllBookSalesPage() {
             columns={columns}
             rowKey="id"
             pagination={{
-              pageSize: 20,
+              pageSize: pageSize,
+              current: currentPage,
+              onChange: (page) => setCurrentPage(page),
               showSizeChanger: true,
               showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} sales records`,
             }}

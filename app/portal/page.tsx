@@ -6,8 +6,10 @@ import Hero from "./../components/Hero";
 import Section from "./../components/Section";
 import Card from "./../components/Card";
 import Link from "next/link";
+import { useSchoolProfile } from "@/app/lib/useSchoolProfile";
 
 export default function Portal() {
+  const { schoolName } = useSchoolProfile();
   return (
     <div className="min-h-screen">
       <Navigation />
@@ -16,7 +18,7 @@ export default function Portal() {
         greeting="Your Digital Gateway - Access Everything in One Place"
         title="Student & Parent Portal"
         subtitle="Access Your School Information Anytime, Anywhere"
-        description="Welcome to Elite Academy's ERP Portal - your digital gateway to quality education management. Experience seamless access to your child's education through our comprehensive online platform. Stay connected with grades, assignments, attendance, schedules, and important announcements all in one convenient system. Our user-friendly portal ensures students, parents, and teachers remain connected 24/7, enhancing the overall school experience for everyone."
+        description={`Welcome to ${schoolName}'s ERP Portal - your digital gateway to quality education management. Experience seamless access to your child's education through our comprehensive online platform. Stay connected with grades, assignments, attendance, schedules, and important announcements all in one convenient system. Our user-friendly portal ensures students, parents, and teachers remain connected 24/7, enhancing the overall school experience for everyone.`}
         imagePath="/FrontEndImages/freepik__the-style-is-candid-image-photography-with-natural__3241.png"
         simple={true}
       />

@@ -2,11 +2,15 @@
 
 import Navigation from "./../components/Navigation";
 import Footer from "./../components/Footer";
-import Hero from "./../components/Hero";
+import PlayfulHero from "./../components/PlayfulHero";
 import Section from "./../components/Section";
 import ImageGrid from "./../components/ImageGrid";
+import Image from "next/image";
+import { useSchoolProfile } from "@/app/lib/useSchoolProfile";
+import { useHomepageDarkMode } from "@/app/lib/useHomepageDarkMode";
 
 export default function Gallery() {
+  const { schoolName } = useSchoolProfile();
   const allImages = [
     { src: "/FrontEndImages/freepik__a-warm-welcoming-school-homepage-header-bright-mod__3236.png", alt: "School welcome" },
     { src: "/FrontEndImages/freepik__cinematic-documentary-photography-style-school-hom__3233.png", alt: "School campus" },
@@ -33,20 +37,59 @@ export default function Gallery() {
   const campusImages = allImages.filter((_, i) => i % 3 === 1 || i % 3 === 2);
   const activitiesImages = allImages.filter((_, i) => i % 3 === 0 || i % 3 === 2);
 
+  const { isDarkMode } = useHomepageDarkMode();
+  
   return (
-    <div className="min-h-screen">
+    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? "bg-gray-900" : "bg-white"}`}>
       <Navigation />
       
-      <Hero
-        greeting="Capturing Excellence - Moments That Define Our Journey"
+      <PlayfulHero
         title="Photo Gallery"
         subtitle="Capturing Moments of Excellence and Growth"
-        description="Welcome to Elite Academy's Photo Gallery - a visual journey showcasing our quality education and exceptional school experience. Explore our beautiful campus, witness our students in action, and see the vibrant community that makes our school a special place. Every photo tells a story of learning, growth, and achievement. Experience the moments that define excellence in education at Elite Academy."
-        imagePath="/FrontEndImages/freepik__a-warm-welcoming-school-homepage-header-bright-mod__3236.png"
-        simple={true}
+        description={`Welcome to ${schoolName}'s Photo Gallery - a visual journey showcasing our quality education and exceptional school experience. Explore our beautiful campus and vibrant community.`}
+        imageUrl="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=800&fit=crop&crop=faces"
+        gradientFrom="from-pink-600"
+        gradientTo="to-rose-500"
       />
 
-      <Section title="Campus Life" subtitle="Explore our beautiful campus and vibrant school community">
+      {/* Photo Category Section */}
+      <Section title="Photo Category" subtitle="Explore our beautiful campus and vibrant school community">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-12">
+          {/* Left Side - Circular Image */}
+          <div className="relative flex justify-center">
+            <div className="relative w-80 h-80 rounded-full overflow-hidden border-8 border-blue-100 shadow-2xl">
+              <Image
+                src={campusImages[0]?.src || allImages[0].src}
+                alt="Students"
+                fill
+                className="object-cover"
+                sizes="320px"
+                suppressHydrationWarning
+              />
+            </div>
+            <div className="absolute -top-4 -left-4 w-24 h-24 bg-pink-300 rounded-full opacity-60"></div>
+          </div>
+          
+          {/* Right Side - Category Icons */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-pink-50 rounded-2xl p-6 text-center">
+              <div className="text-4xl mb-3">👶</div>
+              <h3 className="font-bold text-gray-900">Baby Play</h3>
+            </div>
+            <div className="bg-green-50 rounded-2xl p-6 text-center">
+              <div className="text-4xl mb-3">⏰</div>
+              <h3 className="font-bold text-gray-900">Activities Classes</h3>
+            </div>
+            <div className="bg-orange-50 rounded-2xl p-6 text-center">
+              <div className="text-4xl mb-3">🎨</div>
+              <h3 className="font-bold text-gray-900">Painting</h3>
+            </div>
+            <div className="bg-blue-50 rounded-2xl p-6 text-center">
+              <div className="text-4xl mb-3">🛏️</div>
+              <h3 className="font-bold text-gray-900">Baby Sitting</h3>
+            </div>
+          </div>
+        </div>
         <ImageGrid images={campusImages.slice(0, 6)} columns={3} />
       </Section>
 

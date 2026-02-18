@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { getAuthHeaders } from "@/app/lib/auth";
 import DashboardLayout from "@/app/components/DashboardLayout";
+import { useSchoolProfile } from "@/app/lib/useSchoolProfile";
 
 interface Session {
   id: number;
@@ -91,6 +92,7 @@ interface WebhookResponse {
 }
 
 export default function ParentPayFeePage() {
+  const { schoolName } = useSchoolProfile();
   const router = useRouter();
   const [sessions, setSessions] = useState<Session[]>([]);
   const [terms, setTerms] = useState<Term[]>([]);
@@ -1003,7 +1005,7 @@ export default function ParentPayFeePage() {
               </div>
               <div style={{ paddingBottom: "12px", borderBottom: "1px solid #e8e8e8" }}>
                 <div style={{ fontSize: "12px", color: "#8c8c8c", marginBottom: "4px" }}>Account Name</div>
-                <div style={{ fontSize: "14px", fontWeight: "500", color: "#262626" }}>School Management System</div>
+                <div style={{ fontSize: "14px", fontWeight: "500", color: "#262626" }}>{schoolName}</div>
               </div>
               <div>
                 <div style={{ fontSize: "12px", color: "#8c8c8c", marginBottom: "4px" }}>Reference</div>

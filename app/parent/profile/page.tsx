@@ -64,11 +64,6 @@ export default function ParentProfilePage() {
 
       const profileData = (response.data as any).data || response.data;
       setProfile(profileData);
-      form.setFieldsValue({
-        name: profileData.name,
-        email: profileData.email,
-        phone: profileData.phone,
-      });
     } catch (err: any) {
       console.error("Error fetching profile:", err);
       setError(
@@ -169,6 +164,16 @@ export default function ParentProfilePage() {
           open={isEditModalVisible}
           onCancel={() => setIsEditModalVisible(false)}
           footer={null}
+          afterOpenChange={(open) => {
+            // Set form values when modal opens
+            if (open && profile) {
+              form.setFieldsValue({
+                name: profile.name,
+                email: profile.email,
+                phone: profile.phone,
+              });
+            }
+          }}
         >
           <Form form={form} onFinish={handleUpdate} layout="vertical">
             <Form.Item

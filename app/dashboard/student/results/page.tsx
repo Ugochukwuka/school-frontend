@@ -56,6 +56,8 @@ interface ResultsResponse {
 }
 
 export default function ResultsPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { isMobile } = useResponsive();
   const [sessions, setSessions] = useState<Session[]>([]);
   const [terms, setTerms] = useState<Term[]>([]);
@@ -63,8 +65,15 @@ export default function ResultsPage() {
   const [sessionName, setSessionName] = useState<string>("");
   const [className, setClassName] = useState<string>("");
   
-  const [selectedSessionId, setSelectedSessionId] = useState<number | null>(null);
-  const [selectedTermId, setSelectedTermId] = useState<number | null>(null);
+  // Initialize from URL params if available
+  const [selectedSessionId, setSelectedSessionId] = useState<number | null>(() => {
+    const sid = searchParams.get("session_id");
+    return sid ? parseInt(sid, 10) : null;
+  });
+  const [selectedTermId, setSelectedTermId] = useState<number | null>(() => {
+    const tid = searchParams.get("term_id");
+    return tid ? parseInt(tid, 10) : null;
+  });
   const [selectedTermName, setSelectedTermName] = useState<string>("");
   
   const [loadingSessions, setLoadingSessions] = useState(true);
@@ -91,6 +100,21 @@ export default function ResultsPage() {
   };
 
   const studentUuid = getStudentUuid();
+
+  // Update URL when filters change
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (selectedSessionId) {
+      params.set("session_id", selectedSessionId.toString());
+    }
+    if (selectedTermId) {
+      params.set("term_id", selectedTermId.toString());
+    }
+    const newUrl = params.toString() 
+      ? `${window.location.pathname}?${params.toString()}`
+      : window.location.pathname;
+    window.history.replaceState({}, "", newUrl);
+  }, [selectedSessionId, selectedTermId]);
 
   // Fetch sessions on mount
   useEffect(() => {

@@ -1,16 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import { ConfigProvider, App } from "antd";
 import "./globals.css";
+import DynamicTitle from "./components/DynamicTitle";
+import DarkModeBody from "./components/DarkModeBody";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700", "800"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -31,14 +37,17 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}
+        className={`${inter.variable} ${poppins.variable} font-sans antialiased bg-white transition-colors duration-300`}
         suppressHydrationWarning
       >
-        <ConfigProvider>
-          <App>
-            {children}
-          </App>
-        </ConfigProvider>
+        <DarkModeBody>
+          <ConfigProvider>
+            <App>
+              <DynamicTitle />
+              {children}
+            </App>
+          </ConfigProvider>
+        </DarkModeBody>
       </body>
     </html>
   );

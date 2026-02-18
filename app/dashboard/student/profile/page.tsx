@@ -75,11 +75,15 @@ export default function ProfilePage() {
   // Sync form values when profile changes (after Form has mounted)
   useEffect(() => {
     if (profile) {
-      form.setFieldsValue({
-        name: profile.name,
-        email: profile.email,
-        phone: profile.phone || "",
-      });
+      // Use setTimeout to ensure Form component is mounted
+      const timer = setTimeout(() => {
+        form.setFieldsValue({
+          name: profile.name,
+          email: profile.email,
+          phone: profile.phone || "",
+        });
+      }, 0);
+      return () => clearTimeout(timer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);

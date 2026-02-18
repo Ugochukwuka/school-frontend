@@ -238,6 +238,7 @@ export default function DashboardHeader({ role, isDarkMode = false, onDarkModeTo
 
   return (
     <div
+      suppressHydrationWarning
       style={{
         display: "flex",
         justifyContent: "space-between",
@@ -251,24 +252,24 @@ export default function DashboardHeader({ role, isDarkMode = false, onDarkModeTo
       <div style={{ flex: 1 }}></div>
 
       {/* Right side - Notifications and Profile */}
-      <Space size={isMobile ? "small" : "middle"} align="center">
-        {/* Dark Mode Toggle - Only for Student Dashboard */}
-        {role === "student" && (
-          <Button
-            type="text"
-            icon={darkMode ? <SunOutlined /> : <MoonOutlined />}
-            onClick={handleToggle}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: isMobile ? "36px" : "40px",
-              height: isMobile ? "36px" : "40px",
-              color: darkMode ? "#faad14" : "#666",
-            }}
-            title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
-          />
-        )}
+      <Space size={isMobile ? 8 : 16} align="center" wrap>
+        {/* Dark Mode Toggle - Available for all dashboards */}
+        <Button
+          type="text"
+          icon={darkMode ? <SunOutlined /> : <MoonOutlined />}
+          onClick={handleToggle}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: isMobile ? "32px" : "40px",
+            height: isMobile ? "32px" : "40px",
+            minWidth: isMobile ? "32px" : "40px",
+            padding: 0,
+            color: darkMode ? "#faad14" : "#666",
+          }}
+          title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+        />
         
         {/* Notifications */}
         <Dropdown
@@ -276,19 +277,20 @@ export default function DashboardHeader({ role, isDarkMode = false, onDarkModeTo
           placement="bottomRight"
           trigger={["click"]}
           dropdownStyle={{ 
-            width: "320px", 
+            width: isMobile ? "calc(100vw - 32px)" : "320px", 
             maxWidth: "90vw",
             borderRadius: "8px",
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
           }}
+          suppressHydrationWarning
         >
           <Button
             type="text"
             icon={
-              <Badge count={notificationCount} size="small" offset={[-5, 5]}>
+              <Badge count={notificationCount} size="small" offset={isMobile ? [-3, 3] : [-5, 5]}>
                 <BellOutlined
                   style={{
-                    fontSize: isMobile ? "18px" : "20px",
+                    fontSize: isMobile ? "16px" : "20px",
                     color: darkMode ? "#d9d9d9" : "#666",
                   }}
                 />
@@ -298,8 +300,10 @@ export default function DashboardHeader({ role, isDarkMode = false, onDarkModeTo
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              width: isMobile ? "36px" : "40px",
-              height: isMobile ? "36px" : "40px",
+              width: isMobile ? "32px" : "40px",
+              height: isMobile ? "32px" : "40px",
+              minWidth: isMobile ? "32px" : "40px",
+              padding: 0,
             }}
           />
         </Dropdown>
@@ -309,6 +313,7 @@ export default function DashboardHeader({ role, isDarkMode = false, onDarkModeTo
           menu={{ items: profileMenuItems }}
           placement="bottomRight"
           trigger={["click"]}
+          suppressHydrationWarning
         >
           <div
             style={{

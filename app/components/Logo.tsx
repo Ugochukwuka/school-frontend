@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BookOutlined } from "@ant-design/icons";
 
 interface LogoProps {
@@ -9,14 +9,39 @@ interface LogoProps {
   height?: number;
   showFallback?: boolean;
   className?: string;
+  logoPath?: string | null;
 }
 
-export default function Logo({ width = 40, height = 40, showFallback = true, className = "" }: LogoProps) {
+export default function Logo({ width = 40, height = 40, showFallback = true, className = "", logoPath }: LogoProps) {
   const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    setImageError(false);
+  }, [logoPath]);
 
   const handleImageError = () => {
     setImageError(true);
   };
+
+  // Determine the image source - use logoPath from DB if available, otherwise fallback to default
+  const getImageSrc = () => {
+    if (logoPath) {
+      // Already a full URL - use as is
+      if (logoPath.startsWith("http://") || logoPath.startsWith("https://")) {
+        return logoPath;
+      }
+      // Local public path
+      if (logoPath.startsWith("/") || logoPath.startsWith("public/")) {
+        return logoPath.startsWith("public/") ? logoPath.replace(/^public\//, "/") : logoPath;
+      }
+      // Backend storage path (e.g. school_settings/xyz.png) - use same-origin proxy for reliable loading in dashboard
+      const cleanPath = logoPath.replace(/^storage\//, "");
+      return `/storage/${cleanPath}`;
+    }
+    return "/render.png";
+  };
+
+  const imageSrc = getImageSrc();
 
   if (imageError && showFallback) {
     return (
@@ -41,23 +66,26 @@ export default function Logo({ width = 40, height = 40, showFallback = true, cla
 
   return (
     <div
-      className={className}
+      className={`${className} inline-flex items-center justify-center`}
       suppressHydrationWarning
       style={{
         position: "relative",
-        width: width,
-        height: height,
+        width: className ? undefined : width,
+        height: className ? undefined : height,
         display: "inline-flex",
         alignItems: "center",
         justifyContent: "center",
+        overflow: "hidden",
       }}
     >
       <Image
-        src="/render.png"
+        src={imageSrc}
         alt="School Logo"
         width={width}
         height={height}
-        style={{
+        suppressHydrationWarning
+        className={className ? "w-full h-full" : ""}
+        style={className ? {} : {
           objectFit: "contain",
           background: "transparent",
         }}

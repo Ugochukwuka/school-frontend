@@ -21,6 +21,8 @@ export default function AnnouncementsPage() {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
 
   useEffect(() => {
     fetchAnnouncements();
@@ -85,9 +87,12 @@ export default function AnnouncementsPage() {
   const columns = [
     {
       title: "ID",
-      dataIndex: "id",
       key: "id",
       width: 80,
+      render: (_: any, __: any, index: number) => {
+        // Calculate sequential ID based on pagination (1, 2, 3...)
+        return (currentPage - 1) * pageSize + index + 1;
+      },
     },
     {
       title: "Title",
@@ -161,7 +166,9 @@ export default function AnnouncementsPage() {
             pagination={
               announcements.length > 10
                 ? {
-                    pageSize: 10,
+                    pageSize: pageSize,
+                    current: currentPage,
+                    onChange: (page) => setCurrentPage(page),
                     showSizeChanger: true,
                     showTotal: (total) => `Total ${total} announcements`,
                   }

@@ -111,6 +111,8 @@ interface AttendanceSummaryResponse {
 }
 
 export default function AttendanceSummaryPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { isMobile } = useResponsive();
   const [sessions, setSessions] = useState<Session[]>([]);
   const [terms, setTerms] = useState<Term[]>([]);
@@ -118,9 +120,19 @@ export default function AttendanceSummaryPage() {
   const [attendanceRecords, setAttendanceRecords] = useState<AttendanceRecord[]>([]);
   const [summary, setSummary] = useState<{ present: number; absent: number; late: number; total: number } | null>(null);
   
-  const [selectedSessionId, setSelectedSessionId] = useState<number | null>(null);
-  const [selectedTermId, setSelectedTermId] = useState<number | null>(null);
-  const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
+  // Initialize from URL params if available
+  const [selectedSessionId, setSelectedSessionId] = useState<number | null>(() => {
+    const sid = searchParams.get("session_id");
+    return sid ? parseInt(sid, 10) : null;
+  });
+  const [selectedTermId, setSelectedTermId] = useState<number | null>(() => {
+    const tid = searchParams.get("term_id");
+    return tid ? parseInt(tid, 10) : null;
+  });
+  const [selectedClassId, setSelectedClassId] = useState<number | null>(() => {
+    const cid = searchParams.get("class_id");
+    return cid ? parseInt(cid, 10) : null;
+  });
   
   const [loadingSessions, setLoadingSessions] = useState(true);
   const [loadingTerms, setLoadingTerms] = useState(false);
@@ -128,6 +140,24 @@ export default function AttendanceSummaryPage() {
   const [loadingSummary, setLoadingSummary] = useState(false);
   
   const [error, setError] = useState("");
+
+  // Update URL when filters change
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (selectedSessionId) {
+      params.set("session_id", selectedSessionId.toString());
+    }
+    if (selectedTermId) {
+      params.set("term_id", selectedTermId.toString());
+    }
+    if (selectedClassId) {
+      params.set("class_id", selectedClassId.toString());
+    }
+    const newUrl = params.toString() 
+      ? `${window.location.pathname}?${params.toString()}`
+      : window.location.pathname;
+    window.history.replaceState({}, "", newUrl);
+  }, [selectedSessionId, selectedTermId, selectedClassId]);
 
   // Fetch sessions on mount
   useEffect(() => {

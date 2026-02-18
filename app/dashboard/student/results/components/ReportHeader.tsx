@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Logo from "@/app/components/Logo";
+import { useSchoolProfile } from "@/app/lib/useSchoolProfile";
 
 interface ReportHeaderProps {
   schoolName?: string;
@@ -11,18 +12,24 @@ interface ReportHeaderProps {
 }
 
 export default function ReportHeader({
-  schoolName = "SPLENDID SPRING DEMONSTRATION SCHOOLS",
-  schoolAddress = "CATHOLIC MISSION ROAD, OFFIKAKA STREET, OSUBI",
-  motto = "MOTTO: GREAT FUTURE BEGINS HERE",
+  schoolName: propSchoolName,
+  schoolAddress: propSchoolAddress,
+  motto: propMotto,
   termName = "FIRST TERM ASSESSMENT REPORT",
 }: ReportHeaderProps) {
+  const { schoolName: profileSchoolName, address: profileAddress, motto: profileMotto, logoPath } = useSchoolProfile();
+  
+  // Use props if provided, otherwise use profile data
+  const schoolName = propSchoolName || profileSchoolName || "SPLENDID SPRING DEMONSTRATION SCHOOLS";
+  const schoolAddress = propSchoolAddress || profileAddress || "CATHOLIC MISSION ROAD, OFFIKAKA STREET, OSUBI";
+  const motto = propMotto || profileMotto || "MOTTO: GREAT FUTURE BEGINS HERE";
   return (
     <div className="mb-4" style={{ color: '#000' }}>
       {/* Header Block: Logo on left, text centered */}
       <div className="flex items-start gap-4 mb-3">
         {/* Logo - Top Left, Small */}
         <div className="flex-shrink-0">
-          <Logo width={60} height={60} />
+          <Logo width={60} height={60} logoPath={logoPath} />
         </div>
         
         {/* Text Block - Centered */}

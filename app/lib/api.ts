@@ -24,7 +24,7 @@ const getBaseURL = () => {
 const api = axios.create({
   baseURL: getBaseURL(),
   withCredentials: true,
-  timeout: 10000, // 10 seconds timeout (reduced for faster feedback)
+  timeout: 30000, // 30 seconds timeout (increased for slower connections)
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
@@ -37,6 +37,10 @@ api.interceptors.request.use(
     const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+    // If data is FormData, remove Content-Type to let browser set it with boundary
+    if (config.data instanceof FormData) {
+      delete config.headers["Content-Type"];
     }
     return config;
   },

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import api from "@/app/lib/api";
 import { useResponsive } from "@/app/lib/responsive";
 import Logo from "@/app/components/Logo";
+import { useSchoolProfile } from "@/app/lib/useSchoolProfile";
 
 const { Title, Text } = Typography;
 
@@ -26,6 +27,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [form] = Form.useForm();
   const { isMobile } = useResponsive();
+  const { schoolName, logoPath } = useSchoolProfile();
 
   const onFinish = async (values: { email: string; password: string }) => {
     setLoading(true);
@@ -61,10 +63,17 @@ export default function LoginPage() {
       // Error details are already logged by the API interceptor in app/lib/api.ts
       // Only log a brief summary here if needed for debugging
       if (process.env.NODE_ENV === "development" && err.response) {
-        const errorMsg = err.response.data?.message || err.response.data?.error || "Unknown error";
-        // Only log if it's not a database connection error (those are handled below)
-        if (!errorMsg.toLowerCase().includes("sqlstate") && !errorMsg.toLowerCase().includes("connection")) {
-          console.error("Login error:", err.response.status, errorMsg);
+        const responseData = err.response.data;
+        const errorMsg = responseData?.message || responseData?.error || responseData?.detail || 
+                        (typeof responseData === "string" ? responseData : null) || "Unknown error";
+        // Don't log 401 (invalid credentials) - expected user error; log 500 and other server errors only
+        const status = err.response.status;
+        if (status !== 401 && !errorMsg.toLowerCase().includes("sqlstate") && !errorMsg.toLowerCase().includes("connection")) {
+          if (status === 500 && responseData) {
+            console.error("Login error (500):", JSON.stringify(responseData, null, 2));
+          } else {
+            console.error("Login error:", status, errorMsg);
+          }
         }
       }
       
@@ -78,8 +87,8 @@ export default function LoginPage() {
         
         if (status === 500) {
           // Check if it's a database connection error
-          const errorText = (responseData?.message || responseData?.error || "").toLowerCase();
-          const fullErrorText = (responseData?.message || responseData?.error || "");
+          const errorText = (responseData?.message || responseData?.error || responseData?.detail || "").toLowerCase();
+          const fullErrorText = (responseData?.message || responseData?.error || responseData?.detail || "");
           
           // Detect MySQL/database connection errors
           if (errorText.includes("sqlstate") || 
@@ -94,8 +103,11 @@ export default function LoginPage() {
                           "and verify your backend database configuration. " +
                           "The backend server is running, but the database is not accessible.";
           } else {
+            // Try to extract a meaningful error message from various possible response formats
             errorMessage = responseData?.message || 
                           responseData?.error || 
+                          responseData?.detail ||
+                          (typeof responseData === "string" ? responseData : null) ||
                           "Server error. Please try again later or contact support.";
           }
         } else if (status === 401) {
@@ -209,13 +221,14 @@ export default function LoginPage() {
               width={isMobile ? 80 : 100}
               height={isMobile ? 80 : 100}
               showFallback={true}
+              logoPath={logoPath}
             />
           </div>
           <Title level={isMobile ? 3 : 2} style={{ margin: 0, marginBottom: "8px", color: "#1a1a1a" }}>
             Welcome Back
           </Title>
           <Text type="secondary" style={{ fontSize: isMobile ? "14px" : "16px" }}>
-            Sign in to your School Management account
+            Sign in to your {schoolName} account
           </Text>
         </div>
 

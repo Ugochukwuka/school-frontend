@@ -2,37 +2,90 @@
 
 import Navigation from "./../components/Navigation";
 import Footer from "./../components/Footer";
-import Hero from "./../components/Hero";
+import PlayfulHero from "./../components/PlayfulHero";
 import Section from "./../components/Section";
+import ColorfulSection from "./../components/ColorfulSection";
+import TeamCarousel from "./../components/TeamCarousel";
 import Card from "./../components/Card";
+import Image from "next/image";
+import { useSchoolProfile } from "@/app/lib/useSchoolProfile";
 
 export default function Secondary() {
+  const { schoolName } = useSchoolProfile();
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
       <Navigation />
       
-      <Hero
-        greeting="Preparing for Success - Your Path to University and Beyond"
+      <PlayfulHero
         title="Secondary Education"
         subtitle="Preparing for Success, Grades 7-12"
-        description="Welcome to Elite Academy's Secondary Education Program - where quality education prepares students for university and beyond. Experience excellence through our rigorous academic programs designed for Grades 7-12. We empower students to excel academically and personally with specialized tracks, advanced courses, and comprehensive college preparation. Our exceptional school experience ensures every student is ready to make their mark on the world and achieve their highest aspirations."
-        imagePath="/FrontEndImages/freepik__35mm-film-photography-modern-elite-secondary-schoo__3235.png"
-        simple={true}
+        description={`Welcome to ${schoolName}'s Secondary Education Program - where quality education prepares students for university and beyond. Experience excellence through our rigorous academic programs.`}
+        ctaText="Explore Programs"
+        ctaLink="/academics"
+        imageUrl="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&h=800&fit=crop&crop=faces"
+        gradientFrom="from-indigo-600"
+        gradientTo="to-purple-500"
       />
 
-      <Section title="Secondary School Program" subtitle="Rigorous academics, specialized tracks, and college preparation">
-        <div className="max-w-4xl mx-auto">
-          <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-            Our Secondary program prepares students for higher education and future careers through
-            a challenging curriculum, specialized subject tracks, and comprehensive support services.
-            We focus on developing critical thinking, research skills, and independence while
-            maintaining strong values and character.
-          </p>
-          <p className="text-lg text-gray-600 leading-relaxed">
-            With experienced faculty, modern facilities, and a track record of academic excellence,
-            we ensure every student is well-prepared for their next steps in life.
-          </p>
+      {/* Certificate Section */}
+      <Section title="Proactively Incentivize User-Centric Quality Vectors">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          {/* Left Side - Text */}
+          <div>
+            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
+              Proactively incentivize user-centric quality vectors without interactive action items.
+            </h3>
+            <p className="text-gray-600 mb-4 leading-relaxed">
+              Our Secondary program prepares students for higher education and future careers through
+              a challenging curriculum, specialized subject tracks, and comprehensive support services.
+              We focus on developing critical thinking, research skills, and independence.
+            </p>
+            <p className="text-gray-600 leading-relaxed">
+              With experienced faculty, modern facilities, and a track record of academic excellence,
+              we ensure every student is well-prepared for their next steps in life.
+            </p>
+          </div>
+          
+          {/* Right Side - Certificate Image */}
+          <div className="relative">
+            <div className="relative w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-blue-50 to-indigo-50 p-8 flex items-center justify-center">
+              <div className="text-center">
+                <div className="text-4xl font-bold text-blue-600 mb-4">CERTIFICATE OF APPRECIATION</div>
+                <div className="text-2xl text-gray-700 mb-2">Name Surname</div>
+                <div className="text-xl text-gray-600 mb-6">2023 AWARD</div>
+                <div className="w-24 h-24 mx-auto bg-yellow-400 rounded-full flex items-center justify-center text-4xl">
+                  🏆
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </Section>
+
+      {/* Our Team Section */}
+      <Section title="Our Team" subtitle="Meet our experienced secondary educators">
+        <TeamCarousel
+          members={[
+            {
+              name: "Robert Martinez",
+              role: "Science Specialist",
+              imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=faces",
+              bgColor: "bg-yellow-400",
+            },
+            {
+              name: "Jennifer Lee",
+              role: "Mathematics Teacher",
+              imageUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop&crop=faces",
+              bgColor: "bg-pink-400",
+            },
+            {
+              name: "Mark Stevens",
+              role: "English Literature Teacher",
+              imageUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop&crop=faces",
+              bgColor: "bg-blue-400",
+            },
+          ]}
+        />
       </Section>
 
       <Section bgColor="gray" title="Academic Tracks">

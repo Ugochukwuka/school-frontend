@@ -2,26 +2,84 @@
 
 import Navigation from "./../components/Navigation";
 import Footer from "./../components/Footer";
-import Hero from "./../components/Hero";
+import PlayfulHero from "./../components/PlayfulHero";
 import Section from "./../components/Section";
+import ColorfulSection from "./../components/ColorfulSection";
 import Card from "./../components/Card";
 import Image from "next/image";
+import { useSchoolProfile } from "@/app/lib/useSchoolProfile";
+import { useHomepageDarkMode } from "@/app/lib/useHomepageDarkMode";
 
 export default function News() {
+  const { schoolName } = useSchoolProfile();
+  const { isDarkMode } = useHomepageDarkMode();
   return (
-    <div className="min-h-screen">
+    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? "bg-gray-900" : "bg-white"}`}>
       <Navigation />
       
-      <Hero
-        greeting="Stay Connected - Latest Updates from Our Community"
+      <PlayfulHero
         title="News & Announcements"
         subtitle="Stay Updated with Latest School News and Events"
-        description="Welcome to Elite Academy's News & Announcements - your source for the latest updates on our quality education programs and school events. Keep up with everything happening at Elite Academy, from exciting events and student achievements to important announcements and updates. Stay connected with our vibrant school community and never miss a moment of what makes our exceptional school experience special."
-        imagePath="/FrontEndImages/freepik__the-style-is-candid-image-photography-with-natural__3237.png"
-        simple={true}
+        description={`Welcome to ${schoolName}'s News & Announcements - your source for the latest updates on our quality education programs and school events. Stay connected with our vibrant school community.`}
+        imageUrl="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&h=800&fit=crop&crop=faces"
+        gradientFrom="from-violet-600"
+        gradientTo="to-purple-500"
       />
 
-      <Section title="Latest News & Updates" subtitle="Stay informed about everything happening at Elite Academy">
+      {/* Online Education Section */}
+      <Section title="Online Education" subtitle="Learn from leading universities and companies">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-12">
+          {/* Left Side - Text */}
+          <div>
+            <div className="text-4xl mb-4">🌈</div>
+            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+              Learn from leading universities and companies
+            </h3>
+            <p className="text-gray-600 leading-relaxed mb-6">
+              Our online education platform provides flexible learning options for students who need
+              additional support or want to explore advanced topics. Access quality educational content
+              from leading institutions and industry experts.
+            </p>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="bg-blue-100 rounded-xl p-4 text-center">
+                <div className="text-2xl font-bold text-blue-600">13+</div>
+                <div className="text-sm text-gray-700">Courses</div>
+              </div>
+              <div className="bg-indigo-100 rounded-xl p-4 text-center">
+                <div className="text-2xl font-bold text-indigo-600">13+</div>
+                <div className="text-sm text-gray-700">Certificates</div>
+              </div>
+              <div className="bg-purple-100 rounded-xl p-4 text-center">
+                <div className="text-2xl font-bold text-purple-600">10+</div>
+                <div className="text-sm text-gray-700">Master's</div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Right Side - Image */}
+          <div className="relative">
+            <div className="relative w-full h-96 lg:h-[500px] rounded-3xl overflow-hidden shadow-2xl">
+              <Image
+                src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&h=600&fit=crop"
+                alt="Video call interface - online learning"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                suppressHydrationWarning
+              />
+              {/* Overlay with time display */}
+              <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-sm text-white px-4 py-2 rounded-lg">
+                <div className="text-sm font-medium">Video Call Interface</div>
+                <div className="text-xs text-gray-300 mt-1">13:20</div>
+              </div>
+              {/* Gradient overlay for better text visibility */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+            </div>
+          </div>
+        </div>
+      </Section>
+
+      <Section title="Latest News & Updates" subtitle={`Stay informed about everything happening at ${schoolName}`}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <Card
             title="Admissions Open for 2024-2025 Academic Year"
@@ -182,26 +240,6 @@ export default function News() {
                 </p>
               </div>
             </div>
-          </div>
-        </div>
-      </Section>
-
-      <Section bgColor="gray" title="Newsletter">
-        <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
-          <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Subscribe to Our Newsletter</h3>
-          <p className="text-gray-600 text-center mb-6">
-            Stay informed about school news, events, and important announcements delivered
-            directly to your inbox.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <input
-              type="email"
-              placeholder="Enter your email address"
-              className="flex-grow px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-            <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-200">
-              Subscribe
-            </button>
           </div>
         </div>
       </Section>

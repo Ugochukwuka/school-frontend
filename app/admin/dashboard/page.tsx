@@ -141,23 +141,36 @@ export default function AdminDashboard() {
 
   return (
     <DashboardLayout role="admin">
-      <Title level={1} style={{ marginBottom: "24px", fontSize: isMobile ? "24px" : "28px" }}>
-        Admin Dashboard
-      </Title>
+      <div style={{ minWidth: 0, maxWidth: "100%", overflowX: "visible" }}>
+        <Title
+          level={1}
+          style={{
+            marginBottom: isMobile ? 16 : 24,
+            marginLeft: 0,
+            paddingLeft: 0,
+            fontSize: isMobile ? "22px" : "28px",
+            lineHeight: 1.3,
+            wordBreak: "break-word",
+            overflowWrap: "break-word",
+            maxWidth: "100%",
+          }}
+        >
+          Admin Dashboard
+        </Title>
 
-      {error && (
-        <Alert
-          message={error}
-          type="error"
-          showIcon
-          closable
-          onClose={() => setError("")}
-          style={{ marginBottom: 24 }}
-        />
-      )}
+        {error && (
+          <Alert
+            title={error}
+            type="error"
+            showIcon
+            closable
+            onClose={() => setError("")}
+            style={{ marginBottom: isMobile ? 16 : 24 }}
+          />
+        )}
 
-      {/* Statistics Cards */}
-      <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
+        {/* Statistics Cards */}
+        <Row gutter={[isMobile ? 12 : 16, isMobile ? 12 : 16]} style={{ marginBottom: isMobile ? 16 : 24 }}>
         {statCards.map((stat, index) => (
           <Col xs={24} sm={12} md={8} lg={8} xl={8} key={index}>
             <Link href={stat.link}>
@@ -171,18 +184,31 @@ export default function AdminDashboard() {
                   transition: "all 0.3s ease",
                   boxShadow: "none",
                 }}
-                styles={{ body: { padding: "24px" } }}
+                styles={{ body: { padding: isMobile ? "16px" : "24px" } }}
               >
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <div style={{ flex: 1 }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
+                  <div style={{ flex: 1, minWidth: isMobile ? "100%" : "auto" }}>
                     <Statistic
                       title={stat.title}
                       value={stat.value}
                       prefix={stat.prefix}
-                      styles={{ content: { color: stat.color, fontSize: "28px", fontWeight: "bold" } }}
+                      styles={{ 
+                        content: { 
+                          color: stat.color, 
+                          fontSize: isMobile ? "20px" : "28px", 
+                          fontWeight: "bold" 
+                        },
+                        title: {
+                          fontSize: isMobile ? "12px" : "14px"
+                        }
+                      }}
                     />
                   </div>
-                  <div style={{ marginLeft: "16px" }}>{stat.icon}</div>
+                  <div style={{ marginLeft: isMobile ? "0" : "16px", flexShrink: 0 }}>
+                    <div style={{ fontSize: isMobile ? "24px" : "32px" }}>
+                      {stat.icon}
+                    </div>
+                  </div>
                 </div>
               </Card>
             </Link>
@@ -190,12 +216,12 @@ export default function AdminDashboard() {
         ))}
       </Row>
 
-      {/* Quick Links Section */}
-      <Title level={4} style={{ marginBottom: "16px", fontSize: "18px" }}>
-        Quick Actions
-      </Title>
+        {/* Quick Links Section */}
+        <Title level={4} style={{ marginBottom: isMobile ? 12 : 16, fontSize: isMobile ? 16 : 18 }}>
+          Quick Actions
+        </Title>
 
-      <Row gutter={[16, 16]}>
+        <Row gutter={[isMobile ? 12 : 16, isMobile ? 12 : 16]}>
         <Col xs={24} sm={12} md={8} lg={6}>
           <Link href="/admin/students/add">
             <Card hoverable style={{ borderRadius: "8px", height: "100%", textAlign: "center", boxShadow: "none" }}>
@@ -239,7 +265,8 @@ export default function AdminDashboard() {
             </Card>
           </Link>
         </Col>
-      </Row>
+        </Row>
+      </div>
     </DashboardLayout>
   );
 }

@@ -96,7 +96,7 @@ body {
 .doc-wrapper {
     display: flex;
     flex: 1;
-    overflow: hidden;
+    overflow: visible;
 }
 
 /* Sidebar */
@@ -107,6 +107,10 @@ body {
     overflow-y: auto;
     transition: transform var(--transition);
     border-right: 1px solid var(--border-color);
+    position: sticky;
+    top: 73px;
+    height: calc(100vh - 73px);
+    align-self: flex-start;
 }
 
 .sidebar::-webkit-scrollbar {

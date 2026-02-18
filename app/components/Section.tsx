@@ -8,7 +8,7 @@ interface SectionProps {
   className?: string;
   title?: string;
   subtitle?: string;
-  bgColor?: "white" | "gray" | "blue";
+  bgColor?: "white" | "gray" | "blue" | "dark";
   id?: string;
 }
 
@@ -32,6 +32,7 @@ function Section({
     white: "bg-white",
     gray: "bg-gray-50",
     blue: "bg-blue-50",
+    dark: "bg-white",
   };
 
   const sectionId = id || (title ? title.toLowerCase().replace(/\s+/g, '-') : undefined);
@@ -47,12 +48,12 @@ function Section({
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {(title || subtitle) && (
-          <header className="text-center mb-10 sm:mb-12">
+          <header className="text-center mb-8 sm:mb-10 md:mb-12">
             <div className="flex flex-col items-center">
               {title && (
                 <h2 
                   id={`section-${sectionId}`}
-                  className={`text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 transition-all duration-500 delay-200 ease-out ${
+                  className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold ${subtitle ? 'mb-4 sm:mb-6 md:mb-8 lg:mb-10' : ''} transition-all duration-500 delay-200 ease-out text-gray-900 ${
                     isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                   }`}
                 >
@@ -61,7 +62,7 @@ function Section({
               )}
               {subtitle && (
                 <p 
-                  className={`text-base sm:text-base md:text-lg lg:text-xl text-gray-600 max-w-sm sm:max-w-2xl md:max-w-3xl lg:max-w-4xl text-center leading-relaxed transition-all duration-500 delay-300 ease-out px-2 ${
+                  className={`text-base sm:text-lg md:text-xl lg:text-2xl font-medium max-w-xs sm:max-w-2xl md:max-w-3xl lg:max-w-4xl text-center leading-relaxed transition-all duration-500 delay-300 ease-out px-2 sm:px-4 text-gray-900 ${
                     isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                   }`}
                 >

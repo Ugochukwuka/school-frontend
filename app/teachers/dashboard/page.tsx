@@ -111,60 +111,78 @@ export default function TeacherDashboard() {
 
   return (
     <DashboardLayout role="teacher">
-      <Title level={1} style={{ marginBottom: "24px", fontSize: isMobile ? "24px" : "28px" }}>
-        Teacher Dashboard
-      </Title>
+      <div style={{ minWidth: 0, maxWidth: "100%", overflowX: "visible" }}>
+        <Title
+          level={1}
+          style={{
+            marginBottom: isMobile ? 16 : 24,
+            marginLeft: 0,
+            paddingLeft: 0,
+            fontSize: isMobile ? "22px" : "28px",
+            lineHeight: 1.3,
+            wordBreak: "break-word",
+            overflowWrap: "break-word",
+            maxWidth: "100%",
+          }}
+        >
+          Teacher Dashboard
+        </Title>
 
-      {error && (
-        <Alert
-          message={error}
-          type="error"
-          showIcon
-          closable
-          onClose={() => setError("")}
-          style={{ marginBottom: 24 }}
-        />
-      )}
+        {error && (
+          <Alert
+            title={error}
+            type="error"
+            showIcon
+            closable
+            onClose={() => setError("")}
+            style={{ marginBottom: isMobile ? 16 : 24 }}
+          />
+        )}
 
-      {/* Statistics Cards */}
-      <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
-        {statCards.map((stat, index) => (
-          <Col xs={24} sm={12} md={8} lg={8} xl={8} key={index}>
-            <Link href={stat.link}>
-              <Card
-                hoverable
-                style={{
-                  borderRadius: "12px",
-                  height: "100%",
-                  border: `1px solid ${stat.color}20`,
-                  background: `linear-gradient(135deg, ${stat.color}10 0%, ${stat.color}05 100%)`,
-                  transition: "all 0.3s ease",
-                  boxShadow: "none",
-                }}
-                styles={{ body: { padding: "24px" } }}
-              >
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <div style={{ flex: 1 }}>
-                    <Statistic
-                      title={stat.title}
-                      value={stat.value}
-                      styles={{ content: { color: stat.color, fontSize: "28px", fontWeight: "bold" } }}
-                    />
+        {/* Statistics Cards */}
+        <Row gutter={[isMobile ? 12 : 16, isMobile ? 12 : 16]} style={{ marginBottom: isMobile ? 16 : 24 }}>
+          {statCards.map((stat, index) => (
+            <Col xs={24} sm={12} md={8} lg={8} xl={8} key={index}>
+              <Link href={stat.link} style={{ display: "block" }}>
+                <Card
+                  hoverable
+                  style={{
+                    borderRadius: "12px",
+                    height: "100%",
+                    border: `1px solid ${stat.color}20`,
+                    background: `linear-gradient(135deg, ${stat.color}10 0%, ${stat.color}05 100%)`,
+                    transition: "all 0.3s ease",
+                    boxShadow: "none",
+                  }}
+                  styles={{ body: { padding: isMobile ? 16 : 24 } }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <Statistic
+                        title={stat.title}
+                        value={stat.value}
+                        styles={{
+                          content: { color: stat.color, fontSize: isMobile ? 20 : 28, fontWeight: "bold" },
+                          title: { fontSize: isMobile ? 12 : 14 },
+                        }}
+                      />
+                    </div>
+                    <div style={{ marginLeft: isMobile ? 0 : 16, flexShrink: 0 }}>
+                      <span style={{ fontSize: isMobile ? 24 : 32 }}>{stat.icon}</span>
+                    </div>
                   </div>
-                  <div style={{ marginLeft: "16px" }}>{stat.icon}</div>
-                </div>
-              </Card>
-            </Link>
-          </Col>
-        ))}
-      </Row>
+                </Card>
+              </Link>
+            </Col>
+          ))}
+        </Row>
 
-      {/* Quick Links Section */}
-      <Title level={4} style={{ marginBottom: "16px", fontSize: "18px" }}>
-        Quick Actions
-      </Title>
+        {/* Quick Links Section */}
+        <Title level={4} style={{ marginBottom: isMobile ? 12 : 16, fontSize: isMobile ? 16 : 18 }}>
+          Quick Actions
+        </Title>
 
-      <Row gutter={[16, 16]}>
+        <Row gutter={[isMobile ? 12 : 16, isMobile ? 12 : 16]}>
         <Col xs={24} sm={12} md={8} lg={6}>
           <Link href="/teachers/attendance">
             <Card hoverable style={{ borderRadius: "8px", height: "100%", textAlign: "center", boxShadow: "none" }}>
@@ -208,7 +226,8 @@ export default function TeacherDashboard() {
             </Card>
           </Link>
         </Col>
-      </Row>
+        </Row>
+      </div>
     </DashboardLayout>
   );
 }

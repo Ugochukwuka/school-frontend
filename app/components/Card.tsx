@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useCallback, memo, useMemo } from "react";
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
+import { useHomepageDarkMode } from "../lib/useHomepageDarkMode";
 
 interface CardProps {
   title: string;
@@ -42,6 +43,7 @@ function Card({
     rootMargin: "50px",
     triggerOnce: true 
   });
+  const { isDarkMode } = useHomepageDarkMode();
   
   const getAnimationClasses = () => {
     if (!isVisible) {
@@ -73,7 +75,7 @@ function Card({
   const content = (
     <article
       ref={ref}
-      className={`bg-white rounded-lg overflow-hidden group cursor-pointer transform transition-all duration-500 ease-out hover:-translate-y-2 focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 shadow-md ${getAnimationClasses()} ${className}`}
+      className={`${isDarkMode ? "bg-gray-800" : "bg-white"} rounded-lg overflow-hidden group cursor-pointer transform transition-all duration-500 ease-out hover:-translate-y-2 focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 shadow-md ${getAnimationClasses()} ${className}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       role={link ? "article" : undefined}
@@ -98,7 +100,13 @@ function Card({
               isHovered ? "scale-110" : "scale-100"
             } ${imageLoaded ? "opacity-100" : "opacity-0"}`}
             onLoad={handleImageLoad}
+            onError={(e) => {
+              console.error("Image failed to load:", imagePath, e);
+              // Try to set a fallback or handle error
+            }}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            suppressHydrationWarning
+            unoptimized={imagePath?.startsWith("http://") || imagePath?.startsWith("https://")}
           />
           <div
             className={`absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent transition-opacity duration-300 ${
@@ -110,14 +118,18 @@ function Card({
       )}
       <div className={`${imagePath ? "p-5 sm:p-6" : "p-6 sm:p-8"}`}>
         <h3
-          className={`text-lg sm:text-xl font-bold text-gray-900 mb-3 transition-colors duration-300 ${
+          className={`text-lg sm:text-xl font-bold mb-3 transition-colors duration-300 ${
+            isDarkMode ? "text-white" : "text-gray-900"
+          } ${
             isHovered ? "text-blue-600" : ""
           }`}
         >
           {title}
         </h3>
         {description && (
-          <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-4">{description}</p>
+          <p className={`text-sm sm:text-base leading-relaxed mb-4 ${
+            isDarkMode ? "text-gray-300" : "text-gray-600"
+          }`}>{description}</p>
         )}
         {link && (
           <div
@@ -135,6 +147,7 @@ function Card({
               stroke="currentColor"
               viewBox="0 0 24 24"
               aria-hidden="true"
+              suppressHydrationWarning
             >
               <path
                 strokeLinecap="round"

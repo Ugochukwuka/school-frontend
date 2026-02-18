@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card, Spin, Alert, Select, Table, Space, Tabs, Button, Modal, Form, InputNumber, Checkbox, message } from "antd";
 import { DownloadOutlined, DollarOutlined } from "@ant-design/icons";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { getAuthHeaders } from "@/app/lib/auth";
 import DashboardLayout from "@/app/components/DashboardLayout";
@@ -142,17 +142,32 @@ interface PaymentResponse {
 
 export default function ParentFeesPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [children, setChildren] = useState<Child[]>([]);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [terms, setTerms] = useState<Term[]>([]);
   const [studentClass, setStudentClass] = useState<Class | null>(null);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [obligations, setObligations] = useState<FeeObligation[]>([]);
-  const [selectedChildUuid, setSelectedChildUuid] = useState<string | null>(null);
-  const [selectedSessionId, setSelectedSessionId] = useState<number | null>(null);
-  const [selectedTermId, setSelectedTermId] = useState<number | null>(null);
-  const [classId, setClassId] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState("history");
+  // Initialize from URL params if available
+  const [selectedChildUuid, setSelectedChildUuid] = useState<string | null>(() => {
+    return searchParams.get("child_uuid");
+  });
+  const [selectedSessionId, setSelectedSessionId] = useState<number | null>(() => {
+    const sid = searchParams.get("session_id");
+    return sid ? parseInt(sid, 10) : null;
+  });
+  const [selectedTermId, setSelectedTermId] = useState<number | null>(() => {
+    const tid = searchParams.get("term_id");
+    return tid ? parseInt(tid, 10) : null;
+  });
+  const [classId, setClassId] = useState<number | null>(() => {
+    const cid = searchParams.get("class_id");
+    return cid ? parseInt(cid, 10) : null;
+  });
+  const [activeTab, setActiveTab] = useState<string>(() => {
+    return searchParams.get("tab") || "history";
+  });
   const [loadingChildren, setLoadingChildren] = useState(true);
   const [loadingSessions, setLoadingSessions] = useState(true);
   const [loadingTerms, setLoadingTerms] = useState(false);
@@ -164,6 +179,30 @@ export default function ParentFeesPage() {
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [selectedFees, setSelectedFees] = useState<Record<number, number>>({});
   const [form] = Form.useForm();
+
+  // Update URL when filters change
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (selectedChildUuid) {
+      params.set("child_uuid", selectedChildUuid);
+    }
+    if (selectedSessionId) {
+      params.set("session_id", selectedSessionId.toString());
+    }
+    if (selectedTermId) {
+      params.set("term_id", selectedTermId.toString());
+    }
+    if (classId) {
+      params.set("class_id", classId.toString());
+    }
+    if (activeTab && activeTab !== "history") {
+      params.set("tab", activeTab);
+    }
+    const newUrl = params.toString() 
+      ? `${window.location.pathname}?${params.toString()}`
+      : window.location.pathname;
+    window.history.replaceState({}, "", newUrl);
+  }, [selectedChildUuid, selectedSessionId, selectedTermId, classId, activeTab]);
 
   useEffect(() => {
     fetchChildren();
@@ -853,7 +892,7 @@ export default function ParentFeesPage() {
                       size="small"
                       style={{ marginBottom: 12 }}
                     >
-                      <Space direction="vertical" style={{ width: "100%" }}>
+                      <Space orientation="vertical" style={{ width: "100%" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                           <Checkbox
                             checked={selectedFees[obligation.fee_id] !== undefined && selectedFees[obligation.fee_id] > 0}

@@ -20,7 +20,7 @@ import axios from "axios";
 import { getAuthHeaders } from "@/app/lib/auth";
 import DashboardLayout from "@/app/components/DashboardLayout";
 import { useResponsive } from "@/app/lib/responsive";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -115,6 +115,7 @@ interface SubjectsResponse {
 
 export default function EnterScoresPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { isMobile } = useResponsive();
   const [sessions, setSessions] = useState<Session[]>([]);
   const [terms, setTerms] = useState<Term[]>([]);
@@ -122,10 +123,23 @@ export default function EnterScoresPage() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
   
-  const [selectedSessionId, setSelectedSessionId] = useState<number | null>(null);
-  const [selectedTermId, setSelectedTermId] = useState<number | null>(null);
-  const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
-  const [selectedSubjectId, setSelectedSubjectId] = useState<number | null>(null);
+  // Initialize from URL params if available
+  const [selectedSessionId, setSelectedSessionId] = useState<number | null>(() => {
+    const sid = searchParams.get("session_id");
+    return sid ? parseInt(sid, 10) : null;
+  });
+  const [selectedTermId, setSelectedTermId] = useState<number | null>(() => {
+    const tid = searchParams.get("term_id");
+    return tid ? parseInt(tid, 10) : null;
+  });
+  const [selectedClassId, setSelectedClassId] = useState<number | null>(() => {
+    const cid = searchParams.get("class_id");
+    return cid ? parseInt(cid, 10) : null;
+  });
+  const [selectedSubjectId, setSelectedSubjectId] = useState<number | null>(() => {
+    const subId = searchParams.get("subject_id");
+    return subId ? parseInt(subId, 10) : null;
+  });
   
   const [scores, setScores] = useState<Record<string, StudentScore>>({});
   
@@ -139,6 +153,27 @@ export default function EnterScoresPage() {
   const [cooldownTimer, setCooldownTimer] = useState<NodeJS.Timeout | null>(null);
   
   const [error, setError] = useState("");
+
+  // Update URL when filters change
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (selectedSessionId) {
+      params.set("session_id", selectedSessionId.toString());
+    }
+    if (selectedTermId) {
+      params.set("term_id", selectedTermId.toString());
+    }
+    if (selectedClassId) {
+      params.set("class_id", selectedClassId.toString());
+    }
+    if (selectedSubjectId) {
+      params.set("subject_id", selectedSubjectId.toString());
+    }
+    const newUrl = params.toString() 
+      ? `${window.location.pathname}?${params.toString()}`
+      : window.location.pathname;
+    window.history.replaceState({}, "", newUrl);
+  }, [selectedSessionId, selectedTermId, selectedClassId, selectedSubjectId]);
 
   // Fetch sessions on mount
   useEffect(() => {

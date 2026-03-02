@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Form, Input, Button, Card, Select, InputNumber, Alert, Spin, message } from "antd";
+import { Form, Input, Button, Card, Select, InputNumber, Alert, Spin, App } from "antd";
 import axios from "axios";
 import { getAuthHeaders } from "@/app/lib/auth";
 import DashboardLayout from "@/app/components/DashboardLayout";
@@ -46,6 +46,7 @@ interface FeeCreateResponse {
 }
 
 export default function AddFeePage() {
+  const { message } = App.useApp();
   const [form] = Form.useForm();
   const router = useRouter();
   const [sessions, setSessions] = useState<Session[]>([]);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Spin, Alert, Descriptions, Button, Form, Input, Modal, message } from "antd";
+import { Card, Spin, Alert, Descriptions, Button, Form, Input, Modal, App } from "antd";
 import { EditOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -32,6 +32,7 @@ interface UpdateProfileResponse {
 }
 
 export default function AdminProfilePage() {
+  const { message } = App.useApp();
   const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);

@@ -166,23 +166,32 @@ export default function ParentAcademicResultsPage() {
     setError("");
 
     try {
-      const response = await axios.get<ApiResponse>(
-        `http://127.0.0.1:8000/api/parent/children`,
-        getAuthHeaders()
-      );
+      const allChildren: Child[] = [];
+      let page = 1;
+      let lastPage = 1;
 
-      let childrenData: Child[] = [];
-      if (Array.isArray(response.data)) {
-        childrenData = response.data;
-      } else if (response.data.data && Array.isArray(response.data.data)) {
-        childrenData = response.data.data;
-      } else if ((response.data as any).children && Array.isArray((response.data as any).children)) {
-        childrenData = (response.data as any).children;
-      }
+      do {
+        const response = await axios.get<ApiResponse>(
+          `http://127.0.0.1:8000/api/parent/children?page=${page}`,
+          getAuthHeaders()
+        );
 
-      setChildren(childrenData);
-      if (childrenData.length === 1) {
-        setSelectedChildUuid(childrenData[0].uuid);
+        let childrenData: Child[] = [];
+        if (Array.isArray(response.data)) {
+          childrenData = response.data;
+        } else if (response.data.data && Array.isArray(response.data.data)) {
+          childrenData = response.data.data;
+          lastPage = response.data.last_page ?? 1;
+        } else if ((response.data as any).children && Array.isArray((response.data as any).children)) {
+          childrenData = (response.data as any).children;
+        }
+        allChildren.push(...childrenData);
+        page++;
+      } while (page <= lastPage);
+
+      setChildren(allChildren);
+      if (allChildren.length === 1) {
+        setSelectedChildUuid(allChildren[0].uuid);
       }
     } catch (err: any) {
       console.error("Error fetching children:", err);

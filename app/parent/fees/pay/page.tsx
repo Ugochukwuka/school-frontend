@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Select, Alert, Spin, message, Table, Button, InputNumber, Checkbox, Form, Modal } from "antd";
+import { Card, Select, Alert, Spin, App, Table, Button, InputNumber, Checkbox, Form, Modal } from "antd";
 import { DollarOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -92,6 +92,7 @@ interface WebhookResponse {
 }
 
 export default function ParentPayFeePage() {
+  const { message } = App.useApp();
   const { schoolName } = useSchoolProfile();
   const router = useRouter();
   const [sessions, setSessions] = useState<Session[]>([]);
@@ -280,26 +281,35 @@ export default function ParentPayFeePage() {
     setError("");
 
     try {
-      const response = await axios.get<ChildrenResponse>(
-        "http://127.0.0.1:8000/api/parent/children",
-        getAuthHeaders()
-      );
+      const allChildren: Child[] = [];
+      let page = 1;
+      let lastPage = 1;
 
-      let childrenData: Child[] = [];
-      if (Array.isArray(response.data)) {
-        childrenData = response.data;
-      } else if (response.data?.data && Array.isArray(response.data.data)) {
-        childrenData = response.data.data;
-      } else if ((response.data as any).children && Array.isArray((response.data as any).children)) {
-        childrenData = (response.data as any).children;
-      }
+      do {
+        const response = await axios.get<ChildrenResponse>(
+          `http://127.0.0.1:8000/api/parent/children?page=${page}`,
+          getAuthHeaders()
+        );
 
-      const mappedChildren = childrenData.map((child: any) => ({
-        ...child,
-        class_name: child.class?.full_name || child.class_name || "N/A",
-      }));
+        let childrenData: Child[] = [];
+        if (Array.isArray(response.data)) {
+          childrenData = response.data;
+        } else if (response.data?.data && Array.isArray(response.data.data)) {
+          childrenData = response.data.data;
+          lastPage = response.data.last_page ?? 1;
+        } else if ((response.data as any).children && Array.isArray((response.data as any).children)) {
+          childrenData = (response.data as any).children;
+        }
 
-      setChildren(mappedChildren);
+        const mapped = childrenData.map((child: any) => ({
+          ...child,
+          class_name: child.class?.full_name || child.class_name || "N/A",
+        }));
+        allChildren.push(...mapped);
+        page++;
+      } while (page <= lastPage);
+
+      setChildren(allChildren);
     } catch (err: any) {
       console.error("Error fetching children:", err);
       setError(err.response?.data?.message || "Failed to load children. Please try again.");

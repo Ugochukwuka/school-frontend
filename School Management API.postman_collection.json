@@ -30,7 +30,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "//admin login\r\n{\r\n  \"email\": \"admin@example.com\",\r\n  \"password\": \"123457\"\r\n}\r\n\r\n//parent login\r\n\r\n// {\r\n//   \"email\": \"parent1@example.com\",\r\n//   \"password\": \"123457\"\r\n// }\r\n\r\n//teacher login\r\n\r\n// {\r\n//   \"email\": \"johndoe@example.com\",\r\n//   \"password\": \"password\"\r\n// }\r\n\r\n//student login\r\n// {\r\n//     \"email\": \"studenta@example.com\",\r\n//     \"password\": \"password123\"\r\n// }",
+              "raw": "//admin login\r\n// {\r\n//   \"email\": \"admin@example.com\",\r\n//   \"password\": \"password\"\r\n// }\r\n\r\n//parent login\r\n\r\n// {\r\n//   \"email\": \"parent1@example.com\",\r\n//   \"password\": \"password\"\r\n// }\r\n\r\n//teacher login\r\n\r\n{\r\n  \"email\": \"johndoe@example.com\",\r\n  \"password\": \"password\"\r\n}\r\n\r\n//student login\r\n// {\r\n//     \"email\": \"studenta@example.com\",\r\n//     \"password\": \"password\"\r\n// }",
               "options": {
                 "raw": {
                   "language": "json"
@@ -637,6 +637,368 @@
               "response": []
             }
           ]
+        },
+        {
+          "name": "Announcement Management",
+          "item": [
+            {
+              "name": "View Announcements",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/student/viewnotifications",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "student",
+                    "viewnotifications"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "CBT",
+          "item": [
+            {
+              "name": "Exam Access",
+              "item": [
+                {
+                  "name": "Start exam",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/1/start",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "1",
+                        "start"
+                      ]
+                    },
+                    "description": "Creates attempt. Set exam_id in variables."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "View available exams",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/available",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "available"
+                      ]
+                    },
+                    "description": "List exams available to the student's class. Optional query: subject_id"
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Exam Session",
+              "item": [
+                {
+                  "name": "Attempt status",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/attempts/1/status",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "attempts",
+                        "1",
+                        "status"
+                      ]
+                    },
+                    "description": "Status check; may auto-submit if expired."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Log event",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"event_type\": \"tab_switch\",\n  \"metadata\": { \"count\": 1 }\n}"
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/api/cbt/attempts/{{attempt_id}}/event",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "cbt",
+                        "attempts",
+                        "{{attempt_id}}",
+                        "event"
+                      ]
+                    },
+                    "description": "Log tab switch, reconnect, etc."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Sync time",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"remaining_seconds\": 3000\n}"
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/api/cbt/attempts/{{attempt_id}}/sync-time",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "cbt",
+                        "attempts",
+                        "{{attempt_id}}",
+                        "sync-time"
+                      ]
+                    },
+                    "description": "Update remaining time from client."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Submit exam",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/attempts/1/submit",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "attempts",
+                        "1",
+                        "submit"
+                      ]
+                    },
+                    "description": "Final submission."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Save answer",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"question_id\": 2,\n  \"selected_option_id\": 3,\n  \"answer_text\": \"4\"\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/attempts/1/answers",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "attempts",
+                        "1",
+                        "answers"
+                      ]
+                    },
+                    "description": "Auto-save one answer. For MCQ use selected_option_id; for theory use answer_text."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Resume unfinished exam",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/api/cbt/attempts/{{attempt_id}}/resume",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "cbt",
+                        "attempts",
+                        "{{attempt_id}}",
+                        "resume"
+                      ]
+                    },
+                    "description": "Resume with saved answers."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Fetch questions",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/attempts/1/questions",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "attempts",
+                        "1",
+                        "questions"
+                      ]
+                    },
+                    "description": "Get questions for in-progress attempt."
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Results",
+              "item": [
+                {
+                  "name": "View result for one exam",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/api/cbt/results/{{exam_id}}",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "cbt",
+                        "results",
+                        "{{exam_id}}"
+                      ]
+                    },
+                    "description": "Latest result for given exam."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "View result history",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/results/history",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "results",
+                        "history"
+                      ]
+                    },
+                    "description": "All CBT results for the student."
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -951,6 +1313,526 @@
               "response": []
             }
           ]
+        },
+        {
+          "name": "CBT",
+          "item": [
+            {
+              "name": "Exam Management",
+              "item": [
+                {
+                  "name": "Create exam",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"class_id\": 1,\n  \"subject_id\": 1,\n  \"title\": \"Mathematics Mid-Term\",\n  \"description\": \"\",\n  \"instructions\": \"Answer all questions.\",\n  \"duration_minutes\": 60,\n  \"total_marks\": 50,\n  \"start_time\": \"2026-02-20T09:00:00\",\n  \"end_time\": \"2026-02-20T10:30:00\"\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams"
+                      ]
+                    },
+                    "description": "Create new CBT exam (draft)."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Preview exam",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/1/preview",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "1",
+                        "preview"
+                      ]
+                    },
+                    "description": "Preview as student would see (no correct answers)."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Clone exam",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/1/clone",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "1",
+                        "clone"
+                      ]
+                    },
+                    "description": "Duplicate exam as draft."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Unpublish exam",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/1/unpublish",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "1",
+                        "unpublish"
+                      ]
+                    },
+                    "description": "Hide exam from students."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Publish exam",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/1/publish",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "1",
+                        "publish"
+                      ]
+                    },
+                    "description": "Make exam visible to students."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete exam",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/2",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "2"
+                      ]
+                    },
+                    "description": "Remove exam and related data."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update exam",
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"title\": \"Updated Title\",\n  \"duration_minutes\": 45\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/1",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "1"
+                      ]
+                    },
+                    "description": "Edit exam details."
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Question Management",
+              "item": [
+                {
+                  "name": "Add questions",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"questions\": [\n    {\n      \"question_type\": \"mcq\",\n      \"question_text\": \"What is 2 + 2?\",\n      \"marks\": 2,\n      \"options\": [\n        { \"option_label\": \"A\", \"option_text\": \"3\", \"is_correct\": false },\n        { \"option_label\": \"B\", \"option_text\": \"4\", \"is_correct\": true }\n      ]\n    }\n  ]\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/1/questions",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "1",
+                        "questions"
+                      ]
+                    },
+                    "description": "Add questions manually (MCQ or theory)."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Import questions (bank IDs)",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"bank_question_ids\": [1, 2, 3]\n}"
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/api/cbt/exams/{{exam_id}}/questions/import",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "cbt",
+                        "exams",
+                        "{{exam_id}}",
+                        "questions",
+                        "import"
+                      ]
+                    },
+                    "description": "Import from question bank by IDs."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update question",
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"question_text\": \"Updated text\",\n  \"marks\": 3\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/questions/1",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "questions",
+                        "1"
+                      ]
+                    },
+                    "description": "Edit question."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete question",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/questions/1",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "questions",
+                        "1"
+                      ]
+                    },
+                    "description": "Remove question."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Add option (MCQ)",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"option_label\": \"C\",\n  \"option_text\": \"5\",\n  \"is_correct\": false\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/questions/2/options",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "questions",
+                        "2",
+                        "options"
+                      ]
+                    },
+                    "description": "Add one MCQ option."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update option",
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"option_text\": \"4\",\n  \"is_correct\": true\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/options/5",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "options",
+                        "5"
+                      ]
+                    },
+                    "description": "Edit option."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete option",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/options/5",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "options",
+                        "5"
+                      ]
+                    },
+                    "description": "Remove option."
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Grading & Review",
+              "item": [
+                {
+                  "name": "View script",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/attempts/1",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "attempts",
+                        "1"
+                      ]
+                    },
+                    "description": "Full attempt with answers and theory marks."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "View attempts (for exam)",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/1/attempts",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "1",
+                        "attempts"
+                      ]
+                    },
+                    "description": "List all attempts for this exam."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Mark theory",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"marks\": [\n    { \"question_id\": 5, \"mark_awarded\": 8, \"remark\": \"Good.\" }\n  ]\n}"
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/api/cbt/attempts/{{attempt_id}}/mark-theory",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "cbt",
+                        "attempts",
+                        "{{attempt_id}}",
+                        "mark-theory"
+                      ]
+                    },
+                    "description": "Grade theory question(s) for an attempt."
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -1222,6 +2104,25 @@
                     "teachers",
                     "0dc4f1b0-85e9-42fa-ad8c-e65d13eb350a",
                     "edit"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View all Teachers without Pagination",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/teachers/all",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "teachers",
+                    "all"
                   ]
                 }
               },
@@ -2161,7 +3062,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "\r\n  [\r\n    {\r\n    \"class_id\": 2,\r\n    \"subject_id\": 2,\r\n    \"day_of_week\": \"Monday\",\r\n    \"start_time\": \"08:00\",\r\n    \"end_time\": \"09:00\",\r\n    \"teacher_id\": 3\r\n\r\n  },\r\n  {\r\n    \"class_id\": 2,\r\n    \"subject_id\": 2,\r\n    \"day_of_week\": \"Monday\",\r\n    \"start_time\": \"08:00\",\r\n    \"end_time\": \"09:00\",\r\n    \"teacher_id\": 3\r\n    \r\n  }\r\n  \r\n  ]"
+                  "raw": "\r\n  [\r\n    {\r\n    \"class_id\": 1,\r\n    \"subject_id\": 1,\r\n    \"day_of_week\": \"Friday\",\r\n    \"start_time\": \"08:00\",\r\n    \"end_time\": \"09:00\",\r\n    \"teacher_id\": 3\r\n\r\n  },\r\n  {\r\n    \"class_id\": 2,\r\n    \"subject_id\": 2,\r\n    \"day_of_week\": \"Monday\",\r\n    \"start_time\": \"08:00\",\r\n    \"end_time\": \"09:00\",\r\n    \"teacher_id\": 3\r\n    \r\n  }\r\n  \r\n  ]"
                 },
                 "url": {
                   "raw": "{{BaseUrl}}/students/timetable",
@@ -2250,13 +3151,50 @@
               "response": []
             },
             {
+              "name": "view single timetable",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/students/viewsingletimetable/1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "students",
+                    "viewsingletimetable",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Timetable",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/timetable/13",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "timetable",
+                    "13"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
               "name": "add exam time table",
               "request": {
                 "method": "POST",
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "[\r\n  {    \r\n    \"class_id\": 2,\r\n    \"subject_id\": 4,\r\n    \"exam_date\": \"2025-03-12\",\r\n    \"start_time\": \"09:00\",\r\n    \"end_time\": \"11:00\",\r\n    \"exam_type\": \"Midterm\",\r\n    \"room_number\": \"Room 5\"\r\n  },\r\n\r\n  {    \r\n    \"class_id\": 1,\r\n    \"subject_id\": 4,\r\n    \"exam_date\": \"2025-03-12\",\r\n    \"start_time\": \"09:00\",\r\n    \"end_time\": \"11:00\",\r\n    \"exam_type\": \"Midterm\",\r\n    \"room_number\": \"Room 5\"\r\n  }\r\n]\r\n",
+                  "raw": "[\r\n  {    \r\n    \"class_id\": 1,\r\n    \"subject_id\": 1,\r\n    \"exam_date\": \"2025-03-12\",\r\n    \"start_time\": \"09:00\",\r\n    \"end_time\": \"11:00\",\r\n    \"exam_type\": \"Midterm\",\r\n    \"room_number\": \"Room 5\"\r\n  }\r\n\r\n//   {    \r\n//     \"class_id\": 1,\r\n//     \"subject_id\": 4,\r\n//     \"exam_date\": \"2025-03-12\",\r\n//     \"start_time\": \"09:00\",\r\n//     \"end_time\": \"11:00\",\r\n//     \"exam_type\": \"Midterm\",\r\n//     \"room_number\": \"Room 5\"\r\n//   }\r\n\r\n]\r\n",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -2336,25 +3274,6 @@
               "response": []
             },
             {
-              "name": "view single timetable",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{BaseUrl}}/students/viewsingletimetable/1",
-                  "host": [
-                    "{{BaseUrl}}"
-                  ],
-                  "path": [
-                    "students",
-                    "viewsingletimetable",
-                    "1"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
               "name": "view single exam timetable",
               "request": {
                 "method": "GET",
@@ -2388,6 +3307,25 @@
                     "timetable",
                     "edit",
                     "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete  Exam Timetable",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/exam/timetable/3",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "exam",
+                    "timetable",
+                    "3"
                   ]
                 }
               },
@@ -2465,14 +3403,14 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{BaseUrl}}/blogs/edit/1",
+                  "raw": "{{BaseUrl}}/blogs/edit/9",
                   "host": [
                     "{{BaseUrl}}"
                   ],
                   "path": [
                     "blogs",
                     "edit",
-                    "1"
+                    "9"
                   ]
                 }
               },
@@ -2493,13 +3431,13 @@
                   }
                 },
                 "url": {
-                  "raw": "{{BaseUrl}}/updateBlog/1",
+                  "raw": "{{BaseUrl}}/updateBlog/9",
                   "host": [
                     "{{BaseUrl}}"
                   ],
                   "path": [
                     "updateBlog",
-                    "1"
+                    "9"
                   ]
                 }
               },
@@ -2568,7 +3506,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n  \"amount\": 70000\r\n}\r\n",
+                  "raw": "{\r\n    \"class_category\": \"Secondary\",\r\n   \r\n    \"billing_cycle\": \"semester\",\r\n  \"amount\": 70000\r\n}\r\n",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -2648,7 +3586,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n  \"name\": \"John Daniel\",\r\n  \"position\": \"School Principal\",\r\n  \"photo_path\": \"FrontEndImages/freepik__minimal-soft-studio-light-photography-a-profession__5645.png\",\r\n  \"bio\": \"Over 15 years of leadership experience.\"\r\n}",
+                  "raw": "// {\r\n//   \"name\": \"John Daniel\",\r\n//   \"position\": \"School Principal\",\r\n//   \"photo_path\": \"FrontEndImages/freepik__minimal-soft-studio-light-photography-a-profession__5645.png\",\r\n//   \"bio\": \"Over 15 years of leadership experience.\"\r\n// }\r\n\r\n\r\n// {\r\n//   \"name\": \"Mary Oladipo\",\r\n//   \"position\": \"Vice Principal\",\r\n//   \"photo_path\": \"FrontEndImages/freepik__minimal-soft-studio-light-photography-a-profession__6789.png\",\r\n//   \"bio\": \"Dedicated to fostering student growth and academic excellence for over 10 years.\"\r\n// }\r\n\r\n\r\n{\r\n  \"name\": \"Samuel Okeke\",\r\n  \"position\": \"Head of Science Department\",\r\n  \"photo_path\": \"FrontEndImages/freepik__minimal-soft-studio-light-photography-a-profession__1123.png\",\r\n  \"bio\": \"Passionate about inspiring young minds in STEM education with over 12 years of teaching experience.\"\r\n}\r\n\r\n",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -2952,18 +3890,20 @@
               "response": []
             },
             {
-              "name": "New Request",
+              "name": "Delete Testimonial",
               "request": {
-                "method": "GET",
+                "method": "DELETE",
                 "header": [],
                 "url": {
-                  "raw": "{{BaseUrl}}/editTestimonial/1",
+                  "raw": "{{BaseUrl}}/admin/leadership/delete/2",
                   "host": [
                     "{{BaseUrl}}"
                   ],
                   "path": [
-                    "editTestimonial",
-                    "1"
+                    "admin",
+                    "leadership",
+                    "delete",
+                    "2"
                   ]
                 }
               },
@@ -3054,14 +3994,463 @@
                   }
                 },
                 "url": {
-                  "raw": "{{BaseUrl}}/school/profile/update",
+                  "raw": "{{BaseUrl}}/schoo/profile/update",
                   "host": [
                     "{{BaseUrl}}"
                   ],
                   "path": [
-                    "school",
+                    "schoo",
                     "profile",
                     "update"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "CBT",
+          "item": [
+            {
+              "name": "Settings & Configuration",
+              "item": [
+                {
+                  "name": "Sync",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"school_id\": 3\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/sync",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "sync"
+                      ]
+                    },
+                    "description": "Sync subjects/classes info."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Save settings",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"shuffle_questions\": true,\n  \"shuffle_options\": true,\n  \"autosave_interval_seconds\": 60,\n  \"max_attempts\": 1,\n  \"allow_late_entry\": false,\n  \"show_results_immediately\": false\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/settings",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "settings"
+                      ]
+                    },
+                    "description": "Create or update CBT settings."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get settings",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/settings?school_id=1",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "settings"
+                      ],
+                      "query": [
+                        {
+                          "key": "school_id",
+                          "value": "1"
+                        }
+                      ]
+                    },
+                    "description": "Get CBT settings. Optional: school_id"
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Exam Control",
+              "item": [
+                {
+                  "name": "Unlock exam",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/1/unlock",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "1",
+                        "unlock"
+                      ]
+                    },
+                    "description": "Allow submissions again."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Lock exam",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/1/lock",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "1",
+                        "lock"
+                      ]
+                    },
+                    "description": "Prevent further submissions."
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Analytics & Reports",
+              "item": [
+                {
+                  "name": "Analytics",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/api/cbt/analytics?school_id=",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "cbt",
+                        "analytics"
+                      ],
+                      "query": [
+                        {
+                          "key": "school_id",
+                          "value": ""
+                        }
+                      ]
+                    },
+                    "description": "Dashboard stats. Optional: school_id"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reports",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/api/cbt/reports?school_id=&exam_id=",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "cbt",
+                        "reports"
+                      ],
+                      "query": [
+                        {
+                          "key": "school_id",
+                          "value": ""
+                        },
+                        {
+                          "key": "exam_id",
+                          "value": ""
+                        }
+                      ]
+                    },
+                    "description": "Results list. Optional: school_id, exam_id"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Export exam results (CSV)",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/api/cbt/exams/{{exam_id}}/export?format=csv",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "cbt",
+                        "exams",
+                        "{{exam_id}}",
+                        "export"
+                      ],
+                      "query": [
+                        {
+                          "key": "format",
+                          "value": "csv"
+                        }
+                      ]
+                    },
+                    "description": "Download CSV. Use format=pdf for PDF."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Export summary (CSV)",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/api/cbt/reports/export?school_id=",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "cbt",
+                        "reports",
+                        "export"
+                      ],
+                      "query": [
+                        {
+                          "key": "school_id",
+                          "value": ""
+                        }
+                      ]
+                    },
+                    "description": "Full report CSV download."
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Question Bank",
+              "item": [
+                {
+                  "name": "Question bank - List",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/question-bank?school_id=1&subject_id=1",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "question-bank"
+                      ],
+                      "query": [
+                        {
+                          "key": "school_id",
+                          "value": "1"
+                        },
+                        {
+                          "key": "subject_id",
+                          "value": "1"
+                        }
+                      ]
+                    },
+                    "description": "List question bank. Optional: school_id, subject_id"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Question bank - Create",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"subject_id\": 1,\n  \"question_type\": \"mcq\",\n  \"question_text\": \"Sample question?\",\n  \"marks\": 2,\n  \"options\": [\n    { \"option_label\": \"A\", \"option_text\": \"Yes\", \"is_correct\": true },\n    { \"option_label\": \"B\", \"option_text\": \"No\", \"is_correct\": false }\n  ]\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/question-bank",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "question-bank"
+                      ]
+                    },
+                    "description": "Add question to bank."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Question bank - Update",
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"question_text\": \"Updated question text\",\n  \"marks\": 3\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/question-bank/1",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "question-bank",
+                        "1"
+                      ]
+                    },
+                    "description": "Update bank entry. Set question_bank_id in variables."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Question bank - Delete",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/question-bank/1",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "question-bank",
+                        "1"
+                      ]
+                    },
+                    "description": "Delete bank entry."
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "School Management",
+          "item": [
+            {
+              "name": "List all Schools",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/schools",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "schools"
                   ]
                 }
               },
@@ -3939,6 +5328,115 @@
               "response": []
             }
           ]
+        },
+        {
+          "name": "CBT",
+          "item": [
+            {
+              "name": "Child history",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/parent/0cf194cc-8712-4309-99ff-fe04adcdf5ee/history",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "parent",
+                    "0cf194cc-8712-4309-99ff-fe04adcdf5ee",
+                    "history"
+                  ]
+                },
+                "description": "All exam results for the child."
+              },
+              "response": []
+            },
+            {
+              "name": "Child upcoming exams",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/parent/0cf194cc-8712-4309-99ff-fe04adcdf5ee/exams",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "parent",
+                    "0cf194cc-8712-4309-99ff-fe04adcdf5ee",
+                    "exams"
+                  ]
+                },
+                "description": "Exams the child will write (current session)."
+              },
+              "response": []
+            },
+            {
+              "name": "Child live status",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/parent/0cf194cc-8712-4309-99ff-fe04adcdf5ee/live-status",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "parent",
+                    "0cf194cc-8712-4309-99ff-fe04adcdf5ee",
+                    "live-status"
+                  ]
+                },
+                "description": "Whether child is currently writing an exam."
+              },
+              "response": []
+            },
+            {
+              "name": "Child notifications",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/parent/0cf194cc-8712-4309-99ff-fe04adcdf5ee/notifications",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "parent",
+                    "0cf194cc-8712-4309-99ff-fe04adcdf5ee",
+                    "notifications"
+                  ]
+                },
+                "description": "CBT notification feed for the child."
+              },
+              "response": []
+            }
+          ]
         }
       ]
     },
@@ -4045,7 +5543,17 @@
           "name": "Get Current Class of Student",
           "request": {
             "method": "GET",
-            "header": []
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/student/current-class",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "student",
+                "current-class"
+              ]
+            }
           },
           "response": []
         },
@@ -4180,6 +5688,52 @@
                 "api",
                 "payments",
                 "webhook"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Exam details based on School Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/admin/schools/3/exams",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "schools",
+                "3",
+                "exams"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Subjects based on Class & teacher Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/admin/classes/1/subjectsbyteacher?teacher_uuid=435edcce-f8da-4ef0-959a-26f6d54058bf",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "classes",
+                "1",
+                "subjectsbyteacher"
+              ],
+              "query": [
+                {
+                  "key": "teacher_uuid",
+                  "value": "435edcce-f8da-4ef0-959a-26f6d54058bf"
+                }
               ]
             }
           },

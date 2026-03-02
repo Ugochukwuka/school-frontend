@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Form, Input, Button, Alert, message, Typography, Space } from "antd";
+import { Card, Form, Input, Button, Alert, App, Typography, Space } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useRouter, useSearchParams } from "next/navigation";
 import api from "@/app/lib/api";
@@ -18,6 +18,7 @@ interface TestimonialData {
 }
 
 export default function UpdateTestimonialPage() {
+  const { message } = App.useApp();
   const router = useRouter();
   const searchParams = useSearchParams();
   const testimonialId = searchParams.get("id");

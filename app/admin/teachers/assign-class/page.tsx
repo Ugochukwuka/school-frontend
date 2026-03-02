@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Form, Select, Button, Alert, message, Typography } from "antd";
+import { Card, Form, Select, Button, Alert, App, Typography } from "antd";
 import { useRouter } from "next/navigation";
 import api from "@/app/lib/api";
 import DashboardLayout from "@/app/components/DashboardLayout";
@@ -32,6 +32,7 @@ interface ClassesResponse {
 }
 
 export default function AssignClassPage() {
+  const { message } = App.useApp();
   const router = useRouter();
   const [form] = Form.useForm();
   const [teachers, setTeachers] = useState<Teacher[]>([]);
@@ -53,19 +54,15 @@ export default function AssignClassPage() {
     setLoadingTeachers(true);
     setError("");
     try {
-      const response = await api.get<any>("/admin/teachers");
-      console.log("Teachers response:", response.data);
-      
+      const response = await api.get<any>("/admin/teachers/all");
       let teachersData: Teacher[] = [];
       if (Array.isArray(response.data)) {
         teachersData = response.data;
-      } else if (response.data.data && Array.isArray(response.data.data)) {
+      } else if (response.data?.data && Array.isArray(response.data.data)) {
         teachersData = response.data.data;
       } else {
         console.warn("Unexpected teachers response format:", response.data);
       }
-      
-      console.log("Teachers data:", teachersData);
       setTeachers(teachersData);
     } catch (err: any) {
       console.error("Error fetching teachers:", err);

@@ -29,6 +29,7 @@ interface ApiResponse {
   current_page?: number;
   last_page?: number;
   total?: number;
+  per_page?: number;
 }
 
 export default function ParentChildrenPage() {
@@ -38,41 +39,39 @@ export default function ParentChildrenPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
+  const [pageSize, setPageSize] = useState(15);
   const router = useRouter();
 
   useEffect(() => {
-    fetchChildren();
-  }, []);
+    fetchChildren(currentPage);
+  }, [currentPage]);
 
-  const fetchChildren = async () => {
+  const fetchChildren = async (page: number = 1) => {
     setLoading(true);
     setError("");
 
     try {
       const response = await axios.get<ApiResponse>(
-        `http://127.0.0.1:8000/api/parent/children`,
+        `http://127.0.0.1:8000/api/parent/children?page=${page}`,
         getAuthHeaders()
       );
 
-      console.log("Children response:", response.data);
-
-      // Handle different response structures
+      // Handle paginated response: { data, current_page, last_page, total, per_page }
       let childrenData: Child[] = [];
       if (Array.isArray(response.data)) {
         childrenData = response.data;
         setTotal(response.data.length);
       } else if (response.data.data && Array.isArray(response.data.data)) {
         childrenData = response.data.data;
-        setCurrentPage(response.data.current_page || 1);
-        setTotalPages(response.data.last_page || 1);
-        setTotal(response.data.total || response.data.data.length);
+        setCurrentPage(response.data.current_page ?? page);
+        setTotalPages(response.data.last_page ?? 1);
+        setTotal(response.data.total ?? childrenData.length);
+        if (response.data.per_page) setPageSize(response.data.per_page);
       } else if ((response.data as any).children && Array.isArray((response.data as any).children)) {
-        // Handle case where children are nested in a children property
         childrenData = (response.data as any).children;
         setTotal((response.data as any).children.length);
       }
 
-      // Map children data to ensure class_name is set from class.full_name
       const mappedChildren = childrenData.map((child: any) => ({
         ...child,
         class_name: child.class?.full_name || child.class_name || "N/A",
@@ -153,13 +152,14 @@ export default function ParentChildrenPage() {
           columns={columns}
           rowKey="uuid"
           pagination={
-            totalPages > 1
+            total > pageSize || totalPages > 1
               ? {
                   current: currentPage,
                   total: total,
-                  pageSize: 10,
+                  pageSize: pageSize,
                   showSizeChanger: false,
-                  showTotal: (total) => `Total ${total} children`,
+                  showTotal: (t) => `${t} children total`,
+                  ...(totalPages > 1 ? { onChange: (page: number) => setCurrentPage(page) } : {}),
                 }
               : false
           }

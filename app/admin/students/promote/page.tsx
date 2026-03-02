@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Form, Select, Button, Alert, message, Table, Space, Checkbox, Spin, Typography } from "antd";
+import { Card, Form, Select, Button, Alert, App, Table, Space, Checkbox, Spin, Typography } from "antd";
 import { useRouter } from "next/navigation";
 import api from "@/app/lib/api";
 import DashboardLayout from "@/app/components/DashboardLayout";
@@ -60,6 +60,7 @@ interface NextSessionClassesResponse {
 }
 
 export default function PromoteStudentsPage() {
+  const { message } = App.useApp();
   const router = useRouter();
   const [form] = Form.useForm();
   const [sessions, setSessions] = useState<Session[]>([]);

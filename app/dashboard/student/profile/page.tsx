@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Spin, Alert, Button, Form, Input, Space, Typography, Avatar, Divider, message } from "antd";
+import { Card, Spin, Alert, Button, Form, Input, Space, Typography, Avatar, Divider, App } from "antd";
 import { EditOutlined, UserOutlined, MailOutlined, PhoneOutlined, SaveOutlined, CloseOutlined, LockOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { getAuthHeaders } from "@/app/lib/auth";
@@ -36,6 +36,7 @@ interface UpdateProfileResponse {
 }
 
 export default function ProfilePage() {
+  const { message } = App.useApp();
   const { isMobile } = useResponsive();
   const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -336,15 +337,16 @@ export default function ProfilePage() {
             />
           )}
 
-          {/* Profile Form */}
-          {profile && (
-            <Form
-              form={form}
-              onFinish={handleUpdate}
-              layout="vertical"
-              requiredMark={false}
-              style={{ maxWidth: "600px" }}
-            >
+          {/* Profile Form - always mounted so useForm instance stays connected */}
+          <Form
+            form={form}
+            onFinish={handleUpdate}
+            layout="vertical"
+            requiredMark={false}
+            style={{ maxWidth: "600px", display: profile ? "block" : "none" }}
+          >
+            {profile && (
+              <>
               <Divider style={{ margin: "24px 0" }} />
 
               <Form.Item
@@ -541,8 +543,9 @@ export default function ProfilePage() {
                   </Space>
                 </Form.Item>
               )}
-            </Form>
-          )}
+              </>
+            )}
+          </Form>
 
           {/* Additional Info (Read-only) */}
           {!isEditMode && profile && (

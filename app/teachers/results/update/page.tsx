@@ -13,7 +13,7 @@ import {
   Typography, 
   Input,
   InputNumber,
-  message
+  App
 } from "antd";
 import { ReloadOutlined, SaveOutlined } from "@ant-design/icons";
 import axios from "axios";
@@ -123,6 +123,7 @@ interface ResultsResponse {
 }
 
 export default function UpdateResultsPage() {
+  const { message } = App.useApp();
   const { isMobile } = useResponsive();
   const [sessions, setSessions] = useState<Session[]>([]);
   const [terms, setTerms] = useState<Term[]>([]);

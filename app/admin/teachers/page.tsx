@@ -30,16 +30,16 @@ export default function AdminTeachersPage() {
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    fetchTeachers();
-  }, []);
+    fetchTeachers(currentPage);
+  }, [currentPage]);
 
-  const fetchTeachers = async () => {
+  const fetchTeachers = async (page: number = 1) => {
     setLoading(true);
     setError("");
 
     try {
       const response = await axios.get<ApiResponse>(
-        `http://127.0.0.1:8000/api/admin/teachers`,
+        `http://127.0.0.1:8000/api/admin/teachers?page=${page}`,
         getAuthHeaders()
       );
 
@@ -118,6 +118,7 @@ export default function AdminTeachersPage() {
                   pageSize: 10,
                   showSizeChanger: false,
                   showTotal: (total) => `Total ${total} teachers`,
+                  onChange: (page) => setCurrentPage(page),
                 }
               : false
           }

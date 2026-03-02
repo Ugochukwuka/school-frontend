@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Form, Input, Button, Card, Select, Alert, message } from "antd";
+import { Form, Input, Button, Card, Select, Alert, App } from "antd";
 import { DatePicker } from "antd";
 import axios from "axios";
 import { getAuthHeaders } from "@/app/lib/auth";
@@ -27,6 +27,7 @@ interface AnnouncementCreateResponse {
 }
 
 export default function AddAnnouncementPage() {
+  const { message } = App.useApp();
   const [form] = Form.useForm();
   const router = useRouter();
   const [loading, setLoading] = useState(false);

@@ -12,7 +12,7 @@ import {
   Typography, 
   Input,
   InputNumber,
-  message
+  App
 } from "antd";
 import { ReloadOutlined, SaveOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
@@ -125,6 +125,7 @@ interface TeachersResponse {
 }
 
 export default function AdminEnterResultsPage() {
+  const { message } = App.useApp();
   const router = useRouter();
   const { isMobile } = useResponsive();
   const [sessions, setSessions] = useState<Session[]>([]);

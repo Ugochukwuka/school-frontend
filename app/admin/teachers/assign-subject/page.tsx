@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Form, Select, Button, Alert, message, Typography } from "antd";
+import { Card, Form, Select, Button, Alert, App, Typography } from "antd";
 import { useRouter } from "next/navigation";
 import api from "@/app/lib/api";
 import DashboardLayout from "@/app/components/DashboardLayout";
@@ -38,6 +38,7 @@ interface Subject {
 }
 
 export default function AssignSubjectPage() {
+  const { message } = App.useApp();
   const router = useRouter();
   const [form] = Form.useForm();
   const [teachers, setTeachers] = useState<Teacher[]>([]);

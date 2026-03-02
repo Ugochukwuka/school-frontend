@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, Form, Input, Button, Alert, message, Typography } from "antd";
+import { Card, Form, Input, Button, Alert, App, Typography } from "antd";
 import { useRouter } from "next/navigation";
 import api from "@/app/lib/api";
 import DashboardLayout from "@/app/components/DashboardLayout";
@@ -9,6 +9,7 @@ import DashboardLayout from "@/app/components/DashboardLayout";
 const { Title } = Typography;
 
 export default function AddTeacherPage() {
+  const { message } = App.useApp();
   const router = useRouter();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);

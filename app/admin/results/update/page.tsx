@@ -12,7 +12,7 @@ import {
   Typography, 
   Input,
   InputNumber,
-  message
+  App
 } from "antd";
 import { ReloadOutlined, SaveOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
@@ -122,6 +122,7 @@ interface UpdateResponse {
 }
 
 export default function AdminUpdateResultsPage() {
+  const { message } = App.useApp();
   const router = useRouter();
   const { isMobile } = useResponsive();
   const [sessions, setSessions] = useState<Session[]>([]);

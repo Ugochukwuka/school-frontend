@@ -632,11 +632,13 @@ export default function AttendancePage() {
       dataIndex: ["student", "name"],
       key: "name",
       sorter: (a: Student, b: Student) => a.student.name.localeCompare(b.student.name),
+      ellipsis: true,
+      ...(isMobile && { width: 180 }),
     },
     {
       title: "Present",
       key: "attendance",
-      width: 100,
+      width: isMobile ? 80 : 100,
       align: "center" as const,
       render: (_: any, record: Student) => (
         <Checkbox
@@ -651,7 +653,16 @@ export default function AttendancePage() {
 
   return (
     <DashboardLayout role="teacher">
-      <Card>
+      <div style={{ width: "100%", maxWidth: "100%", minWidth: 0, boxSizing: "border-box" }}>
+      <Card
+        style={{
+          padding: isMobile ? 8 : 24,
+          maxWidth: "100%",
+          overflow: "hidden",
+          width: "100%",
+        }}
+        styles={{ body: { padding: isMobile ? 8 : 24, maxWidth: "100%", overflow: "hidden" } }}
+      >
         <div style={{ 
           display: "flex", 
           justifyContent: "space-between", 
@@ -663,11 +674,16 @@ export default function AttendancePage() {
           <Title level={2} style={{ margin: 0, fontSize: isMobile ? "20px" : "24px", fontWeight: 600 }}>
             Mark Attendance
           </Title>
-          <Space>
+          <Space
+            wrap
+            style={{ width: isMobile ? "100%" : undefined }}
+            size={isMobile ? "small" : "middle"}
+          >
             <Button
               icon={<ReloadOutlined />}
               onClick={handleRefresh}
               loading={isLoading}
+              style={isMobile ? { flex: 1, minWidth: 0 } : undefined}
             >
               Refresh
             </Button>
@@ -679,6 +695,7 @@ export default function AttendancePage() {
                   onClick={handleSubmitAttendance}
                   loading={submitting}
                   disabled={updating}
+                  style={isMobile ? { flex: 1, minWidth: 0 } : undefined}
                 >
                   Mark Attendance
                 </Button>
@@ -688,6 +705,7 @@ export default function AttendancePage() {
                   onClick={handleUpdateAttendance}
                   loading={updating}
                   disabled={submitting}
+                  style={isMobile ? { flex: 1, minWidth: 0 } : undefined}
                 >
                   Update Attendance
                 </Button>
@@ -703,7 +721,7 @@ export default function AttendancePage() {
             showIcon
             closable
             onClose={() => setError("")}
-            style={{ marginBottom: 20 }}
+            style={{ marginBottom: 20, maxWidth: "100%" }}
           />
         )}
 
@@ -715,10 +733,11 @@ export default function AttendancePage() {
             width: "100%", 
             marginBottom: "24px",
             display: "flex",
-            flexWrap: "wrap"
+            flexWrap: "wrap",
+            gap: isMobile ? "12px" : undefined,
           }}
         >
-          <div style={{ minWidth: isMobile ? "100%" : "200px", flex: isMobile ? "none" : "1" }}>
+          <div style={{ minWidth: isMobile ? "100%" : "200px", flex: isMobile ? "none" : "1", maxWidth: isMobile ? "100%" : "240px" }}>
             <label style={{ display: "block", marginBottom: "8px", fontWeight: 500 }}>
               Academic Session
             </label>
@@ -741,7 +760,7 @@ export default function AttendancePage() {
             />
           </div>
 
-          <div style={{ minWidth: isMobile ? "100%" : "200px", flex: isMobile ? "none" : "1" }}>
+          <div style={{ minWidth: isMobile ? "100%" : "200px", flex: isMobile ? "none" : "1", maxWidth: isMobile ? "100%" : "240px" }}>
             <label style={{ display: "block", marginBottom: "8px", fontWeight: 500 }}>
               Term
             </label>
@@ -764,7 +783,7 @@ export default function AttendancePage() {
             />
           </div>
 
-          <div style={{ minWidth: isMobile ? "100%" : "200px", flex: isMobile ? "none" : "1" }}>
+          <div style={{ minWidth: isMobile ? "100%" : "200px", flex: isMobile ? "none" : "1", maxWidth: isMobile ? "100%" : "240px" }}>
             <label style={{ display: "block", marginBottom: "8px", fontWeight: 500 }}>
               Class
             </label>
@@ -787,7 +806,7 @@ export default function AttendancePage() {
             />
           </div>
 
-          <div style={{ minWidth: isMobile ? "100%" : "200px", flex: isMobile ? "none" : "1" }}>
+          <div style={{ minWidth: isMobile ? "100%" : "200px", flex: isMobile ? "none" : "1", maxWidth: isMobile ? "100%" : "240px" }}>
             <label style={{ display: "block", marginBottom: "8px", fontWeight: 500 }}>
               Date
             </label>
@@ -813,12 +832,13 @@ export default function AttendancePage() {
 
         {/* Students Table */}
         {!isLoading && selectedSessionId && selectedTermId && selectedClassId && (
-          <div style={{ overflowX: "auto" }}>
+          <div style={{ overflowX: "auto", minWidth: 0, maxWidth: "100%", WebkitOverflowScrolling: "touch" }}>
             <Table
               dataSource={students}
               columns={columns}
               rowKey={(record) => record.student.uuid}
-              scroll={{ x: "max-content" }}
+              size={isMobile ? "small" : "middle"}
+              scroll={{ x: isMobile ? 320 : "max-content" }}
               loading={loadingStudents}
               locale={{
                 emptyText: (
@@ -875,6 +895,7 @@ export default function AttendancePage() {
           </div>
         )}
       </Card>
+      </div>
     </DashboardLayout>
   );
 }

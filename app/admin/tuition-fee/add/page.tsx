@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, Form, InputNumber, Button, Alert, message, Typography, Select, Space } from "antd";
+import { Card, Form, InputNumber, Button, Alert, App, Typography, Select, Space } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import api from "@/app/lib/api";
@@ -12,6 +12,7 @@ const { Title } = Typography;
 const BILLING_CYCLES = ["term", "monthly", "yearly", "semester"];
 
 export default function AddTuitionFeePage() {
+  const { message } = App.useApp();
   const router = useRouter();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);

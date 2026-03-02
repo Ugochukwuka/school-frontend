@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Form, Input, Button, Alert, message, Typography, Space, Upload } from "antd";
+import { Card, Form, Input, Button, Alert, App, Typography, Space, Upload } from "antd";
 import { ArrowLeftOutlined, UploadOutlined } from "@ant-design/icons";
 import { useRouter, useSearchParams } from "next/navigation";
 import api from "@/app/lib/api";
@@ -20,6 +20,7 @@ interface LeaderData {
 }
 
 export default function UpdateLeaderPage() {
+  const { message } = App.useApp();
   const router = useRouter();
   const searchParams = useSearchParams();
   const leaderId = searchParams.get("id");

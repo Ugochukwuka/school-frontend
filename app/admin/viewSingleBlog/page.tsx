@@ -353,13 +353,12 @@ export default function ViewSingleBlogPage() {
           <Spin size="large" style={{ display: "block", textAlign: "center", padding: 50 }} />
         ) : blog ? (
           <>
-            {isEditMode ? (
-              <Form
-                form={form}
-                layout="vertical"
-                onFinish={handleUpdate}
-                style={{ maxWidth: 800 }}
-              >
+            <Form
+              form={form}
+              layout="vertical"
+              onFinish={handleUpdate}
+              style={{ maxWidth: 800, display: isEditMode ? "block" : "none" }}
+            >
                 <Form.Item
                   name="title"
                   label="Title"
@@ -472,8 +471,8 @@ export default function ViewSingleBlogPage() {
                     </Button>
                   </Space>
                 </Form.Item>
-              </Form>
-            ) : (
+            </Form>
+            {!isEditMode && (
               <>
                 <Descriptions bordered column={1} style={{ marginBottom: 24 }}>
                   <Descriptions.Item label="ID">{blog.id}</Descriptions.Item>

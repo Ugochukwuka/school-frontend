@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, Form, Input, Button, Alert, message, Typography, Upload } from "antd";
+import { Card, Form, Input, Button, Alert, App, Typography, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import api from "@/app/lib/api";
@@ -12,6 +12,7 @@ const { Title } = Typography;
 const { TextArea } = Input;
 
 export default function AddLeaderPage() {
+  const { message } = App.useApp();
   const router = useRouter();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);

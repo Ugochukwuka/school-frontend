@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Form, Select, Button, Alert, message, Typography, TimePicker, Space, Input, DatePicker, App } from "antd";
+import { Card, Form, Select, Button, Alert, Typography, TimePicker, Space, Input, DatePicker, App } from "antd";
 import { ArrowLeftOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useParams, useRouter } from "next/navigation";
 import api from "@/app/lib/api";
@@ -32,7 +32,7 @@ interface Subject {
 export default function UpdateExamTimetablePage() {
   const router = useRouter();
   const params = useParams();
-  const { modal } = App.useApp();
+  const { modal, message } = App.useApp();
   const { isMobile } = useResponsive();
   const timetableId = params?.id as string;
   const [form] = Form.useForm();

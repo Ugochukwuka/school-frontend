@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Select, Alert, Spin, message, Table, Button, InputNumber, Checkbox, Form, Space, Modal } from "antd";
+import { Card, Select, Alert, Spin, App, Table, Button, InputNumber, Checkbox, Form, Space, Modal } from "antd";
 import { DollarOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -106,6 +106,7 @@ interface WebhookResponse {
 }
 
 export default function PayFeePage() {
+  const { message } = App.useApp();
   const { schoolName } = useSchoolProfile();
   const router = useRouter();
   const [sessions, setSessions] = useState<Session[]>([]);

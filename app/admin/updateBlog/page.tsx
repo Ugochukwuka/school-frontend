@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Form, Input, Button, Alert, message, Typography, Select, DatePicker, Space, Upload } from "antd";
+import { Card, Form, Input, Button, Alert, App, Typography, Select, DatePicker, Space, Upload } from "antd";
 import { UploadOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import { useRouter, useSearchParams } from "next/navigation";
 import api from "@/app/lib/api";
@@ -13,6 +13,7 @@ const { Title } = Typography;
 const { TextArea } = Input;
 
 export default function UpdateBlogPage() {
+  const { message } = App.useApp();
   const router = useRouter();
   const searchParams = useSearchParams();
   const blogId = searchParams.get("id");

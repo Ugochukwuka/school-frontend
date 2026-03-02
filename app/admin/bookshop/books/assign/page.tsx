@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Select, Alert, Card, Space, Button, message, Spin } from "antd";
+import { Select, Alert, Card, Space, Button, App, Spin } from "antd";
 import axios from "axios";
 import { getAuthHeaders } from "@/app/lib/auth";
 import DashboardLayout from "@/app/components/DashboardLayout";
@@ -84,6 +84,7 @@ interface ClassLevelsResponse {
 }
 
 export default function AssignBooksPage() {
+  const { message } = App.useApp();
   const router = useRouter();
   const [sessions, setSessions] = useState<Session[]>([]);
   const [terms, setTerms] = useState<Term[]>([]);

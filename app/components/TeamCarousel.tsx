@@ -133,7 +133,7 @@ export default function TeamCarousel({
           
           return (
             <div
-              key={member.id}
+              key={`${member.id}-${index}`}
               className={`flex-shrink-0 transition-all duration-500 ${
                 isTransitioning ? "opacity-50 scale-95" : "opacity-100 scale-100"
               }`}

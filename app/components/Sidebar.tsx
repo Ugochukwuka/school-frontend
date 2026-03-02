@@ -22,6 +22,10 @@ import {
   CommentOutlined,
   CrownOutlined,
   BuildOutlined,
+  FormOutlined,
+  BarChartOutlined,
+  UnlockOutlined,
+  DatabaseOutlined,
 } from "@ant-design/icons";
 import { useResponsive } from "@/app/lib/responsive";
 import { useRouter, usePathname } from "next/navigation";
@@ -53,6 +57,16 @@ export default function Sidebar({ role, isDarkMode = false }: SidebarProps) {
     if (pathname.startsWith("/admin/testimonial") || pathname.startsWith("/admin/addTestimonial") || pathname.startsWith("/admin/viewAllTestimonials")) return ["contents-management", "testimonial-management"];
     if (pathname.startsWith("/admin/leadership") || pathname.startsWith("/admin/addLeader") || pathname.startsWith("/admin/viewAllLeaders") || pathname.startsWith("/admin/viewSingleLeader")) return ["contents-management", "leadership-management"];
     if (pathname.startsWith("/admin/schoolprofile")) return ["contents-management", "school-profile-management"];
+    if (pathname.startsWith("/admin/cbt")) {
+      if (pathname.startsWith("/admin/cbt/settings") || pathname.startsWith("/admin/cbt/sync")) return ["cbt-admin", "cbt-admin-settings"];
+      if (pathname.startsWith("/admin/cbt/exams")) return ["cbt-admin", "cbt-admin-exam-control"];
+      if (pathname.startsWith("/admin/cbt/analytics") || pathname.startsWith("/admin/cbt/reports") || pathname.startsWith("/admin/cbt/export")) return ["cbt-admin", "cbt-admin-analytics"];
+      if (pathname.startsWith("/admin/cbt/question-bank")) return ["cbt-admin", "cbt-admin-question-bank"];
+      return ["cbt-admin"];
+    }
+    if (pathname.startsWith("/dashboard/student/cbt")) return ["cbt-student"];
+    if (pathname.startsWith("/teachers/cbt")) return ["cbt-teacher"];
+    if (pathname.startsWith("/parent/cbt")) return ["cbt-parent"];
     return [];
   };
   
@@ -171,6 +185,15 @@ export default function Sidebar({ role, isDarkMode = false }: SidebarProps) {
       label: "Fee Obligations",
     },
     {
+      key: "cbt-student",
+      icon: <FormOutlined />,
+      label: "CBT",
+      children: [
+        { key: "/dashboard/student/cbt/exams", icon: <EyeOutlined />, label: "Available Exams" },
+        { key: "/dashboard/student/cbt/results", icon: <TrophyOutlined />, label: "My Results" },
+      ],
+    },
+    {
       key: "/dashboard/student/profile",
       icon: <SettingOutlined />,
       label: "Profile",
@@ -231,6 +254,15 @@ export default function Sidebar({ role, isDarkMode = false }: SidebarProps) {
       key: "/teachers/class-subject-management",
       icon: <BookOutlined />,
       label: "Class & Subject Management",
+    },
+    {
+      key: "cbt-teacher",
+      icon: <FormOutlined />,
+      label: "CBT",
+      children: [
+        { key: "/teachers/cbt/exams", icon: <FileTextOutlined />, label: "My Exams" },
+        { key: "/teachers/cbt/grading", icon: <EditOutlined />, label: "Grading & Review" },
+      ],
     },
   ];
 
@@ -569,6 +601,50 @@ key: "academic-session-management",
       ],
     },
     {
+      key: "cbt-admin",
+      icon: <FormOutlined />,
+      label: "CBT",
+      children: [
+        {
+          key: "cbt-admin-settings",
+          icon: <SettingOutlined />,
+          label: "Settings & Configuration",
+          children: [
+            { key: "/admin/cbt/settings", icon: <SettingOutlined />, label: "Get settings" },
+            { key: "/admin/cbt/settings/save", icon: <EditOutlined />, label: "Save settings" },
+            { key: "/admin/cbt/sync", icon: <GlobalOutlined />, label: "Sync" },
+          ],
+        },
+        {
+          key: "cbt-admin-exam-control",
+          icon: <UnlockOutlined />,
+          label: "Exam Control",
+          children: [
+            { key: "/admin/cbt/exams", icon: <FileTextOutlined />, label: "Lock / Unlock exam" },
+          ],
+        },
+        {
+          key: "cbt-admin-analytics",
+          icon: <BarChartOutlined />,
+          label: "Analytics & Reports",
+          children: [
+            { key: "/admin/cbt/analytics", icon: <BarChartOutlined />, label: "Analytics" },
+            { key: "/admin/cbt/reports", icon: <FileTextOutlined />, label: "Reports" },
+            { key: "/admin/cbt/export", icon: <FileTextOutlined />, label: "Export (results / summary)" },
+          ],
+        },
+        {
+          key: "cbt-admin-question-bank",
+          icon: <DatabaseOutlined />,
+          label: "Question Bank",
+          children: [
+            { key: "/admin/cbt/question-bank", icon: <EyeOutlined />, label: "Question bank - List" },
+            { key: "/admin/cbt/question-bank/create", icon: <PlusOutlined />, label: "Question bank - Create" },
+          ],
+        },
+      ],
+    },
+    {
       key: "/admin/profile",
       icon: <SettingOutlined />,
       label: "Profile Settings",
@@ -632,6 +708,17 @@ key: "academic-session-management",
           icon: <EyeOutlined />,
           label: "Payment History",
         },
+      ],
+    },
+    {
+      key: "cbt-parent",
+      icon: <FormOutlined />,
+      label: "CBT",
+      children: [
+        { key: "/parent/cbt", icon: <TrophyOutlined />, label: "Child exam history" },
+        { key: "/parent/cbt/upcoming", icon: <CalendarOutlined />, label: "Child upcoming exams" },
+        { key: "/parent/cbt/live-status", icon: <EyeOutlined />, label: "Child live status" },
+        { key: "/parent/cbt/notifications", icon: <BellOutlined />, label: "Child notifications" },
       ],
     },
     {

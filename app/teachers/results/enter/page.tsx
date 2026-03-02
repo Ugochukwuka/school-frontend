@@ -13,7 +13,7 @@ import {
   Typography, 
   Input,
   InputNumber,
-  message
+  App
 } from "antd";
 import { ReloadOutlined, SaveOutlined, EditOutlined } from "@ant-design/icons";
 import axios from "axios";
@@ -114,6 +114,7 @@ interface SubjectsResponse {
 }
 
 export default function EnterScoresPage() {
+  const { message } = App.useApp();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { isMobile } = useResponsive();

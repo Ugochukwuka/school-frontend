@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Table, Spin, Alert, Card, Select, Button, Tabs, Modal, Form, InputNumber, Checkbox, message } from "antd";
+import { Table, Spin, Alert, Card, Select, Button, Tabs, Modal, Form, InputNumber, Checkbox, App } from "antd";
 import { DownloadOutlined, DollarOutlined } from "@ant-design/icons";
 import { useParams } from "next/navigation";
 import axios from "axios";
@@ -105,6 +105,7 @@ interface WebhookResponse {
 }
 
 export default function ChildFeesPage() {
+  const { message } = App.useApp();
   const params = useParams();
   const childUuid = params.uuid as string;
   const [payments, setPayments] = useState<Payment[]>([]);

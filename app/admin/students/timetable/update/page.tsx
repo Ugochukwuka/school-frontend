@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Form, Select, Button, Alert, message, Typography, TimePicker, Space, Descriptions, Input, App } from "antd";
+import { Card, Form, Select, Button, Alert, Typography, TimePicker, Space, Descriptions, Input, App } from "antd";
 import { ArrowLeftOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useRouter, useSearchParams } from "next/navigation";
 import api from "@/app/lib/api";
@@ -54,7 +54,7 @@ interface TimetableData {
 export default function UpdateWeeklyTimetablePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { modal } = App.useApp();
+  const { modal, message } = App.useApp();
   const timetableId = searchParams.get("id");
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);

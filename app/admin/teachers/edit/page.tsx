@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Form, Input, Button, Alert, message, Typography, Select, Spin } from "antd";
+import { Card, Form, Input, Button, Alert, App, Typography, Select, Spin } from "antd";
 import { useRouter } from "next/navigation";
 import api from "@/app/lib/api";
 import DashboardLayout from "@/app/components/DashboardLayout";
@@ -22,6 +22,7 @@ interface TeacherResponse {
 }
 
 export default function EditTeacherPage() {
+  const { message } = App.useApp();
   const router = useRouter();
   const [form] = Form.useForm();
   const [teachers, setTeachers] = useState<Teacher[]>([]);

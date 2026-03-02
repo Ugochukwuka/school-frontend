@@ -145,6 +145,33 @@ const breadcrumbMap: { [key: string]: string } = {
   "/parent/children/[uuid]/attendance": "Child Attendance",
   "/parent/children/[uuid]/fees": "Child Fees",
   "/parent/children/[uuid]/results": "Child Results",
+  // CBT - Admin
+  "/admin/cbt/settings": "CBT Settings",
+  "/admin/cbt/settings/save": "CBT Save Settings",
+  "/admin/cbt/sync": "CBT Sync",
+  "/admin/cbt/exams": "CBT Exam Control",
+  "/admin/cbt/analytics": "CBT Analytics",
+  "/admin/cbt/reports": "CBT Reports",
+  "/admin/cbt/export": "CBT Export",
+  "/admin/cbt/question-bank": "CBT Question Bank",
+  "/admin/cbt/question-bank/create": "CBT Question Bank - Create",
+  // CBT - Student
+  "/dashboard/student/cbt/exams": "CBT Available Exams",
+  "/dashboard/student/cbt/results": "CBT My Results",
+  "/dashboard/student/cbt/results/[examId]": "CBT Result",
+  "/dashboard/student/cbt/attempt/[attemptId]": "CBT Take Exam",
+  // CBT - Teacher
+  "/teachers/cbt/exams": "CBT My Exams",
+  "/teachers/cbt/exams/[id]": "CBT Exam",
+  "/teachers/cbt/exams/[id]/preview": "CBT Preview",
+  "/teachers/cbt/grading": "CBT Grading & Review",
+  "/teachers/cbt/grading/[attemptId]": "CBT Script / Mark theory",
+  "/teachers/cbt/exams/new": "CBT Create Exam",
+  // CBT - Parent
+  "/parent/cbt": "CBT Child Exam History",
+  "/parent/cbt/upcoming": "CBT Child Upcoming Exams",
+  "/parent/cbt/live-status": "CBT Child Live Status",
+  "/parent/cbt/notifications": "CBT Child Notifications",
 };
 
 // Get breadcrumb items from pathname
@@ -204,9 +231,14 @@ const getBreadcrumbItems = (pathname: string, role: string) => {
         });
       }
     } else {
-      // Check if current path matches a mapped route (with [uuid] placeholder)
+      // Check if current path matches a mapped route (with [uuid] or numeric placeholder)
       const pathWithPlaceholder = currentPath.replace(/\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i, "/[uuid]");
-      const mappedPath = breadcrumbMap[currentPath] || breadcrumbMap[pathWithPlaceholder];
+      let mappedPath = breadcrumbMap[currentPath] || breadcrumbMap[pathWithPlaceholder];
+      if (!mappedPath && /^\d+$/.test(segment)) {
+        mappedPath = breadcrumbMap[currentPath.replace(/\/\d+$/, "/[attemptId]")] ||
+          breadcrumbMap[currentPath.replace(/\/\d+$/, "/[examId]")] ||
+          breadcrumbMap[currentPath.replace(/\/\d+$/, "/[id]")];
+      }
       
       if (mappedPath) {
         // Only add link if it's not the last item
@@ -299,6 +331,7 @@ export default function DashboardLayout({ children, role }: DashboardLayoutProps
               flex: 1,
               width: "100%",
               maxWidth: "100%",
+              overflowX: isMobile ? "hidden" : "visible",
               transition: mounted ? "margin-left 0.2s" : "none",
               background: bgColor,
             }}
@@ -319,15 +352,15 @@ export default function DashboardLayout({ children, role }: DashboardLayoutProps
                 style={{
                   background: contentBgColor,
                   borderRadius: "8px",
-                  padding,
-                  paddingLeft: isMobile ? padding : Math.max(padding, 20),
-                  paddingRight: isMobile ? padding : Math.max(padding, 20),
+                  padding: isMobile ? 12 : padding,
+                  paddingLeft: isMobile ? 56 : Math.max(padding, 20),
+                  paddingRight: isMobile ? 12 : Math.max(padding, 20),
                   minHeight: "calc(100vh - 32px)",
                   minWidth: 0,
                   width: "100%",
                   maxWidth: "100%",
                   boxSizing: "border-box",
-                  overflowX: "visible",
+                  overflowX: isMobile ? "hidden" : "visible",
                   overflowY: "visible",
                   ...(textColor && { color: textColor }),
                   transition: "background-color 0.3s ease, color 0.3s ease",
@@ -344,6 +377,8 @@ export default function DashboardLayout({ children, role }: DashboardLayoutProps
                     marginBottom: isMobile ? 16 : 24,
                     ...(textColor && { color: textColor }),
                     overflow: "hidden",
+                    maxWidth: "100%",
+                    fontSize: isMobile ? 12 : undefined,
                   }}
                 />
                 {children}

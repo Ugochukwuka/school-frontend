@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Card, Form, Input, Button, Alert, message } from "antd";
+import { Card, Form, Input, Button, Alert, App } from "antd";
 import axios from "axios";
 import { getAuthHeaders } from "@/app/lib/auth";
 import DashboardLayout from "@/app/components/DashboardLayout";
 
 export default function AddStudentPage() {
+  const { message } = App.useApp();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

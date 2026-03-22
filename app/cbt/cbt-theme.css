@@ -1,0 +1,37 @@
+/* CBT dashboard theme – tokens for shadcn-style components (primary, muted, card, etc.) */
+.CbtManagementSystem {
+  --background: #ffffff;
+  --foreground: oklch(0.145 0 0);
+  --card: #ffffff;
+  --card-foreground: oklch(0.145 0 0);
+  --primary: #030213;
+  --primary-foreground: #ffffff;
+  --secondary: oklch(0.95 0.0058 264.53);
+  --secondary-foreground: #030213;
+  --muted: #ececf0;
+  --muted-foreground: #717182;
+  --accent: #e9ebef;
+  --accent-foreground: #030213;
+  --destructive: #d4183d;
+  --destructive-foreground: #ffffff;
+  --border: rgba(0, 0, 0, 0.1);
+  --input: transparent;
+  --input-background: #f3f3f5;
+  --ring: oklch(0.708 0 0);
+  --radius: 0.625rem;
+  --popover: #ffffff;
+  --popover-foreground: oklch(0.145 0 0);
+  --switch-background: #cbced4;
+}
+
+/* CBT: single border on focus — no outline, no ring/box-shadow (no double line) */
+.cbt-root input:focus-visible,
+.cbt-root textarea:focus-visible,
+.cbt-root select:focus-visible,
+.cbt-root [data-slot="input"]:focus-visible,
+.cbt-root [data-slot="textarea"]:focus-visible,
+.cbt-root [data-slot="select-trigger"]:focus-visible {
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+}

@@ -767,7 +767,7 @@ export default function PayFeePage() {
       key: "amount_to_pay",
       width: 200,
       render: (_: any, record: Fee) => (
-        <InputNumber
+        <InputNumber<number>
           value={selectedFees[record.id] || undefined}
           min={0}
           max={parseFloat(record.amount_due)}
@@ -777,7 +777,11 @@ export default function PayFeePage() {
           disabled={!selectedFees[record.id]}
           onChange={(value) => handleAmountChange(record.id, value)}
           formatter={(value) => `₦ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-          parser={(value) => value!.replace(/₦\s?|(,*)/g, "")}
+          parser={(value) => {
+            const raw = (value ?? "").replace(/₦\s?|(,*)/g, "");
+            const n = Number(raw);
+            return Number.isFinite(n) ? n : 0;
+          }}
         />
       ),
     },
@@ -901,9 +905,15 @@ export default function PayFeePage() {
                   disabled={!classId || students.length === 0}
                   style={{ width: "100%" }}
                   showSearch
-                  filterOption={(input, option) =>
-                    (option?.children as string)?.toLowerCase().includes(input.toLowerCase())
-                  }
+                  filterOption={(input, option) => {
+                    const candidate =
+                      (option as any)?.label ??
+                      (option as any)?.children ??
+                      (option as any)?.title;
+                    return String(candidate ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase());
+                  }}
                 >
                   {students.map((student) => (
                     <Select.Option key={student.student_uuid} value={student.student_uuid}>

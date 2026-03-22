@@ -261,6 +261,22 @@ export default function Sidebar({ role, isDarkMode = false }: SidebarProps) {
       label: "CBT",
       children: [
         { key: "/teachers/cbt/exams", icon: <FileTextOutlined />, label: "My Exams" },
+        { key: "/teachers/cbt/exams/new", icon: <PlusOutlined />, label: "Create Exam" },
+        { key: "/teachers/cbt/grading", icon: <EditOutlined />, label: "Grading & Review" },
+      ],
+    },
+  ];
+
+  // When teacher is in CBT section, show only Dashboard + CBT (no Attendance, Results, My Classes)
+  const teacherMenuItemsCbtOnly = [
+    { key: "/teachers/dashboard", icon: <HomeOutlined />, label: "Dashboard" },
+    {
+      key: "cbt-teacher",
+      icon: <FormOutlined />,
+      label: "CBT",
+      children: [
+        { key: "/teachers/cbt/exams", icon: <FileTextOutlined />, label: "My Exams" },
+        { key: "/teachers/cbt/exams/new", icon: <PlusOutlined />, label: "Create Exam" },
         { key: "/teachers/cbt/grading", icon: <EditOutlined />, label: "Grading & Review" },
       ],
     },

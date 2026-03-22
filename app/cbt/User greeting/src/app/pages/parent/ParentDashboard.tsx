@@ -1,0 +1,262 @@
+import { Link } from "react-router";
+import { DashboardLayout } from "../../components/layouts/DashboardLayout";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
+import { Badge } from "../../components/ui/badge";
+import { Progress } from "../../components/ui/progress";
+import { Avatar, AvatarFallback } from "../../components/ui/avatar";
+import { 
+  User, 
+  Trophy, 
+  Calendar, 
+  AlertCircle,
+  TrendingUp,
+  BookOpen,
+  Clock,
+  Eye,
+} from "lucide-react";
+
+export function ParentDashboard() {
+  // Mock data - Would fetch children from parent account
+  // GET /api/cbt/parent/{student_uuid}/history
+  // GET /api/cbt/parent/{student_uuid}/exams
+  // GET /api/cbt/parent/{student_uuid}/live-status
+  const children = [
+    {
+      uuid: "student-uuid-1",
+      name: "Emma Johnson",
+      class: "Grade 10A",
+      initials: "EJ",
+      avgScore: 85,
+      totalExams: 12,
+      upcomingExams: 3,
+      isCurrentlyWriting: false,
+      recentExams: [
+        { title: "Mathematics Test", score: 88, date: "2026-02-28" },
+        { title: "Physics Quiz", score: 92, date: "2026-02-25" },
+        { title: "Chemistry Practical", score: 78, date: "2026-02-22" },
+      ],
+    },
+    {
+      uuid: "student-uuid-2",
+      name: "Michael Johnson",
+      class: "Grade 8B",
+      initials: "MJ",
+      avgScore: 78,
+      totalExams: 10,
+      upcomingExams: 2,
+      isCurrentlyWriting: true,
+      currentExam: {
+        title: "English Literature Quiz",
+        startTime: "2026-03-02T10:00:00",
+        progress: 65,
+      },
+      recentExams: [
+        { title: "History Test", score: 75, date: "2026-02-27" },
+        { title: "Biology Quiz", score: 82, date: "2026-02-24" },
+      ],
+    },
+  ];
+
+  return (
+    <DashboardLayout role="parent">
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">Parent Dashboard</h1>
+          <p className="text-slate-600 mt-1">Monitor your children's exam performance</p>
+        </div>
+
+        {/* Summary Stats */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-600">Children</p>
+                  <p className="text-3xl font-bold mt-1">{children.length}</p>
+                </div>
+                <User className="w-10 h-10 text-blue-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-600">Total Exams</p>
+                  <p className="text-3xl font-bold mt-1">
+                    {children.reduce((sum, child) => sum + child.totalExams, 0)}
+                  </p>
+                </div>
+                <BookOpen className="w-10 h-10 text-green-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-600">Upcoming</p>
+                  <p className="text-3xl font-bold mt-1">
+                    {children.reduce((sum, child) => sum + child.upcomingExams, 0)}
+                  </p>
+                </div>
+                <Calendar className="w-10 h-10 text-purple-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-600">Family Avg</p>
+                  <p className="text-3xl font-bold mt-1">
+                    {Math.round(
+                      children.reduce((sum, child) => sum + child.avgScore, 0) / children.length
+                    )}%
+                  </p>
+                </div>
+                <Trophy className="w-10 h-10 text-orange-600" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Live Status Alert */}
+        {children.some((child) => child.isCurrentlyWriting) && (
+          <Card className="border-orange-200 bg-orange-50">
+            <CardContent className="p-6">
+              <div className="flex items-start gap-4">
+                <div className="p-2 rounded-lg bg-orange-100">
+                  <Clock className="w-5 h-5 text-orange-600 animate-pulse" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-orange-900">Child Currently Taking Exam</h3>
+                  {children
+                    .filter((child) => child.isCurrentlyWriting)
+                    .map((child) => (
+                      <div key={child.uuid} className="mt-2">
+                        <p className="text-sm text-orange-700">
+                          {child.name} is currently writing: {child.currentExam?.title}
+                        </p>
+                        <div className="mt-2">
+                          <div className="flex items-center justify-between text-xs text-orange-600 mb-1">
+                            <span>Progress</span>
+                            <span>{child.currentExam?.progress}%</span>
+                          </div>
+                          <Progress value={child.currentExam?.progress} className="h-2" />
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Children Cards */}
+        <div className="grid lg:grid-cols-2 gap-6">
+          {children.map((child) => (
+            <Card key={child.uuid} className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="w-12 h-12">
+                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-cyan-500 text-white">
+                        {child.initials}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <CardTitle>{child.name}</CardTitle>
+                      <CardDescription>{child.class}</CardDescription>
+                    </div>
+                  </div>
+                  {child.isCurrentlyWriting && (
+                    <Badge className="bg-orange-100 text-orange-700 animate-pulse">
+                      Writing Exam
+                    </Badge>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Stats */}
+                <div className="grid grid-cols-3 gap-4 p-4 bg-slate-50 rounded-lg">
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-green-600">{child.avgScore}%</p>
+                    <p className="text-xs text-slate-600 mt-1">Avg Score</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-blue-600">{child.totalExams}</p>
+                    <p className="text-xs text-slate-600 mt-1">Exams</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-purple-600">{child.upcomingExams}</p>
+                    <p className="text-xs text-slate-600 mt-1">Upcoming</p>
+                  </div>
+                </div>
+
+                {/* Recent Results */}
+                <div>
+                  <h4 className="font-semibold text-sm mb-2">Recent Exams</h4>
+                  <div className="space-y-2">
+                    {child.recentExams.map((exam, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center justify-between p-2 bg-slate-50 rounded"
+                      >
+                        <div className="flex-1">
+                          <p className="text-sm font-medium">{exam.title}</p>
+                          <p className="text-xs text-slate-500">
+                            {new Date(exam.date).toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                            })}
+                          </p>
+                        </div>
+                        <Badge
+                          className={
+                            exam.score >= 80
+                              ? "bg-green-100 text-green-700"
+                              : exam.score >= 70
+                              ? "bg-blue-100 text-blue-700"
+                              : "bg-yellow-100 text-yellow-700"
+                          }
+                        >
+                          {exam.score}%
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <Link to={`/parent/child/${child.uuid}`}>
+                  <Button variant="outline" className="w-full">
+                    <Eye className="w-4 h-4 mr-2" />
+                    View Full Details
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Insights */}
+        <Card className="border-blue-200 bg-blue-50">
+          <CardContent className="p-6">
+            <div className="flex items-start gap-4">
+              <div className="p-2 rounded-lg bg-blue-100">
+                <TrendingUp className="w-5 h-5 text-blue-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-blue-900">Great Progress!</h3>
+                <p className="text-sm text-blue-700 mt-1">
+                  Your children's average performance has improved by 6% this month. Keep encouraging their studies!
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </DashboardLayout>
+  );
+}

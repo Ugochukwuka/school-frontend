@@ -1,0 +1,567 @@
+{
+  "info": {
+    "name": "CBT API - School ERP",
+    "description": "Computer-Based Testing module endpoints.\n\nSetup: Set base_url (e.g. http://localhost:8000) and token (from POST /api/login) in collection variables.\n\nResponse format (all CBT endpoints):\n- Success: status true, message, type, and data. Use response.json.data for the main payload (e.g. list of exams, attempt_id, questions).\n- Error: status false and message. Use response.json.message to show the user. For 422 validation, response.json.errors has per-field messages.\n- Not logged in / invalid token: 401 with message 'You must be logged in to perform this action...'.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "school-api-cbt"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{token}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "token", "value": "" },
+    { "key": "exam_id", "value": "1" },
+    { "key": "attempt_id", "value": "1" },
+    { "key": "question_id", "value": "1" },
+    { "key": "option_id", "value": "1" },
+    { "key": "student_id", "value": "1" },
+    { "key": "student_uuid", "value": "" },
+    { "key": "question_bank_id", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Student",
+      "description": "Endpoints for role: student",
+      "item": [
+        {
+          "name": "View available exams",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/exams/available?subject_id=",
+            "description": "List exams available to the student's class. Optional query: subject_id"
+          }
+        },
+        {
+          "name": "Start exam",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/api/cbt/exams/{{exam_id}}/start",
+            "description": "Creates attempt. No body required. Set exam_id in collection variables and use a student token. Response returns attempt_id (use it for Fetch questions, Save answer, Submit, and View script)."
+          }
+        },
+        {
+          "name": "Fetch questions",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/attempts/{{attempt_id}}/questions",
+            "description": "Get questions for in-progress attempt."
+          }
+        },
+        {
+          "name": "Resume unfinished exam",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/attempts/{{attempt_id}}/resume",
+            "description": "Resume with saved answers."
+          }
+        },
+        {
+          "name": "Save answer",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question_id\": 1,\n  \"selected_option_id\": 2,\n  \"answer_text\": null\n}"
+            },
+            "url": "{{base_url}}/api/cbt/attempts/{{attempt_id}}/answers",
+            "description": "Auto-save one answer. For MCQ use selected_option_id; for theory use answer_text."
+          }
+        },
+        {
+          "name": "Submit exam",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/api/cbt/attempts/{{attempt_id}}/submit",
+            "description": "Final submission."
+          }
+        },
+        {
+          "name": "View result history",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/results/history",
+            "description": "All CBT results for the student."
+          }
+        },
+        {
+          "name": "View result for one exam",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/results/{{exam_id}}",
+            "description": "Latest result for given exam."
+          }
+        },
+        {
+          "name": "Sync time",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"remaining_seconds\": 3000\n}"
+            },
+            "url": "{{base_url}}/api/cbt/attempts/{{attempt_id}}/sync-time",
+            "description": "Update remaining time from client."
+          }
+        },
+        {
+          "name": "Log event",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event_type\": \"tab_switch\",\n  \"metadata\": { \"count\": 1 }\n}"
+            },
+            "url": "{{base_url}}/api/cbt/attempts/{{attempt_id}}/event",
+            "description": "Log tab switch, reconnect, etc."
+          }
+        },
+        {
+          "name": "Attempt status",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/attempts/{{attempt_id}}/status",
+            "description": "Status check; may auto-submit if expired."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Teacher",
+      "description": "Endpoints for role: teacher or admin",
+      "item": [
+        {
+          "name": "Create exam",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"class_id\": 1,\n  \"subject_id\": 1,\n  \"title\": \"Mathematics Mid-Term\",\n  \"description\": \"\",\n  \"instructions\": \"Answer all questions.\",\n  \"duration_minutes\": 60,\n  \"total_marks\": 50,\n  \"start_time\": \"2026-02-20T09:00:00\",\n  \"end_time\": \"2026-02-20T10:30:00\"\n}"
+            },
+            "url": "{{base_url}}/api/cbt/exams",
+            "description": "Create new CBT exam (draft)."
+          }
+        },
+        {
+          "name": "Update exam",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Title\",\n  \"duration_minutes\": 45\n}"
+            },
+            "url": "{{base_url}}/api/cbt/exams/{{exam_id}}",
+            "description": "Edit exam details."
+          }
+        },
+        {
+          "name": "Publish exam",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/exams/{{exam_id}}/publish",
+            "description": "Make exam visible to students."
+          }
+        },
+        {
+          "name": "Unpublish exam",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/exams/{{exam_id}}/unpublish",
+            "description": "Hide exam from students."
+          }
+        },
+        {
+          "name": "Delete exam",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/exams/{{exam_id}}",
+            "description": "Remove exam and related data."
+          }
+        },
+        {
+          "name": "Add questions",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"questions\": [\n    {\n      \"question_type\": \"mcq\",\n      \"question_text\": \"What is 2 + 2?\",\n      \"marks\": 2,\n      \"options\": [\n        { \"option_label\": \"A\", \"option_text\": \"3\", \"is_correct\": false },\n        { \"option_label\": \"B\", \"option_text\": \"4\", \"is_correct\": true }\n      ]\n    }\n  ]\n}"
+            },
+            "url": "{{base_url}}/api/cbt/exams/{{exam_id}}/questions",
+            "description": "Add questions manually (MCQ or theory)."
+          }
+        },
+        {
+          "name": "Import questions (bank IDs)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bank_question_ids\": [1, 2, 3]\n}"
+            },
+            "url": "{{base_url}}/api/cbt/exams/{{exam_id}}/questions/import",
+            "description": "Import from question bank by IDs."
+          }
+        },
+        {
+          "name": "Update question",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question_text\": \"Updated text\",\n  \"marks\": 3\n}"
+            },
+            "url": "{{base_url}}/api/cbt/questions/{{question_id}}",
+            "description": "Edit question."
+          }
+        },
+        {
+          "name": "Delete question",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/questions/{{question_id}}",
+            "description": "Remove question."
+          }
+        },
+        {
+          "name": "Add option (MCQ)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"option_label\": \"C\",\n  \"option_text\": \"5\",\n  \"is_correct\": false\n}"
+            },
+            "url": "{{base_url}}/api/cbt/questions/{{question_id}}/options",
+            "description": "Add one MCQ option."
+          }
+        },
+        {
+          "name": "Update option",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"option_text\": \"Updated option\",\n  \"is_correct\": true\n}"
+            },
+            "url": "{{base_url}}/api/cbt/options/{{option_id}}",
+            "description": "Edit option."
+          }
+        },
+        {
+          "name": "Delete option",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/options/{{option_id}}",
+            "description": "Remove option."
+          }
+        },
+        {
+          "name": "Mark theory",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"marks\": [\n    { \"question_id\": 5, \"mark_awarded\": 8, \"remark\": \"Good.\" }\n  ]\n}"
+            },
+            "url": "{{base_url}}/api/cbt/attempts/{{attempt_id}}/mark-theory",
+            "description": "Grade theory question(s) for an attempt."
+          }
+        },
+        {
+          "name": "View attempts (for exam)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/exams/{{exam_id}}/attempts",
+            "description": "List all attempts for this exam."
+          }
+        },
+        {
+          "name": "View script",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/attempts/{{attempt_id}}",
+            "description": "Full attempt with answers and theory marks."
+          }
+        },
+        {
+          "name": "Clone exam",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/exams/{{exam_id}}/clone",
+            "description": "Duplicate exam as draft."
+          }
+        },
+        {
+          "name": "Preview exam",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/exams/{{exam_id}}/preview",
+            "description": "Preview as student would see (no correct answers)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "description": "Endpoints for role: admin",
+      "item": [
+        {
+          "name": "Get settings",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/settings?school_id=",
+            "description": "Get CBT settings. Optional: school_id"
+          }
+        },
+        {
+          "name": "Save settings",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shuffle_questions\": true,\n  \"shuffle_options\": true,\n  \"autosave_interval_seconds\": 60,\n  \"max_attempts\": 1,\n  \"allow_late_entry\": false,\n  \"show_results_immediately\": false\n}"
+            },
+            "url": "{{base_url}}/api/cbt/settings",
+            "description": "Create or update CBT settings."
+          }
+        },
+        {
+          "name": "Analytics",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/analytics?school_id=",
+            "description": "Dashboard stats. Optional: school_id"
+          }
+        },
+        {
+          "name": "Reports",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/reports?school_id=&exam_id=",
+            "description": "Results list. Optional: school_id, exam_id"
+          }
+        },
+        {
+          "name": "Export exam results (CSV)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/exams/{{exam_id}}/export?format=csv",
+            "description": "Download CSV. Use format=pdf for PDF."
+          }
+        },
+        {
+          "name": "Export summary (CSV)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/reports/export?school_id=",
+            "description": "Full report CSV download."
+          }
+        },
+        {
+          "name": "Question bank - List",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/question-bank?school_id=&subject_id=",
+            "description": "List question bank. Optional: school_id, subject_id"
+          }
+        },
+        {
+          "name": "Question bank - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject_id\": 1,\n  \"question_type\": \"mcq\",\n  \"question_text\": \"Sample question?\",\n  \"marks\": 2,\n  \"options\": [\n    { \"option_label\": \"A\", \"option_text\": \"Yes\", \"is_correct\": true },\n    { \"option_label\": \"B\", \"option_text\": \"No\", \"is_correct\": false }\n  ]\n}"
+            },
+            "url": "{{base_url}}/api/cbt/question-bank",
+            "description": "Add question to bank."
+          }
+        },
+        {
+          "name": "Question bank - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question_text\": \"Updated question text\",\n  \"marks\": 3\n}"
+            },
+            "url": "{{base_url}}/api/cbt/question-bank/{{question_bank_id}}",
+            "description": "Update bank entry. Set question_bank_id in variables."
+          }
+        },
+        {
+          "name": "Question bank - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/question-bank/{{question_bank_id}}",
+            "description": "Delete bank entry."
+          }
+        },
+        {
+          "name": "Sync",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"school_id\": null\n}"
+            },
+            "url": "{{base_url}}/api/cbt/sync",
+            "description": "Sync subjects/classes info."
+          }
+        },
+        {
+          "name": "Lock exam",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/exams/{{exam_id}}/lock",
+            "description": "Prevent further submissions."
+          }
+        },
+        {
+          "name": "Unlock exam",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/exams/{{exam_id}}/unlock",
+            "description": "Allow submissions again."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Parent",
+      "description": "Endpoints for role: parent. Use student_uuid = child's user UUID (not numeric id; for security).",
+      "item": [
+        {
+          "name": "Child history",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/parent/{{student_uuid}}/history",
+            "description": "All exam results for the child."
+          }
+        },
+        {
+          "name": "Child upcoming exams",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/parent/{{student_uuid}}/exams",
+            "description": "Exams the child will write (current session)."
+          }
+        },
+        {
+          "name": "Child live status",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/parent/{{student_uuid}}/live-status",
+            "description": "Whether child is currently writing an exam."
+          }
+        },
+        {
+          "name": "Child notifications",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/cbt/parent/{{student_uuid}}/notifications",
+            "description": "CBT notification feed for the child."
+          }
+        }
+      ]
+    }
+  ]
+}

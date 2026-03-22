@@ -2,14 +2,21 @@
 
 import { useState, useEffect } from "react";
 import { Form, Input, Button, Card, Alert, Typography, Divider } from "antd";
-import { UserOutlined, LockOutlined, SafetyOutlined, BookOutlined } from "@ant-design/icons";
+import { UserOutlined, LockOutlined, SafetyOutlined, EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import api from "@/app/lib/api";
 import { useResponsive } from "@/app/lib/responsive";
 import Logo from "@/app/components/Logo";
 import { useSchoolProfile } from "@/app/lib/useSchoolProfile";
+import styles from "./login.module.css";
 
 const { Title, Text } = Typography;
+
+// Demo login credentials (password is "password" for all):
+// Admin:    admin@example.com
+// Parent:   parent1@example.com
+// Teacher:  johndoe@example.com
+// Student:  studenta@example.com
 
 interface LoginResponse {
   token: string;
@@ -22,12 +29,20 @@ interface LoginResponse {
 }
 
 export default function LoginPage() {
+  const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const router = useRouter();
   const [form] = Form.useForm();
   const { isMobile } = useResponsive();
   const { schoolName, logoPath } = useSchoolProfile();
+
+  // Defer form render until after mount to avoid hydration mismatch from
+  // browser extensions (e.g. Dark Reader) or antd inline style serialization.
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const onFinish = async (values: { email: string; password: string }) => {
     setLoading(true);
@@ -162,50 +177,26 @@ export default function LoginPage() {
     }
   };
 
+  if (!mounted) {
+    return (
+      <div className={styles.root}>
+        <div className={styles.overlay} aria-hidden />
+        <div className={styles.cardSkeleton}>
+          <div className={styles.cardSkeletonInner} />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "20px",
-        position: "relative",
-        overflow: "hidden",
-        backgroundImage: "url('/FrontEndImages/Login pic.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed",
-      }}
-    >
-      {/* Overlay for better readability */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: "rgba(0, 0, 0, 0.3)",
-          backdropFilter: "blur(1px)",
-          zIndex: 0,
-        }}
-      />
+    <div className={styles.root}>
+      <div className={styles.overlay} aria-hidden />
 
       <Card
-        style={{
-          width: "100%",
-          maxWidth: 450,
-          borderRadius: "16px",
-          boxShadow: "0 20px 60px rgba(0, 0, 0, 0.5)",
-          border: "none",
-          backdropFilter: "blur(20px)",
-          background: "rgba(255, 255, 255, 0.95)",
-          position: "relative",
-          zIndex: 1,
+        className={styles.card}
+        styles={{
+          body: { padding: isMobile ? "24px" : "40px" },
         }}
-        styles={{ body: { padding: isMobile ? "24px" : "40px" } }}
       >
         {/* Header Section */}
         <div style={{ textAlign: "center", marginBottom: "32px" }}>
@@ -251,8 +242,8 @@ export default function LoginPage() {
           size="large"
           requiredMark={false}
           initialValues={{
-            email: "admin@example.com",
-            password: "123457",
+            email: "johndoe@example.com",
+            password: "password",
           }}
         >
           <Form.Item
@@ -280,7 +271,8 @@ export default function LoginPage() {
             rules={[{ required: true, message: "Please input your password!" }]}
             style={{ marginBottom: "8px" }}
           >
-            <Input.Password
+            <Input
+              type={passwordVisible ? "text" : "password"}
               prefix={<LockOutlined style={{ color: "#667eea" }} />}
               placeholder="Password"
               autoComplete="current-password"
@@ -289,6 +281,27 @@ export default function LoginPage() {
                 borderRadius: "8px",
                 fontSize: "15px",
               }}
+              suffix={
+                <span
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setPasswordVisible((v) => !v)}
+                  onKeyDown={(e) => e.key === "Enter" && setPasswordVisible((v) => !v)}
+                  style={{
+                    cursor: "pointer",
+                    color: "#667eea",
+                    display: "inline-flex",
+                    alignItems: "center",
+                  }}
+                  aria-label={passwordVisible ? "Hide password" : "Show password"}
+                >
+                  {passwordVisible ? (
+                    <EyeInvisibleOutlined style={{ fontSize: 18 }} />
+                  ) : (
+                    <EyeOutlined style={{ fontSize: 18 }} />
+                  )}
+                </span>
+              }
             />
           </Form.Item>
 

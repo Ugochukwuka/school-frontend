@@ -21,7 +21,7 @@ export default function Error({
         <Alert
           type="error"
           showIcon
-          message="Something went wrong"
+          title="Something went wrong"
           description={
             <div className="mt-2">
               <p className="text-sm text-gray-600 mb-2">

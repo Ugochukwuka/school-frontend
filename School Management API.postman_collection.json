@@ -30,7 +30,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "//admin login\r\n// {\r\n//   \"email\": \"admin@example.com\",\r\n//   \"password\": \"password\"\r\n// }\r\n\r\n//parent login\r\n\r\n// {\r\n//   \"email\": \"parent1@example.com\",\r\n//   \"password\": \"password\"\r\n// }\r\n\r\n//teacher login\r\n\r\n{\r\n  \"email\": \"johndoe@example.com\",\r\n  \"password\": \"password\"\r\n}\r\n\r\n//student login\r\n// {\r\n//     \"email\": \"studenta@example.com\",\r\n//     \"password\": \"password\"\r\n// }",
+              "raw": "//admin login\r\n{\r\n  \"email\": \"admin@example.com\",\r\n  \"password\": \"password\"\r\n}\r\n\r\n//parent login\r\n\r\n// {\r\n//   \"email\": \"parent1@example.com\",\r\n//   \"password\": \"password\"\r\n// }\r\n\r\n//teacher login\r\n\r\n// {\r\n//   \"email\": \"johndoe@example.com\",\r\n//   \"password\": \"password\"\r\n// }\r\n\r\n//student login\r\n// {\r\n//     \"email\": \"studenta@example.com\",\r\n//     \"password\": \"password\"\r\n// }",
               "options": {
                 "raw": {
                   "language": "json"
@@ -96,17 +96,27 @@
           "response": []
         },
         {
-          "name": "New Request",
+          "name": "Cbt Login",
           "request": {
-            "method": "GET",
+            "method": "POST",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "//admin login\r\n{\r\n  \"email\": \"admin@example.com\",\r\n  \"password\": \"password\"\r\n}\r\n\r\n//parent login\r\n\r\n// {\r\n//   \"email\": \"parent1@example.com\",\r\n//   \"password\": \"password\"\r\n// }\r\n\r\n//teacher login\r\n\r\n// {\r\n//   \"email\": \"johndoe@example.com\",\r\n//   \"password\": \"password\"\r\n// }\r\n\r\n//student login\r\n// {\r\n//     \"email\": \"studenta@example.com\",\r\n//     \"password\": \"password\"\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
-              "raw": "{{BaseUrl}}/ping",
+              "raw": "{{BaseUrl}}/cbt/login",
               "host": [
                 "{{BaseUrl}}"
               ],
               "path": [
-                "ping"
+                "cbt",
+                "login"
               ]
             }
           },
@@ -682,14 +692,14 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{BaseUrl}}/cbt/exams/1/start",
+                      "raw": "{{BaseUrl}}/cbt/exams/5/start",
                       "host": [
                         "{{BaseUrl}}"
                       ],
                       "path": [
                         "cbt",
                         "exams",
-                        "1",
+                        "5",
                         "start"
                       ]
                     },
@@ -708,14 +718,14 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{BaseUrl}}/cbt/exams/available",
+                      "raw": "{{BaseUrl}}/cbt/exams/available  ",
                       "host": [
                         "{{BaseUrl}}"
                       ],
                       "path": [
                         "cbt",
                         "exams",
-                        "available"
+                        "available  "
                       ]
                     },
                     "description": "List exams available to the student's class. Optional query: subject_id"
@@ -898,15 +908,14 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{base_url}}/api/cbt/attempts/{{attempt_id}}/resume",
+                      "raw": "{{BaseUrl}}/cbt/attempts/21/resume",
                       "host": [
-                        "{{base_url}}"
+                        "{{BaseUrl}}"
                       ],
                       "path": [
-                        "api",
                         "cbt",
                         "attempts",
-                        "{{attempt_id}}",
+                        "21",
                         "resume"
                       ]
                     },
@@ -1363,14 +1372,14 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{BaseUrl}}/cbt/exams/1/preview",
+                      "raw": "{{BaseUrl}}/cbt/exams/5/preview",
                       "host": [
                         "{{BaseUrl}}"
                       ],
                       "path": [
                         "cbt",
                         "exams",
-                        "1",
+                        "5",
                         "preview"
                       ]
                     },
@@ -1389,14 +1398,14 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{BaseUrl}}/cbt/exams/1/clone",
+                      "raw": "{{BaseUrl}}/cbt/exams/5/clone",
                       "host": [
                         "{{BaseUrl}}"
                       ],
                       "path": [
                         "cbt",
                         "exams",
-                        "1",
+                        "5",
                         "clone"
                       ]
                     },
@@ -1415,14 +1424,14 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{BaseUrl}}/cbt/exams/1/unpublish",
+                      "raw": "{{BaseUrl}}/cbt/exams/11/unpublish",
                       "host": [
                         "{{BaseUrl}}"
                       ],
                       "path": [
                         "cbt",
                         "exams",
-                        "1",
+                        "11",
                         "unpublish"
                       ]
                     },
@@ -1441,14 +1450,14 @@
                       }
                     ],
                     "url": {
-                      "raw": "{{BaseUrl}}/cbt/exams/1/publish",
+                      "raw": "{{BaseUrl}}/cbt/exams/6/publish",
                       "host": [
                         "{{BaseUrl}}"
                       ],
                       "path": [
                         "cbt",
                         "exams",
-                        "1",
+                        "6",
                         "publish"
                       ]
                     },
@@ -1497,20 +1506,38 @@
                     ],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"title\": \"Updated Title\",\n  \"duration_minutes\": 45\n}"
+                      "raw": "{\n  \"title\": \"Updated Title2\",\n  \"duration_minutes\": 30\n}"
                     },
                     "url": {
-                      "raw": "{{BaseUrl}}/cbt/exams/1",
+                      "raw": "{{BaseUrl}}/cbt/exams/5",
                       "host": [
                         "{{BaseUrl}}"
                       ],
                       "path": [
                         "cbt",
                         "exams",
-                        "1"
+                        "5"
                       ]
                     },
                     "description": "Edit exam details."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "View my Exams",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{BaseUrl}}/teacher/exams",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "teacher",
+                        "exams"
+                      ]
+                    }
                   },
                   "response": []
                 }
@@ -1538,14 +1565,14 @@
                       "raw": "{\n  \"questions\": [\n    {\n      \"question_type\": \"mcq\",\n      \"question_text\": \"What is 2 + 2?\",\n      \"marks\": 2,\n      \"options\": [\n        { \"option_label\": \"A\", \"option_text\": \"3\", \"is_correct\": false },\n        { \"option_label\": \"B\", \"option_text\": \"4\", \"is_correct\": true }\n      ]\n    }\n  ]\n}"
                     },
                     "url": {
-                      "raw": "{{BaseUrl}}/cbt/exams/1/questions",
+                      "raw": "{{BaseUrl}}/cbt/exams/6/questions",
                       "host": [
                         "{{BaseUrl}}"
                       ],
                       "path": [
                         "cbt",
                         "exams",
-                        "1",
+                        "6",
                         "questions"
                       ]
                     },
@@ -4432,6 +4459,60 @@
                   "response": []
                 }
               ]
+            },
+            {
+              "name": "AI Uploads",
+              "item": [
+                {
+                  "name": "Upload Questions",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "exam_type",
+                          "type": "text",
+                          "uuid": "0a8118b2-7cea-4720-b8c4-0270036fec57",
+                          "value": "WAEC"
+                        },
+                        {
+                          "key": "images[]",
+                          "type": "file",
+                          "uuid": "8f3fde82-11a6-43cc-8711-4e1865418876",
+                          "src": [
+                            "/C:/Users/USER/Pictures/New folder/civic1.png",
+                            "/C:/Users/USER/Pictures/New folder/civic2.png",
+                            "/C:/Users/USER/Pictures/New folder/Civic3.png",
+                            "/C:/Users/USER/Pictures/New folder/Civic4.png"
+                          ]
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/ocr/questions/upload",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "ocr",
+                        "questions",
+                        "upload"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Upload Answers",
+                  "request": {
+                    "method": "GET",
+                    "header": []
+                  },
+                  "response": []
+                }
+              ]
             }
           ]
         },
@@ -5738,6 +5819,1220 @@
             }
           },
           "response": []
+        }
+      ]
+    },
+    {
+      "name": "External CBT API",
+      "item": [
+        {
+          "name": "External Exams",
+          "item": [
+            {
+              "name": "Create external exam",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Status is 201', () => pm.response.to.have.status(201))",
+                      "",
+                      "pm.test('Response has exam data', () => {",
+                      "    const json = pm.response.json();",
+                      "    pm.expect(json).to.have.property('data');",
+                      "    pm.expect(json.data).to.have.property('id');",
+                      "    pm.expect(json.data).to.have.property('name');",
+                      "    pm.collectionVariables.set('exam_id', json.data.id);",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"WAEC 2025 Mathematics\",\n  \"course_name\": \"Mathematics\",\n  \"title\": \"WAEC Maths 2024\",\n  \"description\": \"Objective section\",\n  \"duration\": 60,\n  \"total_marks\": 50,\n  \"start_time\": \"2026-03-12 09:00:00\",\n  \"end_time\": \"2026-03-12 10:00:00\",\n  \"year\": \"2024\",\n  \"status\": \"draft\"\n}"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/external/exams",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "external",
+                    "exams"
+                  ]
+                },
+                "description": "Create a new external exam. Required: name, course_name, duration, total_marks. Optional: title, description, year, start_time, end_time, status. 2026-03-11"
+              },
+              "response": []
+            },
+            {
+              "name": "List external exams",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Status is 200', () => pm.response.to.have.status(200))",
+                      "",
+                      "pm.test('Response has data array', () => {",
+                      "    const json = pm.response.json();",
+                      "    pm.expect(json).to.have.property('data');",
+                      "    pm.expect(json.data).to.be.an('array');",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/external/exams?year=2024&course_name=Mathematics&per_page=15",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "external",
+                    "exams"
+                  ],
+                  "query": [
+                    {
+                      "key": "year",
+                      "value": "2024",
+                      "description": "Filter by year"
+                    },
+                    {
+                      "key": "course_name",
+                      "value": "Mathematics"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "15"
+                    }
+                  ]
+                },
+                "description": "List all external exams. Optional query: year, course_name, per_page. 2026-03-11"
+              },
+              "response": []
+            },
+            {
+              "name": "Get one external exam",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Status is 200', () => pm.response.to.have.status(200))",
+                      "",
+                      "pm.test('Exam id matches', () => {",
+                      "    const json = pm.response.json();",
+                      "    pm.expect(json.data).to.have.property('id');",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/external/exams/1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "external",
+                    "exams",
+                    "1"
+                  ]
+                },
+                "description": "Get details of a specific exam by id or uuid. 2026-03-11"
+              },
+              "response": []
+            },
+            {
+              "name": "Update external exam",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Status is 200', () => pm.response.to.have.status(200))",
+                      "",
+                      "pm.test('Exam updated', () => {",
+                      "    const json = pm.response.json();",
+                      "    pm.expect(json.data).to.have.property('name');",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"WAEC 2024 Mathematics\",\n  \"course_name\": \"Mathematics\",\n  \"title\": \"WAEC Maths 2024\",\n  \"description\": \"Objective section\",\n  \"duration\": 60,\n  \"total_marks\": 60,\n  \"start_time\": \"2026-03-14 16:56:00\",\n  \"end_time\": \"2026-03-14 16:58:00\",\n  \"year\": \"2024\",\n  \"status\": \"published\"\n}"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/external/exams/1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "external",
+                    "exams",
+                    "1"
+                  ]
+                },
+                "description": "Update an existing exam. Send only fields to change. 2026-03-11"
+              },
+              "response": []
+            },
+            {
+              "name": "Delete external exam",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Status is 200 or 204', () => {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([",
+                      "        200,",
+                      "        204",
+                      "    ]);",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/external/exams/4",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "external",
+                    "exams",
+                    "4"
+                  ]
+                },
+                "description": "Delete an exam by id or uuid. 2026-03-11"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Questions",
+          "item": [
+            {
+              "name": "Add question to exam",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status is 201', () => pm.response.to.have.status(201))",
+                      "",
+                      "pm.test('Question created', () => {",
+                      "    const json = pm.response.json();",
+                      "    pm.expect(json.data).to.have.property('id');",
+                      "    pm.expect(json.data).to.have.property('question_text');",
+                      "    pm.collectionVariables.set('question_id', json.data.id);",
+                      "})"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"question_text\": \"What is 2 + 2?\",\n  \"type\": \"mcq\",\n  \"marks\": 2,\n  \"explanation\": \"Basic addition.\"\n}"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/external/exams/{{exam_id}}/questions",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "external",
+                    "exams",
+                    "{{exam_id}}",
+                    "questions"
+                  ]
+                },
+                "description": "Manually add a question. Required: question_text, type (mcq|theory), marks. Optional: image, audio, explanation. 2026-03-11"
+              },
+              "response": []
+            },
+            {
+              "name": "Update question",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status is 200', () => pm.response.to.have.status(200))",
+                      "",
+                      "pm.test('Question updated', () => {",
+                      "    const json = pm.response.json();",
+                      "    pm.expect(json.data).to.have.property('question_text');",
+                      "})"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"question_text\": \"What is 2 + 2? (Updated)\",\n  \"marks\": 3,\n  \"explanation\": \"Basic arithmetic.\"\n}"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/external/questions/{{question_id}}",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "external",
+                    "questions",
+                    "{{question_id}}"
+                  ]
+                },
+                "description": "Update a question by id or uuid. 2026-03-11"
+              },
+              "response": []
+            },
+            {
+              "name": "List questions for exam",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status is 200', () => pm.response.to.have.status(200))",
+                      "",
+                      "pm.test('Questions array returned', () => {",
+                      "    const json = pm.response.json();",
+                      "    pm.expect(json.data).to.be.an('array');",
+                      "})"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/external/exams/{{exam_id}}/questions",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "external",
+                    "exams",
+                    "{{exam_id}}",
+                    "questions"
+                  ]
+                },
+                "description": "List all questions for an exam (with options). 2026-03-11"
+              },
+              "response": []
+            },
+            {
+              "name": "Delete question",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status is 200 or 204', () => {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([",
+                      "        200,",
+                      "        204",
+                      "    ]);",
+                      "})"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/external/questions/{{question_id}}",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "external",
+                    "questions",
+                    "{{question_id}}"
+                  ]
+                },
+                "description": "Delete a question by id or uuid. 2026-03-11"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Question Options",
+          "item": [
+            {
+              "name": "Add option to question",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status is 201', () => pm.response.to.have.status(201))",
+                      "",
+                      "pm.test('Option created', () => {",
+                      "    const json = pm.response.json();",
+                      "    pm.expect(json.data).to.have.property('id');",
+                      "    pm.collectionVariables.set('option_id', json.data.id);",
+                      "})"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"option_label\": \"A\",\n  \"option_text\": \"3\",\n  \"is_correct\": false\n}"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/external/questions/{{question_id}}/options",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "external",
+                    "questions",
+                    "{{question_id}}",
+                    "options"
+                  ]
+                },
+                "description": "Add an option. Required: option_text, is_correct. Optional: option_label, image. 2026-03-11"
+              },
+              "response": []
+            },
+            {
+              "name": "Add correct option",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status is 201', () => pm.response.to.have.status(201))",
+                      "",
+                      "pm.test('Correct option created', () => {",
+                      "    const json = pm.response.json();",
+                      "    pm.expect(json.data).to.have.property('id');",
+                      "    pm.expect(json.data.is_correct).to.be.true;",
+                      "    pm.collectionVariables.set('correct_option_id', json.data.id);",
+                      "})"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"option_label\": \"B\",\n  \"option_text\": \"4\",\n  \"is_correct\": true\n}"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/external/questions/{{question_id}}/options",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "external",
+                    "questions",
+                    "{{question_id}}",
+                    "options"
+                  ]
+                },
+                "description": "Add the correct option for a question. 2026-03-11"
+              },
+              "response": []
+            },
+            {
+              "name": "List options for question",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status is 200', () => pm.response.to.have.status(200))",
+                      "",
+                      "pm.test('Options array returned', () => {",
+                      "    const json = pm.response.json();",
+                      "    pm.expect(json.data).to.be.an('array');",
+                      "})"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/external/questions/{{question_id}}/options",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "external",
+                    "questions",
+                    "{{question_id}}",
+                    "options"
+                  ]
+                },
+                "description": "List all options for a question. 2026-03-11"
+              },
+              "response": []
+            },
+            {
+              "name": "Delete option",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status is 200 or 204', () => {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([",
+                      "        200,",
+                      "        204",
+                      "    ]);",
+                      "})"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/external/options/{{option_id}}",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "external",
+                    "options",
+                    "{{option_id}}"
+                  ]
+                },
+                "description": "Delete an option by id or uuid. 2026-03-11"
+              },
+              "response": []
+            },
+            {
+              "name": "Update option",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status is 200', () => pm.response.to.have.status(200))",
+                      "",
+                      "pm.test('Option updated', () => {",
+                      "    const json = pm.response.json();",
+                      "    pm.expect(json.data).to.have.property('option_text');",
+                      "})"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"option_text\": \"4 (four)\",\n  \"is_correct\": true\n}"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/external/options/{{option_id}}",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "external",
+                    "options",
+                    "{{option_id}}"
+                  ]
+                },
+                "description": "Update an option by id or uuid. 2026-03-11"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "4. Attempts & Answers",
+          "item": [
+            {
+              "name": "Start exam attempt",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Status is 201 or 200', () => {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([",
+                      "        200,",
+                      "        201",
+                      "    ]);",
+                      "})",
+                      "",
+                      "pm.test('Attempt created with id', () => {",
+                      "    const json = pm.response.json();",
+                      "    pm.expect(json.data).to.have.property('id');",
+                      "    pm.collectionVariables.set('attempt_id', json.data.id);",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_id\": 1\n}"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/external/exams/1/attempt",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "external",
+                    "exams",
+                    "1",
+                    "attempt"
+                  ]
+                },
+                "description": "Start a new attempt. Pass user_id or omit to use authenticated user. Save returned attempt_id for next requests. 2026-03-11"
+              },
+              "response": []
+            },
+            {
+              "name": "Get attempt questions (student view)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Status is 200', () => pm.response.to.have.status(200))",
+                      "",
+                      "pm.test('Questions returned without correct answers', () => {",
+                      "    const json = pm.response.json();",
+                      "    pm.expect(json.data).to.be.an('array');",
+                      "    if (json.data.length > 0 && json.data[0].options) {",
+                      "        json.data[0].options.forEach(opt => {",
+                      "            pm.expect(opt).to.not.have.property('is_correct');",
+                      "        });",
+                      "    }",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/external/attempts/5/questions",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "external",
+                    "attempts",
+                    "5",
+                    "questions"
+                  ]
+                },
+                "description": "Get questions for this attempt. When in_progress, is_correct is hidden so students cannot see answers. 2026-03-11"
+              },
+              "response": []
+            },
+            {
+              "name": "Submit one answer",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status is 200 or 201', () => {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([",
+                      "        200,",
+                      "        201",
+                      "    ]);",
+                      "})",
+                      "",
+                      "pm.test('Answer submitted', () => {",
+                      "    const json = pm.response.json();",
+                      "    pm.expect(json).to.have.property('data');",
+                      "})"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_id\": 1,\n  \"question_id\": 1,\n  \"option_id\": 2\n}"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/external/attempts/{{attempt_id}}/answers",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "external",
+                    "attempts",
+                    "{{attempt_id}}",
+                    "answers"
+                  ]
+                },
+                "description": "Submit one answer. Use question_id and option_id (or selected_option_id). user_id optional if auth user. 2026-03-11"
+              },
+              "response": []
+            },
+            {
+              "name": "Submit multiple answers",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status is 200 or 201', () => {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([",
+                      "        200,",
+                      "        201",
+                      "    ]);",
+                      "})",
+                      "",
+                      "pm.test('Answers submitted', () => {",
+                      "    const json = pm.response.json();",
+                      "    pm.expect(json).to.have.property('data');",
+                      "})"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"user_id\": 1,\n  \"answers\": [\n    { \"question_id\": 1, \"option_id\": 2 },\n    { \"question_id\": 2, \"option_id\": 5 }\n  ]\n}"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/external/attempts/{{attempt_id}}/answers",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "external",
+                    "attempts",
+                    "{{attempt_id}}",
+                    "answers"
+                  ]
+                },
+                "description": "Submit multiple answers in one request. 2026-03-11"
+              },
+              "response": []
+            },
+            {
+              "name": "Submit exam (finalize)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Status is 200', () => pm.response.to.have.status(200))",
+                      "",
+                      "pm.test('Score computed', () => {",
+                      "    const json = pm.response.json();",
+                      "    pm.expect(json.data).to.have.property('score');",
+                      "    pm.expect(json.data.score).to.be.a('number');",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/external/attempts/1/submit",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "external",
+                    "attempts",
+                    "1",
+                    "submit"
+                  ]
+                },
+                "description": "Finalize attempt: sets status=submitted, computes score from saved answers. 2026-03-11"
+              },
+              "response": []
+            },
+            {
+              "name": "Get attempt (with answers)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status is 200', () => pm.response.to.have.status(200))",
+                      "",
+                      "pm.test('Attempt has score and answers', () => {",
+                      "    const json = pm.response.json();",
+                      "    pm.expect(json.data).to.have.property('score');",
+                      "    pm.expect(json.data).to.have.property('answers');",
+                      "    pm.expect(json.data.answers).to.be.an('array');",
+                      "})",
+                      "",
+                      "pm.test('Score matches correct answers', () => {",
+                      "    const json = pm.response.json();",
+                      "    const correctAnswers = json.data.answers.filter(a => a.is_correct === true);",
+                      "    pm.expect(json.data.score).to.equal(correctAnswers.length * 5);",
+                      "})"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/external/attempts/{{attempt_id}}",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "external",
+                    "attempts",
+                    "{{attempt_id}}"
+                  ]
+                },
+                "description": "View attempt details and all submitted answers (after or during attempt). 2026-03-11"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "5. OCR → External CBT",
+          "item": [
+            {
+              "name": "OCR upload questions (then insert to external CBT)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Status is 200 or 201', () => {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([",
+                      "        200,",
+                      "        201",
+                      "    ]);",
+                      "})",
+                      "",
+                      "pm.test('OCR questions parsed', () => {",
+                      "    const json = pm.response.json();",
+                      "    pm.expect(json).to.have.property('data');",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "exam_type",
+                      "value": "WAEC",
+                      "description": "WAEC|NECO|JAMB|church_quiz|company_exam|other",
+                      "type": "text"
+                    },
+                    {
+                      "key": "name",
+                      "value": "WAEC Maths 2024",
+                      "description": "Optional: exam name if creating new",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "course_name",
+                      "value": "Mathematics",
+                      "description": "Optional",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "year",
+                      "value": "2024",
+                      "description": "Optional",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "duration",
+                      "value": "60",
+                      "description": "Optional, minutes",
+                      "type": "text"
+                    },
+                    {
+                      "key": "external_exam_id",
+                      "value": "1",
+                      "description": "Optional: existing exam id to add questions to",
+                      "type": "text"
+                    },
+                    {
+                      "key": "images[]",
+                      "description": "One or more question paper images",
+                      "type": "file",
+                      "src": [
+                        "/C:/Users/USER/Pictures/New folder/civic1.png",
+                        "/C:/Users/USER/Pictures/New folder/civic2.png",
+                        "/C:/Users/USER/Pictures/New folder/Civic3.png",
+                        "/C:/Users/USER/Pictures/New folder/Civic4.png"
+                      ]
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/ocr/questions/upload",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "ocr",
+                    "questions",
+                    "upload"
+                  ]
+                },
+                "description": "Upload question images. OCR extracts text, AI parses to Q&A, then inserts into external CBT. Send external_exam_id to add to existing exam, OR name/course_name/year/duration to create new exam. 2026-03-11"
+              },
+              "response": []
+            },
+            {
+              "name": "OCR upload answers (apply to external CBT)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test('Status is 200 or 201', () => {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([",
+                      "        200,",
+                      "        201",
+                      "    ]);",
+                      "})",
+                      "",
+                      "pm.test('OCR answers applied', () => {",
+                      "    const json = pm.response.json();",
+                      "    pm.expect(json).to.have.property('data');",
+                      "})"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "exam_type",
+                      "value": "WAEC",
+                      "description": "WAEC|NECO|JAMB|church_quiz|company_exam|other",
+                      "type": "text"
+                    },
+                    {
+                      "key": "external_exam_id",
+                      "value": "1",
+                      "description": "Required: exam id to apply answer key to",
+                      "type": "text"
+                    },
+                    {
+                      "key": "images[]",
+                      "description": "Answer key/solutions image(s)",
+                      "type": "file",
+                      "src": [
+                        "Civicans1.png",
+                        "Civicans2.png",
+                        "Civicans3.png"
+                      ]
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/ocr/answers/upload",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "ocr",
+                    "answers",
+                    "upload"
+                  ]
+                },
+                "description": "Upload answer key image. OCR extracts text, AI parses correct options, then sets is_correct on cbt_external_question_options. 2026-03-11"
+              },
+              "response": []
+            }
+          ]
         }
       ]
     }

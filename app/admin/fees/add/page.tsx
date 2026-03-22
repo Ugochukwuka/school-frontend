@@ -376,13 +376,17 @@ export default function AddFeePage() {
               { type: "number", min: 0, message: "Amount must be 0 or greater" },
             ]}
           >
-            <InputNumber
+            <InputNumber<number>
               placeholder="Enter amount due"
               min={0}
               step={0.01}
               style={{ width: "100%" }}
               formatter={(value) => `₦ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-              parser={(value) => value!.replace(/₦\s?|(,*)/g, "")}
+              parser={(value) => {
+                const raw = (value ?? "").replace(/₦\s?|(,*)/g, "");
+                const n = Number(raw);
+                return Number.isFinite(n) ? n : 0;
+              }}
             />
           </Form.Item>
 

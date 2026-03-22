@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Table, Spin, Alert, Button, Tag, Dropdown, Modal, Popconfirm } from "antd";
+import { Card, Table, Spin, Alert, Button, Tag, Dropdown, App } from "antd";
 import type { MenuProps } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -16,6 +16,7 @@ interface PaginationInfo {
 }
 
 export default function TeacherCBTExamsPage() {
+  const { modal } = App.useApp();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [exams, setExams] = useState<any[]>([]);
@@ -91,7 +92,7 @@ export default function TeacherCBTExamsPage() {
         key: "publish",
         label: isPublished ? "Unpublish" : "Publish",
         onClick: () => {
-          Modal.confirm({
+          modal.confirm({
             title: isPublished ? "Unpublish this exam?" : "Publish this exam?",
             content: isPublished
               ? "Students will no longer be able to take this exam. You can publish it again later."
@@ -110,7 +111,7 @@ export default function TeacherCBTExamsPage() {
         label: "Delete",
         danger: true,
         onClick: () => {
-          Modal.confirm({
+          modal.confirm({
             title: "Delete this exam?",
             content: "This will remove the exam and related data. This cannot be undone.",
             okText: "Delete",

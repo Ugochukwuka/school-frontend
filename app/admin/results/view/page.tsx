@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Table, Spin, Alert, Card, Select, Space } from "antd";
 import axios from "axios";
 import { getAuthHeaders } from "@/app/lib/auth";
@@ -309,7 +310,7 @@ export default function AdminViewResultsPage() {
       
       // Auto-select first subject if none selected (backend may require it for admin)
       if (subjectsData.length > 0 && !selectedSubjectId) {
-        setSelectedSubjectId(subjectsData[0].id || subjectsData[0].subject_id);
+        setSelectedSubjectId(subjectsData[0].subject_id);
       }
     } catch (err: any) {
       console.error("Error fetching all subjects:", err);
@@ -385,8 +386,8 @@ export default function AdminViewResultsPage() {
         payload.subject_id = Number(selectedSubjectId);
       } else if (subjects.length > 0) {
         // Fallback: use first subject if somehow none is selected
-        payload.subject_id = Number(subjects[0].subject_id || subjects[0].id);
-        setSelectedSubjectId(subjects[0].subject_id || subjects[0].id);
+        payload.subject_id = Number(subjects[0].subject_id);
+        setSelectedSubjectId(subjects[0].subject_id);
       }
 
       if (selectedClassId) {
@@ -395,7 +396,7 @@ export default function AdminViewResultsPage() {
 
       console.log("Fetching results with payload:", payload);
 
-      let response;
+      let response: any;
       try {
         response = await axios.post<Result[]>(
           `http://127.0.0.1:8000/api/results/view`,
@@ -413,7 +414,7 @@ export default function AdminViewResultsPage() {
           if (selectedSubjectId) {
             retryPayload.subject_id = Number(selectedSubjectId);
           } else if (subjects.length > 0) {
-            retryPayload.subject_id = Number(subjects[0].subject_id || subjects[0].id);
+            retryPayload.subject_id = Number(subjects[0].subject_id);
           }
           
           if (selectedClassId) {
@@ -611,7 +612,7 @@ export default function AdminViewResultsPage() {
                 disabled={loadingSubjects}
                 allowClear={false}
                 options={subjects.map((subject) => ({
-                  value: subject.subject_id || subject.id,
+                  value: subject.subject_id,
                   label: `${subject.subject_name}${subject.subject_code ? ` (${subject.subject_code})` : ""}`,
                 }))}
               />

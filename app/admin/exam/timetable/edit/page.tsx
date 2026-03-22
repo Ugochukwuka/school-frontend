@@ -195,7 +195,7 @@ export default function EditExamTimetablePage() {
               showSizeChanger: !isMobile,
               showTotal: (total) => `Total ${total} entries`,
               simple: isMobile,
-              size: isMobile ? "small" : "middle",
+              size: isMobile ? "small" : "default",
             }}
             scroll={{ x: isMobile ? 800 : true }}
             size={isMobile ? "small" : "middle"}

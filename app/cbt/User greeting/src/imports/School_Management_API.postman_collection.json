@@ -1,0 +1,5801 @@
+{
+  "info": {
+    "_postman_id": "d2b90874-1551-41af-9b83-f8216e1d3ec5",
+    "name": "School Management API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "35145756"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let token = pm.response.json().token;\r",
+                  "pm.collectionVariables.set(\"token\", token);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "//admin login\r\n// {\r\n//   \"email\": \"admin@example.com\",\r\n//   \"password\": \"password\"\r\n// }\r\n\r\n//parent login\r\n\r\n// {\r\n//   \"email\": \"parent1@example.com\",\r\n//   \"password\": \"password\"\r\n// }\r\n\r\n//teacher login\r\n\r\n{\r\n  \"email\": \"johndoe@example.com\",\r\n  \"password\": \"password\"\r\n}\r\n\r\n//student login\r\n// {\r\n//     \"email\": \"studenta@example.com\",\r\n//     \"password\": \"password\"\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/login",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"John Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"08012345678\",\r\n    \"password\": \"password123\",\r\n    \"password_confirmation\": \"password123\",\r\n    \"role\": \"student\",\r\n    \"parent_id\": null\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// {\r\n//     \"uuid\": \"b46777c1-71ee-49d3-a3ee-18631310c822\"\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/logout",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "New Request",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/ping",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "ping"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Student Dashboard",
+      "item": [
+        {
+          "name": "Class Info",
+          "item": [
+            {
+              "name": "View Class Members",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/users/b46777c1-71ee-49d3-a3ee-18631310c822/class-members?session_id=1&class_id=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    "b46777c1-71ee-49d3-a3ee-18631310c822",
+                    "class-members"
+                  ],
+                  "query": [
+                    {
+                      "key": "session_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "class_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Class Subjects",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/student/subjects?uuid=b46777c1-71ee-49d3-a3ee-18631310c822",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "student",
+                    "subjects"
+                  ],
+                  "query": [
+                    {
+                      "key": "uuid",
+                      "value": "b46777c1-71ee-49d3-a3ee-18631310c822"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Academic Session",
+          "item": [
+            {
+              "name": "View Timetable",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/student/timetable?uuid=b46777c1-71ee-49d3-a3ee-18631310c822&term_id=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "student",
+                    "timetable"
+                  ],
+                  "query": [
+                    {
+                      "key": "uuid",
+                      "value": "b46777c1-71ee-49d3-a3ee-18631310c822"
+                    },
+                    {
+                      "key": "term_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Results",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/student/results?uuid=b46777c1-71ee-49d3-a3ee-18631310c822&term_id=1&session_id=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "student",
+                    "results"
+                  ],
+                  "query": [
+                    {
+                      "key": "uuid",
+                      "value": "b46777c1-71ee-49d3-a3ee-18631310c822"
+                    },
+                    {
+                      "key": "term_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "session_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Session Details",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/student/sessiondetails?uuid=b46777c1-71ee-49d3-a3ee-18631310c822",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "student",
+                    "sessiondetails"
+                  ],
+                  "query": [
+                    {
+                      "key": "uuid",
+                      "value": "b46777c1-71ee-49d3-a3ee-18631310c822"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Download Result",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/student/downloadresult?uuid=b46777c1-71ee-49d3-a3ee-18631310c822&session_id=1&selected_term=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "student",
+                    "downloadresult"
+                  ],
+                  "query": [
+                    {
+                      "key": "uuid",
+                      "value": "b46777c1-71ee-49d3-a3ee-18631310c822"
+                    },
+                    {
+                      "key": "session_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "selected_term",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Reminder  of Tomorrow Classes",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/notifications/next-daysubjects?uuid=b46777c1-71ee-49d3-a3ee-18631310c822",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "notifications",
+                    "next-daysubjects"
+                  ],
+                  "query": [
+                    {
+                      "key": "uuid",
+                      "value": "b46777c1-71ee-49d3-a3ee-18631310c822"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Fees Management",
+          "item": [
+            {
+              "name": "View payment History",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"student_uuid\": \"b46777c1-71ee-49d3-a3ee-18631310c822\",\r\n  \"session_id\": 1,\r\n  \"term_id\": 1,\r\n  \"class_id\": 1\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/view/child/payment/history?session_id=1&term=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "view",
+                    "child",
+                    "payment",
+                    "history"
+                  ],
+                  "query": [
+                    {
+                      "key": "session_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "term",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Fee Obligation",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/view/child/fees/obligations?student_uuid=b46777c1-71ee-49d3-a3ee-18631310c822&session_id=1&term_id=1&class_id=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "view",
+                    "child",
+                    "fees",
+                    "obligations"
+                  ],
+                  "query": [
+                    {
+                      "key": "student_uuid",
+                      "value": "b46777c1-71ee-49d3-a3ee-18631310c822"
+                    },
+                    {
+                      "key": "session_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "term_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "class_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Reports",
+          "item": [
+            {
+              "name": "View Term Report",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"John Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"08012345678\",\r\n    \"password\": \"password123\",\r\n    \"password_confirmation\": \"password123\",\r\n    \"role\": \"student\",\r\n    \"parent_id\": null\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:8000/api/results/term-report/{id}",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "api",
+                    "results",
+                    "term-report",
+                    "{id}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Session Report",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"email\": \"admin@example.com\",\r\n  \"password\": \"password\"\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:8000/api/results/session-report/{id}",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "api",
+                    "results",
+                    "session-report",
+                    "{id}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Profile",
+          "item": [
+            {
+              "name": "Update Profile",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"uuid\": \"b46777c1-71ee-49d3-a3ee-18631310c822\",\r\n    \"name\": \"Student A\",\r\n    \"phone\": \"0801\",\r\n    \"email\": \"studenta@example.com\",\r\n    \"password\": \"123457\",\r\n    \"password_confirmation\": \"123457\"\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/updateprofile",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "updateprofile"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Profile",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/me?uuid=b46777c1-71ee-49d3-a3ee-18631310c822",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "me"
+                  ],
+                  "query": [
+                    {
+                      "key": "uuid",
+                      "value": "b46777c1-71ee-49d3-a3ee-18631310c822"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Previous Session",
+          "item": [
+            {
+              "name": "View Previous Term Result",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/student/prevresults?uuid=b46777c1-71ee-49d3-a3ee-18631310c822&term_id=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "student",
+                    "prevresults"
+                  ],
+                  "query": [
+                    {
+                      "key": "uuid",
+                      "value": "b46777c1-71ee-49d3-a3ee-18631310c822"
+                    },
+                    {
+                      "key": "term_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Download Result",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/student/downloadresult?uuid=b46777c1-71ee-49d3-a3ee-18631310c822&selected_term=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "student",
+                    "downloadresult"
+                  ],
+                  "query": [
+                    {
+                      "key": "uuid",
+                      "value": "b46777c1-71ee-49d3-a3ee-18631310c822"
+                    },
+                    {
+                      "key": "selected_term",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Announcement Management",
+          "item": [
+            {
+              "name": "View Announcements",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/student/viewnotifications",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "student",
+                    "viewnotifications"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "CBT",
+          "item": [
+            {
+              "name": "Exam Access",
+              "item": [
+                {
+                  "name": "Start exam",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/1/start",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "1",
+                        "start"
+                      ]
+                    },
+                    "description": "Creates attempt. Set exam_id in variables."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "View available exams",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/available",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "available"
+                      ]
+                    },
+                    "description": "List exams available to the student's class. Optional query: subject_id"
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Exam Session",
+              "item": [
+                {
+                  "name": "Attempt status",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/attempts/1/status",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "attempts",
+                        "1",
+                        "status"
+                      ]
+                    },
+                    "description": "Status check; may auto-submit if expired."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Log event",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"event_type\": \"tab_switch\",\n  \"metadata\": { \"count\": 1 }\n}"
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/api/cbt/attempts/{{attempt_id}}/event",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "cbt",
+                        "attempts",
+                        "{{attempt_id}}",
+                        "event"
+                      ]
+                    },
+                    "description": "Log tab switch, reconnect, etc."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Sync time",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"remaining_seconds\": 3000\n}"
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/api/cbt/attempts/{{attempt_id}}/sync-time",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "cbt",
+                        "attempts",
+                        "{{attempt_id}}",
+                        "sync-time"
+                      ]
+                    },
+                    "description": "Update remaining time from client."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Submit exam",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/attempts/1/submit",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "attempts",
+                        "1",
+                        "submit"
+                      ]
+                    },
+                    "description": "Final submission."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Save answer",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"question_id\": 2,\n  \"selected_option_id\": 3,\n  \"answer_text\": \"4\"\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/attempts/1/answers",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "attempts",
+                        "1",
+                        "answers"
+                      ]
+                    },
+                    "description": "Auto-save one answer. For MCQ use selected_option_id; for theory use answer_text."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Resume unfinished exam",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/api/cbt/attempts/{{attempt_id}}/resume",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "cbt",
+                        "attempts",
+                        "{{attempt_id}}",
+                        "resume"
+                      ]
+                    },
+                    "description": "Resume with saved answers."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Fetch questions",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/attempts/1/questions",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "attempts",
+                        "1",
+                        "questions"
+                      ]
+                    },
+                    "description": "Get questions for in-progress attempt."
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Results",
+              "item": [
+                {
+                  "name": "View result for one exam",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/api/cbt/results/{{exam_id}}",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "cbt",
+                        "results",
+                        "{{exam_id}}"
+                      ]
+                    },
+                    "description": "Latest result for given exam."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "View result history",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/results/history",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "results",
+                        "history"
+                      ]
+                    },
+                    "description": "All CBT results for the student."
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Teacher Dashboard",
+      "item": [
+        {
+          "name": "Attendance Management",
+          "item": [
+            {
+              "name": "Mark Attendance",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"class_id\": 1,\r\n  \"term_id\": 1,\r\n  \"session_id\": 1,\r\n  \"date\": \"2025-12-15\",\r\n  \"attendance\": [\r\n    {\r\n      \"uuid\": \"b46777c1-71ee-49d3-a3ee-18631310c822\",\r\n      \"status\": \"present\"\r\n    },\r\n    {\r\n      \"uuid\": \"f79cf62e-3025-499d-815f-a277f6aa9092\",\r\n      \"status\": \"absent\"\r\n    },\r\n    {\r\n      \"uuid\": \"6cd4823e-8575-4b68-8b6a-cdd090b87029\",\r\n      \"status\": \"present\"\r\n    }\r\n  ]\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/teacher/attendance/mark",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "teacher",
+                    "attendance",
+                    "mark"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Attendance Summary",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"class_id\": 1,\r\n  \"term_id\": 1,\r\n  \"session_id\": 1,\r\n  \"student_uuids\": [\r\n    \"b46777c1-71ee-49d3-a3ee-18631310c822\",\r\n    \"f79cf62e-3025-499d-815f-a277f6aa9092\",\r\n    \"6cd4823e-8575-4b68-8b6a-cdd090b87029\"\r\n  ],\r\n  \r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/attendance/summary",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "attendance",
+                    "summary"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Attendance",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"class_id\": 1,\r\n  \"term_id\": 1,\r\n  \"session_id\": 1,\r\n  \"date\": \"2025-12-15\",\r\n  \"attendance\": [\r\n    {\r\n      \"uuid\": \"f79cf62e-3025-499d-815f-a277f6aa9092\",\r\n      \"status\": \"present\"\r\n    }\r\n  ]\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/teacher/attendance/update",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "teacher",
+                    "attendance",
+                    "update"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Result Management",
+          "item": [
+            {
+              "name": "Enter Scores (CA, Exam)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"subject_id\": 1,\r\n    \"term_id\": 1,\r\n    \"results\": [\r\n        {\r\n            \"student_uuid\": \"b46777c1-71ee-49d3-a3ee-18631310c822\",\r\n            \"ca1\": 15,\r\n            \"ca2\": 18,\r\n            \"exam_score\": 55,\r\n            \"teacher_comment\": \"Good understanding of the subject\"\r\n        },\r\n        {\r\n            \"student_uuid\": \"f79cf62e-3025-499d-815f-a277f6aa9092\",\r\n            \"ca1\": 12,\r\n            \"ca2\": 17,\r\n            \"exam_score\": 60,\r\n            \"teacher_comment\": \"Needs to participate more in class\"\r\n        }\r\n    ]\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/results/enter",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "results",
+                    "enter"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View all Student Result 4 Term",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"term_id\": 1\r\n}"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/results/view",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "results",
+                    "view"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Result for Class",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"class_id\": 1,\r\n  \"term_id\": 1,\r\n  \"subject_id\": 1,\r\n  \"results\": [\r\n    {\r\n      \"student_uuid\": \"b46777c1-71ee-49d3-a3ee-18631310c822\",\r\n      \"ca1\": 16,\r\n      \"ca2\": 18,\r\n      \"exam_score\": 56,\r\n      \"teacher_comment\": \"Improved performance, keep it up\"\r\n    },\r\n    {\r\n      \"student_uuid\": \"f79cf62e-3025-499d-815f-a277f6aa9092\",\r\n      \"ca1\": 14,\r\n      \"ca2\": 15,\r\n      \"exam_score\": 50,\r\n      \"teacher_comment\": \"Needs more practice\"\r\n    }\r\n  ]\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/results/update",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "results",
+                    "update"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Single Result",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "//gets a single resu fr a part student\r\n\r\n{\r\n  \"term_id\": 1,\r\n  \"subject_id\": 1,\r\n  \"session_id\": 1\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/results/student/b46777c1-71ee-49d3-a3ee-18631310c822",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "results",
+                    "student",
+                    "b46777c1-71ee-49d3-a3ee-18631310c822"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Class & Subject Management",
+          "item": [
+            {
+              "name": "View Student in Classes Taught",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/teacher/classes/students?session_id=1&per_page=20",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "teacher",
+                    "classes",
+                    "students"
+                  ],
+                  "query": [
+                    {
+                      "key": "session_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "20"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Subjects Assigned Per Session",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"John Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"08012345678\",\r\n    \"password\": \"password123\",\r\n    \"password_confirmation\": \"password123\",\r\n    \"role\": \"student\",\r\n    \"parent_id\": null\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/teacher/subjects?session_id=1&per_page=20",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "teacher",
+                    "subjects"
+                  ],
+                  "query": [
+                    {
+                      "key": "session_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "20"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Students in Class I'm the form Teacher",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"John Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"08012345678\",\r\n    \"password\": \"password123\",\r\n    \"password_confirmation\": \"password123\",\r\n    \"role\": \"student\",\r\n    \"parent_id\": null\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/teacher/formclass/students?session_id=1&per_page=20&class_id=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "teacher",
+                    "formclass",
+                    "students"
+                  ],
+                  "query": [
+                    {
+                      "key": "session_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "20"
+                    },
+                    {
+                      "key": "class_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get form teachers classes",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/form-teacher/classes",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "form-teacher",
+                    "classes"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "CBT",
+          "item": [
+            {
+              "name": "Exam Management",
+              "item": [
+                {
+                  "name": "Create exam",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"class_id\": 1,\n  \"subject_id\": 1,\n  \"title\": \"Mathematics Mid-Term\",\n  \"description\": \"\",\n  \"instructions\": \"Answer all questions.\",\n  \"duration_minutes\": 60,\n  \"total_marks\": 50,\n  \"start_time\": \"2026-02-20T09:00:00\",\n  \"end_time\": \"2026-02-20T10:30:00\"\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams"
+                      ]
+                    },
+                    "description": "Create new CBT exam (draft)."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Preview exam",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/1/preview",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "1",
+                        "preview"
+                      ]
+                    },
+                    "description": "Preview as student would see (no correct answers)."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Clone exam",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/1/clone",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "1",
+                        "clone"
+                      ]
+                    },
+                    "description": "Duplicate exam as draft."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Unpublish exam",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/1/unpublish",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "1",
+                        "unpublish"
+                      ]
+                    },
+                    "description": "Hide exam from students."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Publish exam",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/1/publish",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "1",
+                        "publish"
+                      ]
+                    },
+                    "description": "Make exam visible to students."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete exam",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/2",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "2"
+                      ]
+                    },
+                    "description": "Remove exam and related data."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update exam",
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"title\": \"Updated Title\",\n  \"duration_minutes\": 45\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/1",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "1"
+                      ]
+                    },
+                    "description": "Edit exam details."
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Question Management",
+              "item": [
+                {
+                  "name": "Add questions",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"questions\": [\n    {\n      \"question_type\": \"mcq\",\n      \"question_text\": \"What is 2 + 2?\",\n      \"marks\": 2,\n      \"options\": [\n        { \"option_label\": \"A\", \"option_text\": \"3\", \"is_correct\": false },\n        { \"option_label\": \"B\", \"option_text\": \"4\", \"is_correct\": true }\n      ]\n    }\n  ]\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/1/questions",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "1",
+                        "questions"
+                      ]
+                    },
+                    "description": "Add questions manually (MCQ or theory)."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Import questions (bank IDs)",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"bank_question_ids\": [1, 2, 3]\n}"
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/api/cbt/exams/{{exam_id}}/questions/import",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "cbt",
+                        "exams",
+                        "{{exam_id}}",
+                        "questions",
+                        "import"
+                      ]
+                    },
+                    "description": "Import from question bank by IDs."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update question",
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"question_text\": \"Updated text\",\n  \"marks\": 3\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/questions/1",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "questions",
+                        "1"
+                      ]
+                    },
+                    "description": "Edit question."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete question",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/questions/1",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "questions",
+                        "1"
+                      ]
+                    },
+                    "description": "Remove question."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Add option (MCQ)",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"option_label\": \"C\",\n  \"option_text\": \"5\",\n  \"is_correct\": false\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/questions/2/options",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "questions",
+                        "2",
+                        "options"
+                      ]
+                    },
+                    "description": "Add one MCQ option."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update option",
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"option_text\": \"4\",\n  \"is_correct\": true\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/options/5",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "options",
+                        "5"
+                      ]
+                    },
+                    "description": "Edit option."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete option",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/options/5",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "options",
+                        "5"
+                      ]
+                    },
+                    "description": "Remove option."
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Grading & Review",
+              "item": [
+                {
+                  "name": "View script",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/attempts/1",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "attempts",
+                        "1"
+                      ]
+                    },
+                    "description": "Full attempt with answers and theory marks."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "View attempts (for exam)",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/1/attempts",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "1",
+                        "attempts"
+                      ]
+                    },
+                    "description": "List all attempts for this exam."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Mark theory",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"marks\": [\n    { \"question_id\": 5, \"mark_awarded\": 8, \"remark\": \"Good.\" }\n  ]\n}"
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/api/cbt/attempts/{{attempt_id}}/mark-theory",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "cbt",
+                        "attempts",
+                        "{{attempt_id}}",
+                        "mark-theory"
+                      ]
+                    },
+                    "description": "Grade theory question(s) for an attempt."
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Admin Dashboard",
+      "item": [
+        {
+          "name": "Student Management",
+          "item": [
+            {
+              "name": "Add Students",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Mary Johnson\",\r\n  \"email\": \"maryj@student.com\",\r\n  \"phone\": \"08198765432\",\r\n  \"password\": \"password123\",\r\n  \"role\": \"student\"\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/students",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "students"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View all Students",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/viewstudents?class_id=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "viewstudents"
+                  ],
+                  "query": [
+                    {
+                      "key": "class_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Promote Students",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"student_uuids\": [\r\n    \"b46777c1-71ee-49d3-a3ee-18631310c822\"\r\n  ],\r\n  \"new_class_id\": 2,\r\n  \"session_id\": 2\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/students/promote",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "students",
+                    "promote"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Attendance",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"class_id\": 1,\r\n  \"term_id\": 1,\r\n  \"session_id\": 1,\r\n  \"student_uuids\": [\r\n    \"b46777c1-71ee-49d3-a3ee-18631310c822\",\r\n    \"f79cf62e-3025-499d-815f-a277f6aa9092\",\r\n    \"6cd4823e-8575-4b68-8b6a-cdd090b87029\"\r\n  ],\r\n  \r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/attendance/summary",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "attendance",
+                    "summary"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Teacher Management",
+          "item": [
+            {
+              "name": "Add Teacher",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"John Michael\",\r\n  \"email\": \"john.michael@school.com\",\r\n  \"phone\": \"08034567890\",\r\n  \"password\": \"password123\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/teachers/add",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "teachers",
+                    "add"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View all Teachers",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"John Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"08012345678\",\r\n    \"password\": \"password123\",\r\n    \"password_confirmation\": \"password123\",\r\n    \"role\": \"student\",\r\n    \"parent_id\": null\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/teachers",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "teachers"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Assign Subjects to Teachers",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"class_id\": 1,\r\n  \"subject_id\": 2,\r\n  \"session_id\": 1\r\n}"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/teachers/0dc4f1b0-85e9-42fa-ad8c-e65d13eb350a/assign-subject",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "teachers",
+                    "0dc4f1b0-85e9-42fa-ad8c-e65d13eb350a",
+                    "assign-subject"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Assign Class to Teacher",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"teacher_uuid\": \"0dc4f1b0-85e9-42fa-ad8c-e65d13eb350a\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/teachers/2/assign-class",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "teachers",
+                    "2",
+                    "assign-class"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Add Subject to Class",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"subject_ids\": [3, 1, 2]\r\n\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/classes/1/subjects",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "classes",
+                    "1",
+                    "subjects"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Edit Teacher",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Jonny Mic\",\r\n  \"phone\": \"080345\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/teachers/0dc4f1b0-85e9-42fa-ad8c-e65d13eb350a/edit",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "teachers",
+                    "0dc4f1b0-85e9-42fa-ad8c-e65d13eb350a",
+                    "edit"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View all Teachers without Pagination",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/teachers/all",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "teachers",
+                    "all"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Result Management",
+          "item": [
+            {
+              "name": "Enter Scores (CA, Exam)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "//wen is an admin enterin d resul on beh of d teacher supply\r\n//the teacher id\r\n\r\n{\r\n    \"subject_id\": 1,\r\n    \"term_id\": 1,\r\n    \"results\": [\r\n        {\r\n            \"student_uuid\": \"b46777c1-71ee-49d3-a3ee-18631310c822\",\r\n            \"teacher_id\": 2,\r\n            \"ca1\": 15,\r\n            \"ca2\": 18,\r\n            \"exam_score\": 55,\r\n            \"teacher_comment\": \"Good understanding of the subject\"\r\n        },\r\n        {\r\n            \"student_uuid\": \"f79cf62e-3025-499d-815f-a277f6aa9092\",\r\n            \"teacher_id\": 2,\r\n            \"ca1\": 12,\r\n            \"ca2\": 17,\r\n            \"exam_score\": 60,\r\n            \"teacher_comment\": \"Needs to participate more in class\"\r\n        }\r\n    ]\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/results/enter",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "results",
+                    "enter"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Results for all Students Per Term",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"session_id\": 1,\r\n  \"class_id\": 1,\r\n  \"term_id\": 1,\r\n  \"subject_id\": 1\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/results/view",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "results",
+                    "view"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Result for Class",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "// {\r\n//   \"student_uuids\": [\r\n//     \"b46777c1-71ee-49d3-a3ee-18631310c822\",\r\n//     \"f79cf62e-3025-499d-815f-a277f6aa9092\"\r\n//   ],\r\n//   \"term_id\": 1,\r\n//   \"results\": [\r\n//     {\r\n//       \"uuid\": \"b46777c1-71ee-49d3-a3ee-18631310c822\",\r\n//       \"ca1\": 18,\r\n//       \"ca2\": 17,\r\n//       \"exam_score\": 46,\r\n//       \"teacher_comment\": \"Good improvement\"\r\n//     },\r\n//     {\r\n//       \"uuid\": \"f79cf62e-3025-499d-815f-a277f6aa9092\",\r\n//       \"ca1\": 15,\r\n//       \"ca2\": 19,\r\n//       \"exam_score\": 50,\r\n//       \"teacher_comment\": \"Needs more consistency\"\r\n//     }\r\n//   ]\r\n// }\r\n\r\n\r\n\r\n//new test data\r\n{\r\n  \"class_id\": 1,\r\n  \"session_id\": 1,\r\n  \"subject_id\": 1,\r\n  \"term_id\": 1,\r\n  \"results\": [\r\n    {\r\n      \"student_uuid\": \"b46777c1-71ee-49d3-a3ee-18631310c822\",\r\n      \"ca1\": 16,\r\n      \"ca2\": 18,\r\n      \"exam_score\": 52,\r\n      \"teacher_comment\": \"Very good performance\"\r\n    },\r\n    {\r\n      \"student_uuid\": \"f79cf62e-3025-499d-815f-a277f6aa9092\",\r\n      \"ca1\": 14,\r\n      \"ca2\": 17,\r\n      \"exam_score\": 48,\r\n      \"teacher_comment\": \"Improving steadily\"\r\n    }\r\n  ]\r\n}\r\n\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/results/update",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "results",
+                    "update"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Single Result for a Subject & Student",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"term_id\": 1,\r\n  \"subject_id\": 1,\r\n  \"session_id\": 1,\r\n  \"class_id\": 1\r\n\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/results/student/b46777c1-71ee-49d3-a3ee-18631310c822",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "results",
+                    "student",
+                    "b46777c1-71ee-49d3-a3ee-18631310c822"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Bookshop Management",
+          "item": [
+            {
+              "name": "Add Book",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"book_name\": \"Introduction to Economics\",\r\n    \"class_level_id\": 1,\r\n    \"term_id\": 1,\r\n    \"quantity\": 50,\r\n    \"initial_quantity\": 50,\r\n    \"cost_price\": 110.50,\r\n    \"selling_price\": 140.00\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/bookshop/books/add",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "bookshop",
+                    "books",
+                    "add"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View all Books Per Class & Term",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/bookshop/books?class_level_id=1&term_id=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "bookshop",
+                    "books"
+                  ],
+                  "query": [
+                    {
+                      "key": "class_level_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "term_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Edit a Book based on Class and Term",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"cost_price\": 130.00,\r\n    \"selling_price\": 160.00,\r\n    \"class_level_id\": 1,\r\n    \"term_id\": 1\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/bookshop/books/0c916b0d-03d7-46f9-9024-9ee496fc5668/edit",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "bookshop",
+                    "books",
+                    "0c916b0d-03d7-46f9-9024-9ee496fc5668",
+                    "edit"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Assign Books to Class Level",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"class_level_id\": 2\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/bookshop/books/0c916b0d-03d7-46f9-9024-9ee496fc5668/assign",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "bookshop",
+                    "books",
+                    "0c916b0d-03d7-46f9-9024-9ee496fc5668",
+                    "assign"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Books Requirment for Specific Class Level & Term",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/bookshop/books/requirements?class_level_id=2&term_id=2",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "bookshop",
+                    "books",
+                    "requirements"
+                  ],
+                  "query": [
+                    {
+                      "key": "class_level_id",
+                      "value": "2"
+                    },
+                    {
+                      "key": "term_id",
+                      "value": "2"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get books bought for a Class level based on Term",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "// ?class_level_id=1&term_id=1&status=bought",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/bookshop/books/status?status=bought&class_level_id=1&term_id=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "bookshop",
+                    "books",
+                    "status"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "bought"
+                    },
+                    {
+                      "key": "class_level_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "term_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Purchase Book",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"student_uuid\": \"b46777c1-71ee-49d3-a3ee-18631310c822\",\r\n    \"book_uuid\": \"0c916b0d-03d7-46f9-9024-9ee496fc5668\",\r\n    \"branch_uuid\": \"4b9c5a20-c6af-420f-a7b0-6286410a1b30\",\r\n    \"quantity\": 2\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/bookshop/purchase",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "bookshop",
+                    "purchase"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View alll Book Purchased",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/bookshop/viewallbooksales",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "bookshop",
+                    "viewallbooksales"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "System Configuration",
+          "item": [
+            {
+              "name": "Set Academic Sessions & Terms",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"John Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"08012345678\",\r\n    \"password\": \"password123\",\r\n    \"password_confirmation\": \"password123\",\r\n    \"role\": \"student\",\r\n    \"parent_id\": null\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:8000/api/academic-sessions",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "api",
+                    "academic-sessions"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Set School Fees",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"John Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"08012345678\",\r\n    \"password\": \"password123\",\r\n    \"password_confirmation\": \"password123\",\r\n    \"role\": \"student\",\r\n    \"parent_id\": null\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:8000/api/settings/set-fees",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "api",
+                    "settings",
+                    "set-fees"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Set Grading System",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"John Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"08012345678\",\r\n    \"password\": \"password123\",\r\n    \"password_confirmation\": \"password123\",\r\n    \"role\": \"student\",\r\n    \"parent_id\": null\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:8000/api/settings/set-roles",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "api",
+                    "settings",
+                    "set-roles"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Subject Management",
+          "item": [
+            {
+              "name": "View Subjects",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/subjects",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "subjects"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Subjects for Class",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/classes/1/subjects",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "classes",
+                    "1",
+                    "subjects"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Profile Managment",
+          "item": [
+            {
+              "name": "View Profile Details",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/me?uuid=0f02e9b0-2d07-4759-966a-e0e40c116799",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "me"
+                  ],
+                  "query": [
+                    {
+                      "key": "uuid",
+                      "value": "0f02e9b0-2d07-4759-966a-e0e40c116799"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Profile Details",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"uuid\": \"0f02e9b0-2d07-4759-966a-e0e40c116799\",\r\n    \"name\": \"Admin User\",\r\n    \"phone\": \"0800000001\",\r\n    \"email\": \"admin@example.com\",\r\n    \"password\": \"123457\",\r\n    \"password_confirmation\": \"123457\"\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/updateprofile",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "updateprofile"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Logout",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/logout",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "logout"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Fees Managment",
+          "item": [
+            {
+              "name": "Pay Fee on behalf of a Parent",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"parent_uuid\": \"5d503b93-fb48-4b5f-aba9-c0e2830e9a7b\",\r\n  \"student_uuid\": \"b46777c1-71ee-49d3-a3ee-18631310c822\",\r\n  \"payment_method\": \"paystack\",\r\n  \"allocations\": [\r\n    { \"fee_id\": 1, \"amount\": 2000 },\r\n    { \"fee_id\": 2, \"amount\": 1500 },\r\n    { \"fee_id\": 3, \"amount\": 3500 },\r\n    { \"fee_id\": 4, \"amount\": 5500 }\r\n  ]\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/fees/pay",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "fees",
+                    "pay"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Payment History",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"student_uuid\": \"b46777c1-71ee-49d3-a3ee-18631310c822\",\r\n  \"session_id\": 1,\r\n  \"term_id\": 1,\r\n  \"class_id\": 1\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/view/child/payment/history",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "view",
+                    "child",
+                    "payment",
+                    "history"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Add Fees for Session and Term",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"class_id\": \"1\",\r\n    \"session_id\": \"1\", \r\n    \"fee_type\": \"Bus\", \r\n    \"amount_due\": \"50000\",\r\n    \"term_id\": \"1\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/fees/",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "fees",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View all Fees Based on Term & Session",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/fees/view?session_id=1&term_id=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "fees",
+                    "view"
+                  ],
+                  "query": [
+                    {
+                      "key": "session_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "term_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View all Fees",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"email\": \"admin@example.com\",\r\n  \"password\": \"password\"\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/fees/view",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "fees",
+                    "view"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Completed Fees Payment",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/fees/paid?session_id=1&term_id=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "fees",
+                    "paid"
+                  ],
+                  "query": [
+                    {
+                      "key": "session_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "term_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Part Payment Fees",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/fees/part/paid?session_id=1&term_id=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "fees",
+                    "part",
+                    "paid"
+                  ],
+                  "query": [
+                    {
+                      "key": "session_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "term_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Unpaid Fees",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/fees/unpaid?session_id=1&term_id=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "fees",
+                    "unpaid"
+                  ],
+                  "query": [
+                    {
+                      "key": "session_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "term_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Fee Obligations",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/view/child/fees/obligations?student_uuid=b46777c1-71ee-49d3-a3ee-18631310c822&session_id=1&term_id=1&class_id=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "view",
+                    "child",
+                    "fees",
+                    "obligations"
+                  ],
+                  "query": [
+                    {
+                      "key": "student_uuid",
+                      "value": "b46777c1-71ee-49d3-a3ee-18631310c822"
+                    },
+                    {
+                      "key": "session_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "term_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "class_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Announcement",
+          "item": [
+            {
+              "name": "View Announcements",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"John Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"08012345678\",\r\n    \"password\": \"password123\",\r\n    \"password_confirmation\": \"password123\",\r\n    \"role\": \"student\",\r\n    \"parent_id\": null\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/announcements",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "announcements"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "New Request",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"title\": \"Exam Starts\",\r\n  \"description\": \"All students should prepare for exams.\",\r\n  \"target_role\": \"student\",\r\n  \"start_date\": \"2026-01-25\",\r\n  \"end_date\": \"2026-01-30\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/announcements",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "announcements"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Timetable Management",
+          "item": [
+            {
+              "name": "add weekly time table",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "\r\n  [\r\n    {\r\n    \"class_id\": 1,\r\n    \"subject_id\": 1,\r\n    \"day_of_week\": \"Friday\",\r\n    \"start_time\": \"08:00\",\r\n    \"end_time\": \"09:00\",\r\n    \"teacher_id\": 3\r\n\r\n  },\r\n  {\r\n    \"class_id\": 2,\r\n    \"subject_id\": 2,\r\n    \"day_of_week\": \"Monday\",\r\n    \"start_time\": \"08:00\",\r\n    \"end_time\": \"09:00\",\r\n    \"teacher_id\": 3\r\n    \r\n  }\r\n  \r\n  ]"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/students/timetable",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "students",
+                    "timetable"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "view weekly time table",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/students/viewtimetable?class_id=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "students",
+                    "viewtimetable"
+                  ],
+                  "query": [
+                    {
+                      "key": "class_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "edit weekly time table",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/students/timetable/edit/1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "students",
+                    "timetable",
+                    "edit",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update weekly time table",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"class_id\": 3,\r\n  \"subject_id\": 2,\r\n  \"day_of_week\": \"Wednesday\",\r\n  \"start_time\": \"10:00\",\r\n  \"end_time\": \"10:50\",\r\n  \"teacher_id\": 2\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/students/timetable/update/3",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "students",
+                    "timetable",
+                    "update",
+                    "3"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "view single timetable",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/students/viewsingletimetable/1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "students",
+                    "viewsingletimetable",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Timetable",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/timetable/13",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "timetable",
+                    "13"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "add exam time table",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\r\n  {    \r\n    \"class_id\": 1,\r\n    \"subject_id\": 1,\r\n    \"exam_date\": \"2025-03-12\",\r\n    \"start_time\": \"09:00\",\r\n    \"end_time\": \"11:00\",\r\n    \"exam_type\": \"Midterm\",\r\n    \"room_number\": \"Room 5\"\r\n  }\r\n\r\n//   {    \r\n//     \"class_id\": 1,\r\n//     \"subject_id\": 4,\r\n//     \"exam_date\": \"2025-03-12\",\r\n//     \"start_time\": \"09:00\",\r\n//     \"end_time\": \"11:00\",\r\n//     \"exam_type\": \"Midterm\",\r\n//     \"room_number\": \"Room 5\"\r\n//   }\r\n\r\n]\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/exam/timetable",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "exam",
+                    "timetable"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "view exam time table",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/viewexam/timetable",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "viewexam",
+                    "timetable"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update exam time table",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n   \"class_id\": 3,\r\n  \"subject_id\": 2,\r\n  \"exam_date\": \"2025-04-15\",\r\n  \"start_time\": \"09:00\",\r\n  \"end_time\": \"10:30\",\r\n  \"exam_type\": \"Final Exam\",\r\n  \"room_number\": \"Hall 3\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/exam/timetable/update/1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "exam",
+                    "timetable",
+                    "update",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "view single exam timetable",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/students/viewsingleexamtimetable/1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "students",
+                    "viewsingleexamtimetable",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "edit exam time table",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/exam/timetable/edit/1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "exam",
+                    "timetable",
+                    "edit",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete  Exam Timetable",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/exam/timetable/3",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "exam",
+                    "timetable",
+                    "3"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Blog Management",
+          "item": [
+            {
+              "name": "Create Blog",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"title\": \"My First Blog\",\r\n  \"content\": \"This is the content of my first blog.\",\r\n  \"image\": \"FrontEndImages/freepik__the-style-is-candid-image-photography-with-natural__3241.png\",\r\n  \"author_name\": \"Admin User\",\r\n  \"status\": \"published\",\r\n  \"published_at\": \"2026-02-07 10:00:00\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/createBlog",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "createBlog"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "ViewAllBlogs",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/viewAllBlogs",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "viewAllBlogs"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Single Blog",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/viewSingleBlog/1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "viewSingleBlog",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Edit Blog",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/blogs/edit/9",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "blogs",
+                    "edit",
+                    "9"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Blog",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"title\": \"Updated Blog Title\",\r\n  \"content\": \"This is the updated blog content with new information.\",\r\n  \"image\": \"FrontEndImages/freepik__the-style-is-candid-image-photography-with-natural__3241.png\",\r\n  \"author_name\": \"Admin User\",\r\n  \"status\": \"published\",\r\n  \"published_at\": \"2026-02-07 14:30:00\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/updateBlog/9",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "updateBlog",
+                    "9"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "New Request",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Front End Tuition Fee Management",
+          "item": [
+            {
+              "name": "add Tuition Fee",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"class_category\": \"Primary\",\r\n  \"amount\": 65000,\r\n  \"billing_cycle\": \"term\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/addTuitionFee",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "addTuitionFee"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "view All Tuition Fees",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/viewAllTuitionFees",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "viewAllTuitionFees"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update Tuition Fee",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"class_category\": \"Secondary\",\r\n   \r\n    \"billing_cycle\": \"semester\",\r\n  \"amount\": 70000\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/updateTuitionFee/1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "updateTuitionFee",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "view Single Tuition Fee",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/viewSingleTuitionFee/1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "viewSingleTuitionFee",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "edit Tuition Fee",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/editTuitionFee/1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "editTuitionFee",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Front End Leadershp Management",
+          "item": [
+            {
+              "name": "add Leader",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "// {\r\n//   \"name\": \"John Daniel\",\r\n//   \"position\": \"School Principal\",\r\n//   \"photo_path\": \"FrontEndImages/freepik__minimal-soft-studio-light-photography-a-profession__5645.png\",\r\n//   \"bio\": \"Over 15 years of leadership experience.\"\r\n// }\r\n\r\n\r\n// {\r\n//   \"name\": \"Mary Oladipo\",\r\n//   \"position\": \"Vice Principal\",\r\n//   \"photo_path\": \"FrontEndImages/freepik__minimal-soft-studio-light-photography-a-profession__6789.png\",\r\n//   \"bio\": \"Dedicated to fostering student growth and academic excellence for over 10 years.\"\r\n// }\r\n\r\n\r\n{\r\n  \"name\": \"Samuel Okeke\",\r\n  \"position\": \"Head of Science Department\",\r\n  \"photo_path\": \"FrontEndImages/freepik__minimal-soft-studio-light-photography-a-profession__1123.png\",\r\n  \"bio\": \"Passionate about inspiring young minds in STEM education with over 12 years of teaching experience.\"\r\n}\r\n\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/addLeader",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "addLeader"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update Leader",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"bio\": \"Updated biography information.\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/updateLeader/1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "updateLeader",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "view All Leaders",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/viewAllLeaders",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "viewAllLeaders"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "view Single Leader",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/viewSingleLeader/1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "viewSingleLeader",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "edit Leader",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/editLeader/1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "editLeader",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Academic Session Management",
+          "item": [
+            {
+              "name": "add Session",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"2027/2028\",\r\n  \"start_date\": \"2027-09-01\",\r\n  \"end_date\": \"2028-07-30\",\r\n  \"current\": true\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/addSession",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "addSession"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "view All Sessions",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/viewAllSessions",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "viewAllSessions"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "view Single Session",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/viewSingleSession/1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "viewSingleSession",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "edit Session",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/editSession/1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "editSession",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update session",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"current\": true\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/updateSession/1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "updateSession",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Testimonial Management",
+          "item": [
+            {
+              "name": "add Testimonial",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"writeup\": \"This school has truly transformed my child academically and socially.\",\r\n  \"name\": \"Mrs. Janet Okoro\",\r\n  \"position\": \"Parent\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/addTestimonial",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "addTestimonial"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update Testimonial",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"writeup\": \"Updated testimonial message.\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/updateTestimonial/1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "updateTestimonial",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "view All Testimonials",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/viewAllTestimonials",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "viewAllTestimonials"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "view Single Testimonial",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/viewSingleTestimonial/1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "viewSingleTestimonial",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Testimonial",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/leadership/delete/2",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "leadership",
+                    "delete",
+                    "2"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "School Profile Management",
+          "item": [
+            {
+              "name": "add school profile",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"school_name\": \"Example School\",\r\n  \"motto\": \"Knowledge is power\",\r\n  \"mission\": \"To educate and empower\",\r\n  \"vision\": \"Leading in quality education\",\r\n  \"about_us\": \"We are a modern school focused on excellence in academics and character development.\",\r\n  \"address\": \"123 Main Street, City\",\r\n  \"email\": \"info@example.com\",\r\n  \"phone\": \"+1234567890\",\r\n  \"website\": \"https://www.example.com\",\r\n  \"established_year\": 2005,\r\n  \"logo\": \"FrontEndImages/freepik__minimal-soft-studio-light-photography-a-profession_.jpg\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/school/profile/save",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "school",
+                    "profile",
+                    "save"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "view school profile",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/school/viewprofile",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "school",
+                    "viewprofile"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "school profile edit",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/school/profile/edit",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "school",
+                    "profile",
+                    "edit"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "school profile update",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"school_name\": \"Elite Academy\",\r\n  \"about_us\": \"A Legacy of Excellence\\nFounded in 1995, Elite Academy has been at the forefront of educational excellence for nearly three decades. What started as a small institution with a vision to transform education has grown into a premier learning community that serves over 2,000 students across nursery, primary, and secondary levels.\\n\\nOur commitment to providing world-class education while maintaining strong values and character development has made us a trusted choice for families seeking the best for their children's future.\\n\\nToday, we continue to innovate and adapt, ensuring our students are prepared not just for exams, but for life's challenges and opportunities.\",\r\n  \"mission\": \"To provide a transformative educational experience that empowers students to achieve academic excellence, develop strong character, and become responsible global citizens. We are committed to nurturing each child's unique talents while instilling values of integrity, respect, and lifelong learning.\",\r\n  \"vision\": \"To be recognized as a leading educational institution that produces well-rounded, confident, and innovative leaders who contribute positively to society. We envision a learning environment where every student thrives, every teacher inspires, and every achievement is celebrated.\"\r\n}\r\n\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/schoo/profile/update",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "schoo",
+                    "profile",
+                    "update"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "CBT",
+          "item": [
+            {
+              "name": "Settings & Configuration",
+              "item": [
+                {
+                  "name": "Sync",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"school_id\": 3\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/sync",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "sync"
+                      ]
+                    },
+                    "description": "Sync subjects/classes info."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Save settings",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"shuffle_questions\": true,\n  \"shuffle_options\": true,\n  \"autosave_interval_seconds\": 60,\n  \"max_attempts\": 1,\n  \"allow_late_entry\": false,\n  \"show_results_immediately\": false\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/settings",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "settings"
+                      ]
+                    },
+                    "description": "Create or update CBT settings."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get settings",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/settings?school_id=1",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "settings"
+                      ],
+                      "query": [
+                        {
+                          "key": "school_id",
+                          "value": "1"
+                        }
+                      ]
+                    },
+                    "description": "Get CBT settings. Optional: school_id"
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Exam Control",
+              "item": [
+                {
+                  "name": "Unlock exam",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/1/unlock",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "1",
+                        "unlock"
+                      ]
+                    },
+                    "description": "Allow submissions again."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Lock exam",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/exams/1/lock",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "exams",
+                        "1",
+                        "lock"
+                      ]
+                    },
+                    "description": "Prevent further submissions."
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Analytics & Reports",
+              "item": [
+                {
+                  "name": "Analytics",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/api/cbt/analytics?school_id=",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "cbt",
+                        "analytics"
+                      ],
+                      "query": [
+                        {
+                          "key": "school_id",
+                          "value": ""
+                        }
+                      ]
+                    },
+                    "description": "Dashboard stats. Optional: school_id"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Reports",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/api/cbt/reports?school_id=&exam_id=",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "cbt",
+                        "reports"
+                      ],
+                      "query": [
+                        {
+                          "key": "school_id",
+                          "value": ""
+                        },
+                        {
+                          "key": "exam_id",
+                          "value": ""
+                        }
+                      ]
+                    },
+                    "description": "Results list. Optional: school_id, exam_id"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Export exam results (CSV)",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/api/cbt/exams/{{exam_id}}/export?format=csv",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "cbt",
+                        "exams",
+                        "{{exam_id}}",
+                        "export"
+                      ],
+                      "query": [
+                        {
+                          "key": "format",
+                          "value": "csv"
+                        }
+                      ]
+                    },
+                    "description": "Download CSV. Use format=pdf for PDF."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Export summary (CSV)",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/api/cbt/reports/export?school_id=",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "cbt",
+                        "reports",
+                        "export"
+                      ],
+                      "query": [
+                        {
+                          "key": "school_id",
+                          "value": ""
+                        }
+                      ]
+                    },
+                    "description": "Full report CSV download."
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Question Bank",
+              "item": [
+                {
+                  "name": "Question bank - List",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/question-bank?school_id=1&subject_id=1",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "question-bank"
+                      ],
+                      "query": [
+                        {
+                          "key": "school_id",
+                          "value": "1"
+                        },
+                        {
+                          "key": "subject_id",
+                          "value": "1"
+                        }
+                      ]
+                    },
+                    "description": "List question bank. Optional: school_id, subject_id"
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Question bank - Create",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"subject_id\": 1,\n  \"question_type\": \"mcq\",\n  \"question_text\": \"Sample question?\",\n  \"marks\": 2,\n  \"options\": [\n    { \"option_label\": \"A\", \"option_text\": \"Yes\", \"is_correct\": true },\n    { \"option_label\": \"B\", \"option_text\": \"No\", \"is_correct\": false }\n  ]\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/question-bank",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "question-bank"
+                      ]
+                    },
+                    "description": "Add question to bank."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Question bank - Update",
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"question_text\": \"Updated question text\",\n  \"marks\": 3\n}"
+                    },
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/question-bank/1",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "question-bank",
+                        "1"
+                      ]
+                    },
+                    "description": "Update bank entry. Set question_bank_id in variables."
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Question bank - Delete",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{BaseUrl}}/cbt/question-bank/1",
+                      "host": [
+                        "{{BaseUrl}}"
+                      ],
+                      "path": [
+                        "cbt",
+                        "question-bank",
+                        "1"
+                      ]
+                    },
+                    "description": "Delete bank entry."
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "School Management",
+          "item": [
+            {
+              "name": "List all Schools",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/admin/schools",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "schools"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Bookshop Dashboard",
+      "item": [
+        {
+          "name": "Add Book",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"book_name\": \"Introduction to Economics\",\r\n    \"class_level_id\": 1,\r\n    \"term_id\": 1,\r\n    \"quantity\": 50,\r\n    \"initial_quantity\": 50,\r\n    \"cost_price\": 110.50,\r\n    \"selling_price\": 140.00\r\n}\r\n"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/bookshop/books/add",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "bookshop",
+                "books",
+                "add"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "View all Books Per Class & Term",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/bookshop/books?class_level_id=1&term_id=1",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "bookshop",
+                "books"
+              ],
+              "query": [
+                {
+                  "key": "class_level_id",
+                  "value": "1"
+                },
+                {
+                  "key": "term_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Edit a Book based on Class and Term",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"cost_price\": 130.00,\r\n    \"selling_price\": 160.00,\r\n    \"class_level_id\": 1,\r\n    \"term_id\": 1\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/bookshop/books/0c916b0d-03d7-46f9-9024-9ee496fc5668/edit",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "bookshop",
+                "books",
+                "0c916b0d-03d7-46f9-9024-9ee496fc5668",
+                "edit"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Assign Books to Class Level",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"class_level_id\": 2\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/bookshop/books/0c916b0d-03d7-46f9-9024-9ee496fc5668/assign",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "bookshop",
+                "books",
+                "0c916b0d-03d7-46f9-9024-9ee496fc5668",
+                "assign"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "View Books Requirment for Specific Class Level &Term",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/bookshop/books/requirements?class_level_id=2&term_id=2",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "bookshop",
+                "books",
+                "requirements"
+              ],
+              "query": [
+                {
+                  "key": "class_level_id",
+                  "value": "2"
+                },
+                {
+                  "key": "term_id",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get books bought for a Class level based on Term Copy",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/bookshop/books/status?class_level_id=1&term_id=1&status=bought",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "bookshop",
+                "books",
+                "status"
+              ],
+              "query": [
+                {
+                  "key": "class_level_id",
+                  "value": "1"
+                },
+                {
+                  "key": "term_id",
+                  "value": "1"
+                },
+                {
+                  "key": "status",
+                  "value": "bought"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Purchase Book",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"student_uuid\": \"b46777c1-71ee-49d3-a3ee-18631310c822\",\r\n    \"book_uuid\": \"0c916b0d-03d7-46f9-9024-9ee496fc5668\",\r\n    \"branch_uuid\": \"4b9c5a20-c6af-420f-a7b0-6286410a1b30\",\r\n    \"quantity\": 2\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/bookshop/purchase",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "bookshop",
+                "purchase"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "View Book Purchased Receipts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/bookshop/receipts",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "bookshop",
+                "receipts"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Parent Dashboard",
+      "item": [
+        {
+          "name": "Child Overview Dashboard",
+          "item": [
+            {
+              "name": "View all linked children for Parent",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/parent/children",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "parent",
+                    "children"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View a specific child’s profile for Parent",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/parent/children/f79cf62e-3025-499d-815f-a277f6aa9092",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "parent",
+                    "children",
+                    "f79cf62e-3025-499d-815f-a277f6aa9092"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Academic Monitoring",
+          "item": [
+            {
+              "name": "View child results (all terms & sessions)",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/student/results?uuid=b46777c1-71ee-49d3-a3ee-18631310c822&term_id=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "student",
+                    "results"
+                  ],
+                  "query": [
+                    {
+                      "key": "uuid",
+                      "value": "b46777c1-71ee-49d3-a3ee-18631310c822"
+                    },
+                    {
+                      "key": "term_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Download result PDF",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/student/downloadresult?uuid=b46777c1-71ee-49d3-a3ee-18631310c822&selected_term=1&session_id=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "student",
+                    "downloadresult"
+                  ],
+                  "query": [
+                    {
+                      "key": "uuid",
+                      "value": "b46777c1-71ee-49d3-a3ee-18631310c822"
+                    },
+                    {
+                      "key": "selected_term",
+                      "value": "1"
+                    },
+                    {
+                      "key": "session_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Attendance Tracking",
+          "item": [
+            {
+              "name": "Attendance summary / history",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"email\": \"admin@example.com\",\r\n  \"password\": \"password\"\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/parent/children/b46777c1-71ee-49d3-a3ee-18631310c822/attendance",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "parent",
+                    "children",
+                    "b46777c1-71ee-49d3-a3ee-18631310c822",
+                    "attendance"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Absence notifications",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"email\": \"admin@example.com\",\r\n  \"password\": \"password\"\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:8000/api/parent/notifications",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "api",
+                    "parent",
+                    "notifications"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "New Request",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Fees & Payments",
+          "item": [
+            {
+              "name": "View payment history",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"student_uuid\": \"b46777c1-71ee-49d3-a3ee-18631310c822\",\r\n  \"session_id\": 1,\r\n  \"term_id\": 1,\r\n  \"class_id\": 1\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/view/child/payment/history",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "view",
+                    "child",
+                    "payment",
+                    "history"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Pay Fee",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"parent_uuid\": \"5d503b93-fb48-4b5f-aba9-c0e2830e9a7b\",\r\n  \"student_uuid\": \"b46777c1-71ee-49d3-a3ee-18631310c822\",\r\n  \"payment_method\": \"paystack\",\r\n  \"allocations\": [\r\n    { \"fee_id\": 1, \"amount\": 2000 },\r\n    { \"fee_id\": 2, \"amount\": 1500 },\r\n    { \"fee_id\": 3, \"amount\": 3500 },\r\n    { \"fee_id\": 4, \"amount\": 5500 }\r\n  ]\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/fees/pay",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "fees",
+                    "pay"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Fee Obligations",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/view/child/fees/obligations?student_uuid=b46777c1-71ee-49d3-a3ee-18631310c822&session_id=1&term_id=1&class_id=1",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "view",
+                    "child",
+                    "fees",
+                    "obligations"
+                  ],
+                  "query": [
+                    {
+                      "key": "student_uuid",
+                      "value": "b46777c1-71ee-49d3-a3ee-18631310c822"
+                    },
+                    {
+                      "key": "session_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "term_id",
+                      "value": "1"
+                    },
+                    {
+                      "key": "class_id",
+                      "value": "1"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Download payment receipt",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/payments/PAY-MDX3OUKP8W/downloadReceipt",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "payments",
+                    "PAY-MDX3OUKP8W",
+                    "downloadReceipt"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Timetable & Academic Calendar",
+          "item": [
+            {
+              "name": "Weekly class timetable",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"email\": \"admin@example.com\",\r\n  \"password\": \"password\"\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:8000/api/parent/child/{child_id}/timetable",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "api",
+                    "parent",
+                    "child",
+                    "{child_id}",
+                    "timetable"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Exam timetable",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"email\": \"admin@example.com\",\r\n  \"password\": \"password\"\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:8000/api/parent/child/{child_id}/exam-timetable",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "api",
+                    "parent",
+                    "child",
+                    "{child_id}",
+                    "exam-timetable"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "School academic calendar & event reminders",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"John Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"08012345678\",\r\n    \"password\": \"password123\",\r\n    \"password_confirmation\": \"password123\",\r\n    \"role\": \"student\",\r\n    \"parent_id\": null\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:8000/api/parent/child/{child_id}/events",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "api",
+                    "parent",
+                    "child",
+                    "{child_id}",
+                    "events"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Notifications",
+          "item": [
+            {
+              "name": "Receive announcements",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://127.0.0.1:8000/api/parent/announcements",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "api",
+                    "parent",
+                    "announcements"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Receive teacher messages",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://127.0.0.1:8000/api/parent/child/{child_id}/messages",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "api",
+                    "parent",
+                    "child",
+                    "{child_id}",
+                    "messages"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "School-wide notices",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"John Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"08012345678\",\r\n    \"password\": \"password123\",\r\n    \"password_confirmation\": \"password123\",\r\n    \"role\": \"student\",\r\n    \"parent_id\": null\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:8000/api/parent/announcements",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "api",
+                    "parent",
+                    "announcements"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Fee reminders, result alerts, absence alerts, upcoming events",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"John Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"phone\": \"08012345678\",\r\n    \"password\": \"password123\",\r\n    \"password_confirmation\": \"password123\",\r\n    \"role\": \"student\",\r\n    \"parent_id\": null\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:8000/api/parent/notifications",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "api",
+                    "parent",
+                    "notifications"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Direct message school admin/teacher",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"email\": \"admin@example.com\",\r\n  \"password\": \"password\"\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "http://127.0.0.1:8000/api/parent/message/send",
+                  "protocol": "http",
+                  "host": [
+                    "127",
+                    "0",
+                    "0",
+                    "1"
+                  ],
+                  "port": "8000",
+                  "path": [
+                    "api",
+                    "parent",
+                    "message",
+                    "send"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Profile Settings",
+          "item": [
+            {
+              "name": "Update Profile Details",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"uuid\": \"5d503b93-fb48-4b5f-aba9-c0e2830e9a7b\",\r\n    \"name\": \"Mr Parent One\",\r\n    \"phone\": \"080504\",\r\n    \"email\": \"parent1@example.com\",\r\n    \"password\": \"123457\",\r\n    \"password_confirmation\": \"123457\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseUrl}}/updateprofile",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "updateprofile"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "View Profile Details",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseUrl}}/me?uuid=5d503b93-fb48-4b5f-aba9-c0e2830e9a7b",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "me"
+                  ],
+                  "query": [
+                    {
+                      "key": "uuid",
+                      "value": "5d503b93-fb48-4b5f-aba9-c0e2830e9a7b"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "CBT",
+          "item": [
+            {
+              "name": "Child history",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/parent/0cf194cc-8712-4309-99ff-fe04adcdf5ee/history",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "parent",
+                    "0cf194cc-8712-4309-99ff-fe04adcdf5ee",
+                    "history"
+                  ]
+                },
+                "description": "All exam results for the child."
+              },
+              "response": []
+            },
+            {
+              "name": "Child upcoming exams",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/parent/0cf194cc-8712-4309-99ff-fe04adcdf5ee/exams",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "parent",
+                    "0cf194cc-8712-4309-99ff-fe04adcdf5ee",
+                    "exams"
+                  ]
+                },
+                "description": "Exams the child will write (current session)."
+              },
+              "response": []
+            },
+            {
+              "name": "Child live status",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/parent/0cf194cc-8712-4309-99ff-fe04adcdf5ee/live-status",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "parent",
+                    "0cf194cc-8712-4309-99ff-fe04adcdf5ee",
+                    "live-status"
+                  ]
+                },
+                "description": "Whether child is currently writing an exam."
+              },
+              "response": []
+            },
+            {
+              "name": "Child notifications",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{BaseUrl}}/cbt/parent/0cf194cc-8712-4309-99ff-fe04adcdf5ee/notifications",
+                  "host": [
+                    "{{BaseUrl}}"
+                  ],
+                  "path": [
+                    "cbt",
+                    "parent",
+                    "0cf194cc-8712-4309-99ff-fe04adcdf5ee",
+                    "notifications"
+                  ]
+                },
+                "description": "CBT notification feed for the child."
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "General Endpoints",
+      "item": [
+        {
+          "name": "View all Sessions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/viewsessions",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "viewsessions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "student classes by session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/users/b46777c1-71ee-49d3-a3ee-18631310c822/classes/1",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "users",
+                "b46777c1-71ee-49d3-a3ee-18631310c822",
+                "classes",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "View all Terms Based on Session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/users/term/2",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "users",
+                "term",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Current Session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/sessions/current",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "sessions",
+                "current"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Student Class Based on Session ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/users/b46777c1-71ee-49d3-a3ee-18631310c822/class/by/session/1",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "users",
+                "b46777c1-71ee-49d3-a3ee-18631310c822",
+                "class",
+                "by",
+                "session",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current Class of Student",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/student/current-class",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "student",
+                "current-class"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all School Classes Based on Session Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/sessions/1/classes",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "sessions",
+                "1",
+                "classes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all Classes for NextSession",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/next/session/classes/1",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "next",
+                "session",
+                "classes",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Show all Levels",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/class-levels",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "class-levels"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Admin View Dashboard Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/admin/dashboard/stats",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "dashboard",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Students and Parents Info for Class",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/classes/1/students",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "classes",
+                "1",
+                "students"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "TesthandleWebhook endpoint",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "x-paystack-signature",
+                "value": "TEST_SIGNATURE",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"event\": \"charge.success\",\r\n    \"data\": {\r\n        \"reference\": \"PAY-Z720KULF1E\"\r\n    }\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://maddie-untroublesome-marivel.ngrok-free.dev/api/payments/webhook",
+              "protocol": "https",
+              "host": [
+                "maddie-untroublesome-marivel",
+                "ngrok-free",
+                "dev"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "webhook"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Exam details based on School Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/admin/schools/3/exams",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "schools",
+                "3",
+                "exams"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Subjects based on Class & teacher Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/admin/classes/1/subjectsbyteacher?teacher_uuid=435edcce-f8da-4ef0-959a-26f6d54058bf",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "classes",
+                "1",
+                "subjectsbyteacher"
+              ],
+              "query": [
+                {
+                  "key": "teacher_uuid",
+                  "value": "435edcce-f8da-4ef0-959a-26f6d54058bf"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "pm.request.headers.add({\r",
+          "    key: \"Accept\",\r",
+          "    value: \"application/json\"\r",
+          "});\r",
+          "\r",
+          "\r",
+          "// Add Content-Type header for POST/PUT/PATCH requests\r",
+          "if ([\"POST\", \"PUT\", \"PATCH\"].includes(pm.request.method)) {\r",
+          "    pm.request.headers.upsert({\r",
+          "        key: \"Content-Type\",\r",
+          "        value: \"application/json\"\r",
+          "    });\r",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "BaseUrl",
+      "value": ""
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}

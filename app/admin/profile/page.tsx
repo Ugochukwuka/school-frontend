@@ -193,21 +193,24 @@ export default function AdminProfilePage() {
       
       if (err.response?.status === 422) {
         // Validation errors
-        const validationErrors = err.response?.data?.errors;
+        const validationErrors = err.response?.data?.errors as
+          | Record<string, string | string[]>
+          | undefined;
         if (validationErrors) {
-          const firstError = Array.isArray(Object.values(validationErrors).flat()[0]) 
-            ? Object.values(validationErrors).flat()[0][0]
-            : Object.values(validationErrors).flat()[0];
+          const allErrors = Object.values(validationErrors).flatMap((v) =>
+            Array.isArray(v) ? v : [v]
+          );
+          const firstError = allErrors[0];
           errorMessage = firstError || errorMessage;
           // Set form field errors
           Object.keys(validationErrors).forEach((field) => {
             const fieldErrors = Array.isArray(validationErrors[field]) 
-              ? validationErrors[field] 
+              ? validationErrors[field]
               : [validationErrors[field]];
             form.setFields([
               {
                 name: field,
-                errors: fieldErrors,
+                errors: fieldErrors.filter(Boolean) as string[],
               },
             ]);
           });

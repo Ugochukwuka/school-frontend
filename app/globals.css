@@ -141,6 +141,18 @@ a {
   border-radius: 4px;
 }
 
+/* Form controls: single border on focus only — no outline, no ring (no double line) */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[data-slot="input"]:focus-visible,
+[data-slot="textarea"]:focus-visible,
+[data-slot="select-trigger"]:focus-visible {
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+}
+
 /* Custom animations */
 @keyframes fadeInUp {
   from {
@@ -665,4 +677,20 @@ a {
 .team-carousel-wrapper ~ * a,
 section[id*="our-team"] > div > div:last-child a {
   display: none !important;
+}
+
+/* Form dropdowns: ensure Select/AutoComplete/DatePicker dropdowns sit below trigger and above other form content */
+.ant-select-dropdown,
+.ant-picker-dropdown,
+.ant-dropdown,
+.ant-cascader-dropdown {
+  z-index: 1060 !important;
+}
+/* Radix/UI select in forms: render as overlay so dropdown never pushes/overlaps form fields */
+[data-slot="select-content"] {
+  position: fixed !important;
+  z-index: 2147483647 !important;
+  margin-top: 0;
+  max-height: 16rem;
+  overflow-y: auto;
 }

@@ -962,6 +962,8 @@ key: "academic-session-management",
           placement="left"
           onClose={() => setMobileDrawerVisible(false)}
           open={mobileDrawerVisible}
+          mask={false}
+          destroyOnClose
           styles={{ body: { padding: 0 } }}
           size={250}
           suppressHydrationWarning

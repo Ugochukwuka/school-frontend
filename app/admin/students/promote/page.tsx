@@ -5,6 +5,7 @@ import { Card, Form, Select, Button, Alert, App, Table, Space, Checkbox, Spin, T
 import { useRouter } from "next/navigation";
 import api from "@/app/lib/api";
 import DashboardLayout from "@/app/components/DashboardLayout";
+import { fetchSessionClasses } from "@/app/lib/sessionClassesApi";
 
 const { Title } = Typography;
 
@@ -37,12 +38,6 @@ interface StudentsResponse {
   total: number;
   per_page: number;
   last_page: number;
-}
-
-interface ClassesResponse {
-  status: string;
-  session_id: string;
-  classes: Class[];
 }
 
 interface NextSessionClass {
@@ -98,7 +93,7 @@ export default function PromoteStudentsPage() {
     }
   };
 
-  const fetchClasses = async (sessionId: number) => {
+   const fetchClasses = async (sessionId: number) => {
     setLoadingClasses(true);
     setClasses([]);
     setStudents([]);
@@ -106,18 +101,25 @@ export default function PromoteStudentsPage() {
     setSelectedStudents([]);
     setError("");
     try {
-      const response = await api.get<ClassesResponse>(`/sessions/${sessionId}/classes`);
-      if (response.data.status === "success" && response.data.classes) {
-        setClasses(response.data.classes);
+      const list = await fetchSessionClasses(sessionId);
+      if (list.length > 0) {
+        setClasses(list);
       } else {
-        setError("No classes found for this session.");
+        setError(
+          "No classes found for this session. Add classes for this session in the backend, or pick another session."
+        );
       }
     } catch (err: any) {
       console.error("Error fetching classes:", err);
-      if (err.response?.status === 404) {
-        setError("Classes endpoint not found. Please check if the session has classes configured.");
+      const status = err.response?.status;
+      const msg = err.response?.data?.message;
+      if (status === 404) {
+        setError(
+          msg ||
+            "Could not load classes for this session (API returned 404). Your backend may use a different route; ensure GET sessions/{id}/classes or admin/sessions/{id}/classes exists."
+        );
       } else {
-        setError(err.response?.data?.message || "Failed to load classes. Please try again.");
+        setError(msg || "Failed to load classes. Please try again.");
       }
     } finally {
       setLoadingClasses(false);

@@ -331,14 +331,18 @@ function LeadershipTeamCarousel() {
         leadersData = response.data.data;
       }
       setLeaders(leadersData);
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Handle errors gracefully for public pages
-      if (err.response?.status === 401) {
+      const maybeAxiosError = err as { response?: { status?: number }; message?: string };
+      if (maybeAxiosError.response?.status === 401) {
         setLeaders([]);
       } else {
         setLeaders([]);
         if (process.env.NODE_ENV === "development") {
-          console.warn("Leadership team could not be loaded:", err.message || "Unknown error");
+          console.warn(
+            "Leadership team could not be loaded:",
+            maybeAxiosError.message || "Unknown error"
+          );
         }
       }
     } finally {
@@ -708,7 +712,7 @@ export default function About() {
                 }`}>
                   To provide a transformative educational experience that empowers students to
                   achieve academic excellence, develop strong character, and become responsible
-                  global citizens. We are committed to nurturing each child's unique talents while
+                  global citizens. We are committed to nurturing each child&apos;s unique talents while
                   instilling values of integrity, respect, and lifelong learning.
                 </p>
                 
@@ -864,7 +868,7 @@ export default function About() {
                 }`}>Compassion</h4>
                 <p className={`leading-relaxed ${
                   isDarkMode ? "text-gray-300" : "text-gray-600"
-                }`}>Caring for each student's well-being and growth</p>
+                }`}>Caring for each student&apos;s well-being and growth</p>
               </div>
             </div>
           </div>

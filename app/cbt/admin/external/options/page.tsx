@@ -2,20 +2,20 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../../components/ui/card";
-import { Button } from "../../../../components/ui/button";
-import { Input } from "../../../../components/ui/input";
-import { Label } from "../../../../components/ui/label";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../components/ui/card";
+import { Button } from "../../../components/ui/button";
+import { Input } from "../../../components/ui/input";
+import { Label } from "../../../components/ui/label";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../../../../components/ui/dropdown-menu";
-import { Switch } from "../../../../components/ui/switch";
+} from "../../../components/ui/dropdown-menu";
+import { Switch } from "../../../components/ui/switch";
 import { toast } from "sonner";
-import { CBT_BASE } from "../../../../cbt-urls";
+import { CBT_BASE } from "../../../cbt-urls";
 import { Loader2, MoreVertical, Pencil, PlusCircle, Trash2 } from "lucide-react";
 
 type ExternalOption = {

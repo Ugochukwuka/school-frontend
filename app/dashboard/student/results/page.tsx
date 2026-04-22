@@ -8,6 +8,7 @@ import { getAuthHeaders } from "@/app/lib/auth";
 import DashboardLayout from "@/app/components/DashboardLayout";
 import { useResponsive } from "@/app/lib/responsive";
 import ResultReportView from "./components/ResultReportView";
+import { useSearchParams } from "next/navigation";
 
 interface Result {
   subject: string;
@@ -56,7 +57,6 @@ interface ResultsResponse {
 }
 
 export default function ResultsPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const { isMobile } = useResponsive();
   const [sessions, setSessions] = useState<Session[]>([]);

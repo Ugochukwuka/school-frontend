@@ -17,6 +17,7 @@ import {
 } from "antd";
 import { ReloadOutlined, CheckCircleOutlined, CloseCircleOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import axios from "axios";
+import { useSearchParams } from "next/navigation";
 import { getAuthHeaders } from "@/app/lib/auth";
 import DashboardLayout from "@/app/components/DashboardLayout";
 import { useResponsive } from "@/app/lib/responsive";
@@ -111,7 +112,6 @@ interface AttendanceSummaryResponse {
 }
 
 export default function AttendanceSummaryPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const { isMobile } = useResponsive();
   const [sessions, setSessions] = useState<Session[]>([]);

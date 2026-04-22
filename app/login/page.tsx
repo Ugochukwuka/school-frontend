@@ -28,6 +28,30 @@ interface LoginResponse {
   };
 }
 
+const normalizeServerError = (responseData: unknown): string => {
+  if (typeof responseData === "string") {
+    const trimmed = responseData.trim();
+    if (
+      (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+      (trimmed.startsWith("'") && trimmed.endsWith("'"))
+    ) {
+      return trimmed.slice(1, -1);
+    }
+    return trimmed;
+  }
+
+  if (responseData && typeof responseData === "object") {
+    const candidate = (responseData as Record<string, unknown>).message
+      ?? (responseData as Record<string, unknown>).error
+      ?? (responseData as Record<string, unknown>).detail;
+    if (typeof candidate === "string" && candidate.trim()) {
+      return candidate.trim();
+    }
+  }
+
+  return "Unknown error";
+};
+
 export default function LoginPage() {
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -79,13 +103,16 @@ export default function LoginPage() {
       // Only log a brief summary here if needed for debugging
       if (process.env.NODE_ENV === "development" && err.response) {
         const responseData = err.response.data;
-        const errorMsg = responseData?.message || responseData?.error || responseData?.detail || 
-                        (typeof responseData === "string" ? responseData : null) || "Unknown error";
+        const errorMsg = normalizeServerError(responseData);
         // Don't log 401 (invalid credentials) - expected user error; log 500 and other server errors only
         const status = err.response.status;
         if (status !== 401 && !errorMsg.toLowerCase().includes("sqlstate") && !errorMsg.toLowerCase().includes("connection")) {
           if (status === 500 && responseData) {
-            console.error("Login error (500):", JSON.stringify(responseData, null, 2));
+            if (typeof responseData === "string") {
+              console.error("Login error (500):", errorMsg);
+            } else {
+              console.error("Login error (500):", JSON.stringify(responseData, null, 2));
+            }
           } else {
             console.error("Login error:", status, errorMsg);
           }
@@ -102,8 +129,8 @@ export default function LoginPage() {
         
         if (status === 500) {
           // Check if it's a database connection error
-          const errorText = (responseData?.message || responseData?.error || responseData?.detail || "").toLowerCase();
-          const fullErrorText = (responseData?.message || responseData?.error || responseData?.detail || "");
+          const normalizedError = normalizeServerError(responseData);
+          const errorText = normalizedError.toLowerCase();
           
           // Detect MySQL/database connection errors
           if (errorText.includes("sqlstate") || 
@@ -119,11 +146,9 @@ export default function LoginPage() {
                           "The backend server is running, but the database is not accessible.";
           } else {
             // Try to extract a meaningful error message from various possible response formats
-            errorMessage = responseData?.message || 
-                          responseData?.error || 
-                          responseData?.detail ||
-                          (typeof responseData === "string" ? responseData : null) ||
-                          "Server error. Please try again later or contact support.";
+            errorMessage = normalizedError === "Unknown error"
+              ? "Server error. Please try again later or contact support."
+              : normalizedError;
           }
         } else if (status === 401) {
           // 401 Unauthorized - could be invalid credentials or authentication required

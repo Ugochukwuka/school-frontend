@@ -410,7 +410,9 @@ export default function TimetablePage() {
             <Table
               dataSource={timetable}
               columns={columns}
-              rowKey={(record) => `${record.day}-${record.start_time}-${record.subject_code}-${record.subject}`}
+              rowKey={(record, index) =>
+                `${record.day}-${record.start_time}-${record.end_time}-${record.subject_code}-${record.subject}-${record.teacher_name}-${index ?? 0}`
+              }
               scroll={{ x: "max-content" }}
               loading={loadingTimetable}
               locale={{

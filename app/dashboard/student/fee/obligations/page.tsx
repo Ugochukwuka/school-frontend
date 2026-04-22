@@ -260,8 +260,18 @@ export default function FeeObligationsPage() {
         setStudentClass(null);
       }
     } catch (err: any) {
-      console.error("Error fetching class:", err);
-      // Don't set error for class fetch failures - just set class to null
+      // Treat 404 as a normal "no class assigned" state and show it in-page.
+      if (err.response?.status === 404) {
+        setError("No class found for the selected session.");
+      } else if (err.code === "ERR_NETWORK" || err.message === "Network Error") {
+        setError("Network Error: Please check if the backend server is running");
+      } else if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else if (err.message) {
+        setError(err.message);
+      } else {
+        setError("Failed to load class information.");
+      }
       setStudentClass(null);
     } finally {
       setLoadingClass(false);

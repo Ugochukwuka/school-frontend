@@ -4,6 +4,7 @@ import { ConfigProvider, App } from "antd";
 import "./globals.css";
 import DynamicTitle from "./components/DynamicTitle";
 import DarkModeBody from "./components/DarkModeBody";
+import GlobalOverlayGuard from "./components/GlobalOverlayGuard";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -44,6 +45,7 @@ export default function RootLayout({
           <ConfigProvider>
             <App>
               <DynamicTitle />
+              <GlobalOverlayGuard />
               {children}
             </App>
           </ConfigProvider>

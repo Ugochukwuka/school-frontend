@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Card, Row, Col, Spin, Alert, Typography, Statistic } from "antd";
+import { useEffect, useState, type ReactNode } from "react";
+import { Card, Row, Col, Spin, Alert, Typography, Statistic, Button, Input, message } from "antd";
 import {
   TeamOutlined,
   UserOutlined,
@@ -11,7 +11,7 @@ import {
   BellOutlined,
   FileTextOutlined,
 } from "@ant-design/icons";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import api from "@/app/lib/api";
 import DashboardLayout from "@/app/components/DashboardLayout";
 import { useResponsive } from "@/app/lib/responsive";
@@ -34,9 +34,13 @@ interface DashboardStatsResponse {
 }
 
 export default function AdminDashboard() {
+  const router = useRouter();
   const { isMobile } = useResponsive();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [dashboardTitle, setDashboardTitle] = useState("Admin Dashboard");
+  const [quickActionsTitle, setQuickActionsTitle] = useState("Quick Actions");
+  const [isEditing, setIsEditing] = useState(false);
   const [stats, setStats] = useState<DashboardStats>({
     total_students: 0,
     total_teachers: 0,
@@ -49,6 +53,116 @@ export default function AdminDashboard() {
   useEffect(() => {
     fetchAllStats();
   }, []);
+
+  type QuickAction = {
+    title: string;
+    link: string;
+    icon: ReactNode;
+    color: string;
+  };
+
+  const defaultQuickActions: QuickAction[] = [
+    {
+      title: "Add Student",
+      link: "/admin/students/add",
+      icon: <FileTextOutlined style={{ fontSize: "32px", color: "#1890ff", marginBottom: "12px" }} />,
+      color: "#1890ff",
+    },
+    {
+      title: "Add Teacher",
+      link: "/admin/teachers/add",
+      icon: <UserOutlined style={{ fontSize: "32px", color: "#52c41a", marginBottom: "12px" }} />,
+      color: "#52c41a",
+    },
+    {
+      title: "Enter Results",
+      link: "/admin/results/enter",
+      icon: <TrophyOutlined style={{ fontSize: "32px", color: "#722ed1", marginBottom: "12px" }} />,
+      color: "#722ed1",
+    },
+    {
+      title: "Add Fees",
+      link: "/admin/fees/add",
+      icon: <DollarOutlined style={{ fontSize: "32px", color: "#f5222d", marginBottom: "12px" }} />,
+      color: "#f5222d",
+    },
+  ];
+
+  const [quickActions, setQuickActions] = useState<QuickAction[]>(defaultQuickActions);
+  const [draftTitle, setDraftTitle] = useState("Admin Dashboard");
+  const [draftQuickActionsTitle, setDraftQuickActionsTitle] = useState("Quick Actions");
+  const [draftQuickActions, setDraftQuickActions] = useState<QuickAction[]>(defaultQuickActions);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const savedTitle = localStorage.getItem("adminDashboardTitle");
+    const savedQuickActionsTitle = localStorage.getItem("adminQuickActionsTitle");
+    const savedQuickActions = localStorage.getItem("adminQuickActions");
+
+    if (savedTitle) {
+      setDashboardTitle(savedTitle);
+      setDraftTitle(savedTitle);
+    }
+    if (savedQuickActionsTitle) {
+      setQuickActionsTitle(savedQuickActionsTitle);
+      setDraftQuickActionsTitle(savedQuickActionsTitle);
+    }
+    if (savedQuickActions) {
+      try {
+        const parsed = JSON.parse(savedQuickActions) as Array<{ title: string; link: string }>;
+        if (Array.isArray(parsed) && parsed.length === defaultQuickActions.length) {
+          const merged = defaultQuickActions.map((item, index) => ({
+            ...item,
+            title: parsed[index]?.title || item.title,
+            link: parsed[index]?.link || item.link,
+          }));
+          setQuickActions(merged);
+          setDraftQuickActions(merged);
+        }
+      } catch {
+        // Ignore malformed localStorage values
+      }
+    }
+  }, []);
+
+  const startEditing = () => {
+    setDraftTitle(dashboardTitle);
+    setDraftQuickActionsTitle(quickActionsTitle);
+    setDraftQuickActions(quickActions);
+    setIsEditing(true);
+  };
+
+  const cancelEditing = () => {
+    setIsEditing(false);
+    setDraftTitle(dashboardTitle);
+    setDraftQuickActionsTitle(quickActionsTitle);
+    setDraftQuickActions(quickActions);
+  };
+
+  const saveEdits = () => {
+    const cleanTitle = draftTitle.trim() || "Admin Dashboard";
+    const cleanQuickTitle = draftQuickActionsTitle.trim() || "Quick Actions";
+    const cleanQuickActions = draftQuickActions.map((item) => ({
+      ...item,
+      title: item.title.trim() || "Action",
+      link: item.link.trim() || "#",
+    }));
+
+    setDashboardTitle(cleanTitle);
+    setQuickActionsTitle(cleanQuickTitle);
+    setQuickActions(cleanQuickActions);
+    setIsEditing(false);
+
+    if (typeof window !== "undefined") {
+      localStorage.setItem("adminDashboardTitle", cleanTitle);
+      localStorage.setItem("adminQuickActionsTitle", cleanQuickTitle);
+      localStorage.setItem(
+        "adminQuickActions",
+        JSON.stringify(cleanQuickActions.map(({ title, link }) => ({ title, link })))
+      );
+    }
+    message.success("Dashboard updated successfully.");
+  };
 
   const fetchAllStats = async () => {
     setLoading(true);
@@ -78,6 +192,11 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const navigateTo = (path: string) => {
+    if (!path || path === "#") return;
+    router.push(path);
   };
 
   if (loading) {
@@ -155,8 +274,30 @@ export default function AdminDashboard() {
             maxWidth: "100%",
           }}
         >
-          Admin Dashboard
+          {isEditing ? (
+            <Input
+              value={draftTitle}
+              onChange={(e) => setDraftTitle(e.target.value)}
+              placeholder="Dashboard title"
+              style={{ maxWidth: 320 }}
+            />
+          ) : (
+            dashboardTitle
+          )}
         </Title>
+
+        <div style={{ marginBottom: isMobile ? 12 : 16, display: "flex", gap: 8, flexWrap: "wrap" }}>
+          {!isEditing ? (
+            <Button onClick={startEditing}>Edit Dashboard</Button>
+          ) : (
+            <>
+              <Button type="primary" onClick={saveEdits}>
+                Save
+              </Button>
+              <Button onClick={cancelEditing}>Cancel</Button>
+            </>
+          )}
+        </div>
 
         {error && (
           <Alert
@@ -171,100 +312,105 @@ export default function AdminDashboard() {
 
         {/* Statistics Cards */}
         <Row gutter={[isMobile ? 12 : 16, isMobile ? 12 : 16]} style={{ marginBottom: isMobile ? 16 : 24 }}>
-        {statCards.map((stat, index) => (
-          <Col xs={24} sm={12} md={8} lg={8} xl={8} key={index}>
-            <Link href={stat.link}>
-              <Card
-                hoverable
-                style={{
-                  borderRadius: "12px",
-                  height: "100%",
-                  border: `1px solid ${stat.color}20`,
-                  background: `linear-gradient(135deg, ${stat.color}10 0%, ${stat.color}05 100%)`,
-                  transition: "all 0.3s ease",
-                  boxShadow: "none",
-                }}
-                styles={{ body: { padding: isMobile ? "16px" : "24px" } }}
-              >
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
-                  <div style={{ flex: 1, minWidth: isMobile ? "100%" : "auto" }}>
-                    <Statistic
-                      title={stat.title}
-                      value={stat.value}
-                      prefix={stat.prefix}
-                      styles={{ 
-                        content: { 
-                          color: stat.color, 
-                          fontSize: isMobile ? "20px" : "28px", 
-                          fontWeight: "bold" 
-                        },
-                        title: {
-                          fontSize: isMobile ? "12px" : "14px"
-                        }
-                      }}
-                    />
-                  </div>
-                  <div style={{ marginLeft: isMobile ? "0" : "16px", flexShrink: 0 }}>
-                    <div style={{ fontSize: isMobile ? "24px" : "32px" }}>
-                      {stat.icon}
-                    </div>
+        {statCards.map((stat) => (
+          <Col xs={24} sm={12} md={8} lg={8} xl={8} key={stat.title}>
+            <Card
+              hoverable
+              onClick={() => navigateTo(stat.link)}
+              style={{
+                borderRadius: "12px",
+                height: "100%",
+                border: `1px solid ${stat.color}20`,
+                background: `linear-gradient(135deg, ${stat.color}10 0%, ${stat.color}05 100%)`,
+                transition: "all 0.3s ease",
+                boxShadow: "none",
+                cursor: "pointer",
+              }}
+              styles={{ body: { padding: isMobile ? "16px" : "24px" } }}
+            >
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
+                <div style={{ flex: 1, minWidth: isMobile ? "100%" : "auto" }}>
+                  <Statistic
+                    title={stat.title}
+                    value={stat.value}
+                    prefix={stat.prefix}
+                    styles={{ 
+                      content: { 
+                        color: stat.color, 
+                        fontSize: isMobile ? "20px" : "28px", 
+                        fontWeight: "bold" 
+                      },
+                      title: {
+                        fontSize: isMobile ? "12px" : "14px"
+                      }
+                    }}
+                  />
+                </div>
+                <div style={{ marginLeft: isMobile ? "0" : "16px", flexShrink: 0 }}>
+                  <div style={{ fontSize: isMobile ? "24px" : "32px" }}>
+                    {stat.icon}
                   </div>
                 </div>
-              </Card>
-            </Link>
+              </div>
+            </Card>
           </Col>
         ))}
       </Row>
 
         {/* Quick Links Section */}
         <Title level={4} style={{ marginBottom: isMobile ? 12 : 16, fontSize: isMobile ? 16 : 18 }}>
-          Quick Actions
+          {isEditing ? (
+            <Input
+              value={draftQuickActionsTitle}
+              onChange={(e) => setDraftQuickActionsTitle(e.target.value)}
+              placeholder="Quick actions title"
+              style={{ maxWidth: 320 }}
+            />
+          ) : (
+            quickActionsTitle
+          )}
         </Title>
 
         <Row gutter={[isMobile ? 12 : 16, isMobile ? 12 : 16]}>
-        <Col xs={24} sm={12} md={8} lg={6}>
-          <Link href="/admin/students/add">
-            <Card hoverable style={{ borderRadius: "8px", height: "100%", textAlign: "center", boxShadow: "none" }}>
-              <FileTextOutlined style={{ fontSize: "32px", color: "#1890ff", marginBottom: "12px" }} />
-              <Title level={5} style={{ margin: 0, marginBottom: "8px" }}>
-                Add Student
-              </Title>
-            </Card>
-          </Link>
-        </Col>
-
-        <Col xs={24} sm={12} md={8} lg={6}>
-          <Link href="/admin/teachers/add">
-            <Card hoverable style={{ borderRadius: "8px", height: "100%", textAlign: "center", boxShadow: "none" }}>
-              <UserOutlined style={{ fontSize: "32px", color: "#52c41a", marginBottom: "12px" }} />
-              <Title level={5} style={{ margin: 0, marginBottom: "8px" }}>
-                Add Teacher
-              </Title>
-            </Card>
-          </Link>
-        </Col>
-
-        <Col xs={24} sm={12} md={8} lg={6}>
-          <Link href="/admin/results/enter">
-            <Card hoverable style={{ borderRadius: "8px", height: "100%", textAlign: "center", boxShadow: "none" }}>
-              <TrophyOutlined style={{ fontSize: "32px", color: "#722ed1", marginBottom: "12px" }} />
-              <Title level={5} style={{ margin: 0, marginBottom: "8px" }}>
-                Enter Results
-              </Title>
-            </Card>
-          </Link>
-        </Col>
-
-        <Col xs={24} sm={12} md={8} lg={6}>
-          <Link href="/admin/fees/add">
-            <Card hoverable style={{ borderRadius: "8px", height: "100%", textAlign: "center", boxShadow: "none" }}>
-              <DollarOutlined style={{ fontSize: "32px", color: "#f5222d", marginBottom: "12px" }} />
-              <Title level={5} style={{ margin: 0, marginBottom: "8px" }}>
-                Add Fees
-              </Title>
-            </Card>
-          </Link>
-        </Col>
+        {quickActions.map((action, index) => (
+          <Col xs={24} sm={12} md={8} lg={6} key={`${action.title}-${index}`}>
+            {isEditing ? (
+              <Card style={{ borderRadius: "8px", height: "100%", textAlign: "center", boxShadow: "none" }}>
+                {action.icon}
+                <Input
+                  value={draftQuickActions[index]?.title}
+                  onChange={(e) => {
+                    const updated = [...draftQuickActions];
+                    updated[index] = { ...updated[index], title: e.target.value };
+                    setDraftQuickActions(updated);
+                  }}
+                  placeholder="Action title"
+                  style={{ marginBottom: 8 }}
+                />
+                <Input
+                  value={draftQuickActions[index]?.link}
+                  onChange={(e) => {
+                    const updated = [...draftQuickActions];
+                    updated[index] = { ...updated[index], link: e.target.value };
+                    setDraftQuickActions(updated);
+                  }}
+                  placeholder="Action link"
+                />
+              </Card>
+            ) : (
+              <Card
+                hoverable
+                onClick={() => navigateTo(action.link)}
+                style={{ borderRadius: "8px", height: "100%", textAlign: "center", boxShadow: "none", cursor: "pointer" }}
+              >
+                {action.icon}
+                <Title level={5} style={{ margin: 0, marginBottom: "8px", color: action.color }}>
+                  {action.title}
+                </Title>
+              </Card>
+            )}
+          </Col>
+        ))}
         </Row>
       </div>
     </DashboardLayout>

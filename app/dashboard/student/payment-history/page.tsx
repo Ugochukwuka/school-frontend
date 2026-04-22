@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Table, Spin, Alert, Card, Button, Select, Space, Typography, Empty } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { getAuthHeaders } from "@/app/lib/auth";
 import DashboardLayout from "@/app/components/DashboardLayout";
 import { useResponsive } from "@/app/lib/responsive";
+import { useSearchParams } from "next/navigation";
 
 const { Title } = Typography;
 
@@ -31,6 +32,10 @@ interface Payment {
   created_at: string;
   updated_at: string;
   fee: Fee;
+}
+
+interface PaymentTableRow extends Payment {
+  _rowKey: string;
 }
 
 interface Session {
@@ -81,7 +86,6 @@ interface ClassResponse {
 }
 
 export default function PaymentHistoryPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const { isMobile } = useResponsive();
   const [sessions, setSessions] = useState<Session[]>([]);
@@ -333,20 +337,18 @@ export default function PaymentHistoryPage() {
         setError("No class found for this session.");
       }
     } catch (err: any) {
-      console.error("Error fetching class:", err);
-      console.error("Error response:", err.response?.data);
       let errorMessage = "Failed to load class. Please try again.";
-      
-      if (err.code === "ERR_NETWORK" || err.message === "Network Error") {
+
+      if (err.response?.status === 404) {
+        errorMessage = "No class found for this session.";
+      } else if (err.code === "ERR_NETWORK" || err.message === "Network Error") {
         errorMessage = "Network Error: Please check if the backend server is running";
       } else if (err.response?.data?.message) {
         errorMessage = err.response.data.message;
-      } else if (err.response?.status === 404) {
-        errorMessage = "No class found for this session.";
       } else if (err.message) {
         errorMessage = err.message;
       }
-      
+
       setError(errorMessage);
       setClassId(null);
       setClassName("");
@@ -529,6 +531,30 @@ export default function PaymentHistoryPage() {
     },
   ];
 
+  const paymentTableData = useMemo<PaymentTableRow[]>(() => {
+    const keyCount: Record<string, number> = {};
+
+    return payments.map((payment) => {
+      const baseKey = [
+        payment.id ?? "no-id",
+        payment.fee_id ?? "no-fee",
+        payment.created_at ?? "no-created",
+        payment.updated_at ?? "no-updated",
+        payment.amount_due ?? "no-due",
+        payment.amount_paid ?? "no-paid",
+        payment.status ?? "no-status",
+      ].join("-");
+
+      const occurrence = keyCount[baseKey] ?? 0;
+      keyCount[baseKey] = occurrence + 1;
+
+      return {
+        ...payment,
+        _rowKey: `${baseKey}-${occurrence}`,
+      };
+    });
+  }, [payments]);
+
   const isLoading = loadingSessions || loadingTerms || loadingClass || loadingPayments;
 
   return (
@@ -658,9 +684,9 @@ export default function PaymentHistoryPage() {
         {selectedSessionId && selectedTermId && classId && (
           <div style={{ overflowX: "auto" }}>
             <Table
-              dataSource={payments}
+              dataSource={paymentTableData}
               columns={columns}
-              rowKey="id"
+              rowKey={(record) => record._rowKey}
               scroll={{ x: "max-content" }}
               loading={loadingPayments}
               locale={{

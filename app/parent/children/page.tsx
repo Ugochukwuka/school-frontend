@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Table, Spin, Alert, Card } from "antd";
+import { Table, Spin, Alert, Card, Input } from "antd";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { getAuthHeaders } from "@/app/lib/auth";
@@ -40,19 +40,34 @@ export default function ParentChildrenPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [pageSize, setPageSize] = useState(15);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const router = useRouter();
 
   useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm.trim()), 400);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  useEffect(() => {
     fetchChildren(currentPage);
-  }, [currentPage]);
+  }, [currentPage, debouncedSearch]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch]);
 
   const fetchChildren = async (page: number = 1) => {
     setLoading(true);
     setError("");
 
     try {
+      const params = new URLSearchParams({ page: String(page) });
+      if (debouncedSearch) {
+        params.set("search", debouncedSearch);
+      }
       const response = await axios.get<ApiResponse>(
-        `http://127.0.0.1:8000/api/parent/children?page=${page}`,
+        `http://127.0.0.1:8000/api/parent/children?${params.toString()}`,
         getAuthHeaders()
       );
 
@@ -146,6 +161,13 @@ export default function ParentChildrenPage() {
             style={{ marginBottom: 20 }}
           />
         )}
+        <Input
+          placeholder="Search children"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          allowClear
+          style={{ maxWidth: 320, marginBottom: 16 }}
+        />
 
         <Table
           dataSource={children}
@@ -163,6 +185,7 @@ export default function ParentChildrenPage() {
                 }
               : false
           }
+          locale={{ emptyText: "No results found" }}
         />
       </Card>
     </DashboardLayout>

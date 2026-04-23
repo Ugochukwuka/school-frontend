@@ -10,7 +10,8 @@ import {
   Tabs,
   Typography,
   Space,
-  Button
+  Button,
+  Input
 } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
 import axios from "axios";
@@ -119,6 +120,13 @@ export default function ClassSubjectManagementPage() {
   
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("1");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm.trim()), 400);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   // Fetch sessions on mount
   useEffect(() => {
@@ -165,7 +173,7 @@ export default function ClassSubjectManagementPage() {
         fetchFormClassStudents();
       }
     }
-  }, [selectedSessionId, selectedClassId, activeTab]);
+  }, [selectedSessionId, selectedClassId, activeTab, debouncedSearch]);
 
   const fetchSessions = async () => {
     setError("");
@@ -258,8 +266,13 @@ export default function ClassSubjectManagementPage() {
     setError("");
 
     try {
+      const params = new URLSearchParams({
+        session_id: String(selectedSessionId),
+        per_page: "20",
+      });
+      if (debouncedSearch) params.set("search", debouncedSearch);
       const response = await axios.get<TeacherClassesResponse>(
-        `http://127.0.0.1:8000/api/teacher/classes/students?session_id=${selectedSessionId}&per_page=20`,
+        `http://127.0.0.1:8000/api/teacher/classes/students?${params.toString()}`,
         getAuthHeaders()
       );
 
@@ -322,8 +335,13 @@ export default function ClassSubjectManagementPage() {
     setError("");
 
     try {
+      const params = new URLSearchParams({
+        session_id: String(selectedSessionId),
+        per_page: "20",
+      });
+      if (debouncedSearch) params.set("search", debouncedSearch);
       const response = await axios.get<ApiResponse>(
-        `http://127.0.0.1:8000/api/teacher/subjects?session_id=${selectedSessionId}&per_page=20`,
+        `http://127.0.0.1:8000/api/teacher/subjects?${params.toString()}`,
         getAuthHeaders()
       );
 
@@ -409,8 +427,14 @@ export default function ClassSubjectManagementPage() {
     setError("");
 
     try {
+      const params = new URLSearchParams({
+        session_id: String(selectedSessionId),
+        per_page: "20",
+        class_id: String(selectedClassId),
+      });
+      if (debouncedSearch) params.set("search", debouncedSearch);
       const response = await axios.get<any>(
-        `http://127.0.0.1:8000/api/teacher/formclass/students?session_id=${selectedSessionId}&per_page=20&class_id=${selectedClassId}`,
+        `http://127.0.0.1:8000/api/teacher/formclass/students?${params.toString()}`,
         getAuthHeaders()
       );
 
@@ -626,6 +650,13 @@ export default function ClassSubjectManagementPage() {
             style={{ marginBottom: 20 }}
           />
         )}
+        <Input
+          placeholder="Search current tab results"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          allowClear
+          style={{ maxWidth: 320, marginBottom: 16 }}
+        />
 
         <Tabs
           activeKey={activeTab}

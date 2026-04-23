@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { Table, Spin, Alert, Card, Select } from "antd";
+import { Table, Spin, Alert, Card, Select, Input } from "antd";
 import axios from "axios";
 import { getAuthHeaders } from "@/app/lib/auth";
 import DashboardLayout from "@/app/components/DashboardLayout";
@@ -88,6 +88,13 @@ export default function BooksPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [pageSize, setPageSize] = useState(20);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm.trim()), 400);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   // Fetch sessions on mount
   useEffect(() => {
@@ -132,8 +139,16 @@ export default function BooksPage() {
     setError("");
 
     try {
+      const params = new URLSearchParams({
+        class_level_id: String(classLevelId),
+        term_id: String(termId),
+        page: String(currentPage),
+      });
+      if (debouncedSearch) {
+        params.set("search", debouncedSearch);
+      }
       const response = await axios.get<ApiResponse>(
-        `http://127.0.0.1:8000/api/bookshop/books?class_level_id=${classLevelId}&term_id=${termId}&page=${currentPage}`,
+        `http://127.0.0.1:8000/api/bookshop/books?${params.toString()}`,
         getAuthHeaders()
       );
 
@@ -161,7 +176,7 @@ export default function BooksPage() {
     } finally {
       setLoading(false);
     }
-  }, [classLevelId, termId, currentPage]);
+  }, [classLevelId, termId, currentPage, debouncedSearch]);
 
   // Fetch books when both classLevelId and termId are selected, or when page changes
   useEffect(() => {
@@ -336,6 +351,11 @@ export default function BooksPage() {
     setCurrentPage(page);
   };
 
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1);
+  };
+
   if (loadingSessions || loadingClassLevels) {
     return (
       <DashboardLayout role="admin">
@@ -399,6 +419,13 @@ export default function BooksPage() {
             style={{ marginBottom: 20 }}
           />
         )}
+        <Input
+          placeholder="Search books"
+          value={searchTerm}
+          onChange={(e) => handleSearchChange(e.target.value)}
+          allowClear
+          style={{ maxWidth: 320, marginBottom: 16 }}
+        />
 
         {loading ? (
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "200px" }}>
@@ -422,8 +449,8 @@ export default function BooksPage() {
                 : false
             }
             locale={{
-              emptyText: classLevelId && termId 
-                ? "No books found for the selected filters" 
+              emptyText: classLevelId && termId
+                ? "No results found"
                 : "Please select a session, term, and class level to view books",
             }}
           />

@@ -97,6 +97,29 @@ api.interceptors.response.use(
 
 export default api;
 
+export const getApiErrorMessage = (error: any, fallback = "Something went wrong. Please try again.") => {
+  const data = error?.response?.data;
+
+  if (data?.errors && typeof data.errors === "object") {
+    const messages = Object.values(data.errors).flat().filter(Boolean) as string[];
+    if (messages.length > 0) return messages.join(", ");
+  }
+
+  if (typeof data?.message === "string" && data.message.trim()) {
+    return data.message;
+  }
+
+  if (typeof data?.error === "string" && data.error.trim()) {
+    return data.error;
+  }
+
+  if (typeof error?.message === "string" && error.message.trim()) {
+    return error.message;
+  }
+
+  return fallback;
+};
+
 // Helper function to get axios instance with auth headers
 export const getAuthHeaders = () => {
   const token = localStorage.getItem("token");

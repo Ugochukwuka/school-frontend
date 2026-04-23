@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Spin, Alert, Button, Form, InputNumber } from "antd";
+import { Card, Spin, Alert, Button, Form, Input, InputNumber } from "antd";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import DashboardLayout from "@/app/components/DashboardLayout";

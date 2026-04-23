@@ -55,6 +55,7 @@ const breadcrumbMap: { [key: string]: string } = {
   "/admin/teachers/assign-class": "Assign Class to Teacher",
   "/admin/classes/subjects": "Add Subjects to Class",
   "/admin/teachers/edit": "Edit Teacher",
+  "/admin/users/reset-password": "Reset User Password",
   // Admin routes - Result Management
   "/admin/results/enter": "Enter Results",
   "/admin/results/view": "View All Results",

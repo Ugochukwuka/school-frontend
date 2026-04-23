@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { Card, Spin, Alert, Button, Tag, Flex } from "antd";
 import { useRouter } from "next/navigation";
 import DashboardLayout from "@/app/components/DashboardLayout";
-import { cbtStudent } from "@/app/lib/cbtApi";
+import { cbtStudent, type AvailableExamDto } from "@/app/lib/cbtApi";
+import { getApiErrorMessage } from "@/app/lib/api";
 
 export default function StudentCBTExamsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [exams, setExams] = useState<any[]>([]);
+  const [exams, setExams] = useState<AvailableExamDto[]>([]);
   const [emptyMessage, setEmptyMessage] = useState("");
   const router = useRouter();
 
@@ -29,7 +30,7 @@ export default function StudentCBTExamsPage() {
           setEmptyMessage("");
         }
       } catch (err: any) {
-        setError(err.response?.data?.message || "Failed to load available exams.");
+        setError(getApiErrorMessage(err, "Failed to load available exams."));
         setExams([]);
         setEmptyMessage("");
       } finally {
@@ -46,7 +47,7 @@ export default function StudentCBTExamsPage() {
       if (attemptId) router.push(`/dashboard/student/cbt/attempt/${attemptId}`);
       else router.push(`/dashboard/student/cbt/attempt/${examId}`);
     } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to start exam.");
+      setError(getApiErrorMessage(err, "Failed to start exam."));
     }
   };
 
@@ -68,7 +69,7 @@ export default function StudentCBTExamsPage() {
           <Alert type="info" title={emptyMessage} showIcon style={{ marginBottom: 16 }} />
         )}
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {exams.map((item: any) => (
+          {exams.map((item) => (
             <Flex
               key={item.id}
               align="center"
@@ -91,9 +92,17 @@ export default function StudentCBTExamsPage() {
                   {item.total_marks != null && <Tag>Total: {item.total_marks} marks</Tag>}
                 </div>
               </div>
-              <Button type="primary" onClick={() => startExam(item.id)}>
+              <Button
+                type="primary"
+                onClick={() => startExam(item.id)}
+                disabled={item.can_start_now === false}
+                title={item.can_start_now === false ? item.start_blocked_reason || "Exam is not available to start yet." : undefined}
+              >
                 Start exam
               </Button>
+              {item.can_start_now === false && item.start_blocked_reason ? (
+                <div style={{ width: "100%", color: "#8c8c8c", fontSize: 12 }}>{item.start_blocked_reason}</div>
+              ) : null}
             </Flex>
           ))}
         </div>

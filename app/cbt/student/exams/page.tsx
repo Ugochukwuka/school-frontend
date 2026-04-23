@@ -27,6 +27,8 @@ interface AvailableExam {
   class_level?: { id: number; name: string; arm?: string };
   instructions?: string;
   published_at?: string;
+  can_start_now?: boolean;
+  start_blocked_reason?: string | null;
 }
 
 /** Shape for in-progress attempt (GET /api/cbt/attempts?status=in_progress). Backend may use id or attempt_id. */
@@ -63,6 +65,8 @@ type ExamListItem =
       startTime: string;
       endTime: string;
       attemptId?: undefined;
+      canStartNow?: boolean;
+      startBlockedReason?: string | null;
     }
   | {
       type: "in-progress";
@@ -269,6 +273,8 @@ export default function StudentExamListPage() {
         totalMarks: exam.total_marks,
         startTime,
         endTime,
+        canStartNow: exam.can_start_now,
+        startBlockedReason: exam.start_blocked_reason,
       });
     }
 
@@ -330,9 +336,10 @@ export default function StudentExamListPage() {
 
   const getActionButton = (exam: ExamListItem) => {
     if (exam.type === "available") {
+      const blocked = exam.canStartNow === false;
       return (
         <Link href={`${CBT_BASE}/student/exam/${exam.id}`}>
-          <Button className="w-full bg-green-600 hover:bg-green-700">
+          <Button className="w-full bg-green-600 hover:bg-green-700" disabled={blocked} title={blocked ? exam.startBlockedReason ?? "Exam is not available to start yet." : undefined}>
             <Play className="w-4 h-4 mr-2" />
             Start Exam
           </Button>
@@ -359,7 +366,7 @@ export default function StudentExamListPage() {
     }
     return (
       <Button variant="outline" className="w-full" disabled>
-        Not Yet Available
+        {exam.startBlockedReason || "Not Yet Available"}
       </Button>
     );
   };

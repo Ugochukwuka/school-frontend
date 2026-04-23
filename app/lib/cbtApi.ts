@@ -7,6 +7,21 @@ import api from "./api";
 
 const CBT = "/cbt";
 
+export interface AvailableExamDto {
+  id: number;
+  title?: string;
+  name?: string;
+  description?: string;
+  duration_minutes?: number;
+  total_marks?: number;
+  start_time?: string;
+  end_time?: string;
+  is_locked?: boolean;
+  can_start_now?: boolean;
+  start_blocked_reason?: string | null;
+  subject?: { id?: number; name?: string; code?: string };
+}
+
 // --- Student ---
 export const cbtStudent = {
   getAvailableExams: (params?: { subject_id?: number }) =>

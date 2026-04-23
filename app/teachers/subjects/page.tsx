@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Table, Spin, Alert, Card, Select } from "antd";
+import { Table, Spin, Alert, Card, Select, Input } from "antd";
 import axios from "axios";
 import { getAuthHeaders } from "@/app/lib/auth";
 import DashboardLayout from "@/app/components/DashboardLayout";
@@ -44,6 +44,13 @@ export default function TeacherSubjectsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm.trim()), 400);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   useEffect(() => {
     fetchSessions();
@@ -62,7 +69,11 @@ export default function TeacherSubjectsPage() {
     if (sessionId) {
       fetchSubjects();
     }
-  }, [sessionId]);
+  }, [sessionId, currentPage, debouncedSearch]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [sessionId, debouncedSearch]);
 
   const fetchSessions = async () => {
     setLoadingSessions(true);
@@ -106,8 +117,16 @@ export default function TeacherSubjectsPage() {
     setError("");
 
     try {
+      const params = new URLSearchParams({
+        session_id: String(sessionId),
+        per_page: "20",
+        page: String(currentPage),
+      });
+      if (debouncedSearch) {
+        params.set("search", debouncedSearch);
+      }
       const response = await axios.get<ApiResponse>(
-        `http://127.0.0.1:8000/api/teacher/subjects?session_id=${sessionId}&per_page=20`,
+        `http://127.0.0.1:8000/api/teacher/subjects?${params.toString()}`,
         getAuthHeaders()
       );
 
@@ -161,7 +180,7 @@ export default function TeacherSubjectsPage() {
   return (
     <DashboardLayout role="teacher">
       <Card>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
           <h1 style={{ margin: 0 }}>My Assigned Subjects</h1>
           <Select
             value={sessionId}
@@ -175,6 +194,13 @@ export default function TeacherSubjectsPage() {
             }))}
           />
         </div>
+        <Input
+          placeholder="Search subjects"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          allowClear
+          style={{ maxWidth: 320, marginBottom: 16 }}
+        />
         
         {error && (
           <Alert
@@ -199,9 +225,11 @@ export default function TeacherSubjectsPage() {
                   pageSize: 20,
                   showSizeChanger: false,
                   showTotal: (total) => `Total ${total} subjects`,
+                  onChange: (page) => setCurrentPage(page),
                 }
               : false
           }
+          locale={{ emptyText: "No results found" }}
         />
       </Card>
     </DashboardLayout>

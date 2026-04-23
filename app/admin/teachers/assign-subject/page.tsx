@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card, Form, Select, Button, Alert, App, Typography } from "antd";
 import { useRouter } from "next/navigation";
-import api from "@/app/lib/api";
+import api, { getApiErrorMessage } from "@/app/lib/api";
 import DashboardLayout from "@/app/components/DashboardLayout";
 
 const { Title } = Typography;
@@ -32,9 +32,12 @@ interface ClassesResponse {
 }
 
 interface Subject {
-  id: number;
-  name: string;
+  id?: number;
+  name?: string;
+  subject_id?: number;
+  subject_name?: string;
   code?: string;
+  subject_code?: string;
 }
 
 export default function AssignSubjectPage() {
@@ -53,17 +56,34 @@ export default function AssignSubjectPage() {
   const [loadingClasses, setLoadingClasses] = useState(false);
   const [loadingSubjects, setLoadingSubjects] = useState(false);
   const [error, setError] = useState("");
+  const [teacherSearch, setTeacherSearch] = useState("");
+  const [subjectSearch, setSubjectSearch] = useState("");
+  const [debouncedTeacherSearch, setDebouncedTeacherSearch] = useState("");
+  const [debouncedSubjectSearch, setDebouncedSubjectSearch] = useState("");
 
   useEffect(() => {
     fetchTeachers();
-    fetchSubjects();
-  }, []);
+    fetchSessions();
+  }, [debouncedTeacherSearch, debouncedSubjectSearch]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedTeacherSearch(teacherSearch.trim()), 400);
+    return () => clearTimeout(timer);
+  }, [teacherSearch]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSubjectSearch(subjectSearch.trim()), 400);
+    return () => clearTimeout(timer);
+  }, [subjectSearch]);
 
   const fetchTeachers = async () => {
     setLoadingTeachers(true);
     setError("");
     try {
-      const response = await api.get<any>("/admin/teachers");
+      const teacherQuery = debouncedTeacherSearch
+        ? `?search=${encodeURIComponent(debouncedTeacherSearch)}`
+        : "";
+      const response = await api.get<any>(`/admin/teachers${teacherQuery}`);
       console.log("Teachers response:", response.data);
       
       let teachersData: Teacher[] = [];
@@ -122,12 +142,18 @@ export default function AssignSubjectPage() {
     }
   };
 
-  const fetchSubjects = async () => {
+  const fetchSubjectsByClassAndTeacher = async (classId: number, teacherUuid?: string | null) => {
     setLoadingSubjects(true);
     setError("");
     try {
-      const response = await api.get<any>("/admin/subjects");
-      console.log("Subjects response:", response.data);
+      const params: Record<string, string> = {};
+      if (debouncedSubjectSearch) {
+        params.search = debouncedSubjectSearch;
+      }
+      if (teacherUuid) {
+        params.teacher_uuid = teacherUuid;
+      }
+      const response = await api.get<any>(`/admin/classes/${classId}/subjectsbyteacher`, { params });
       
       let subjectsData: Subject[] = [];
       if (Array.isArray(response.data)) {
@@ -136,20 +162,11 @@ export default function AssignSubjectPage() {
         subjectsData = response.data.data;
       } else if (response.data.subjects && Array.isArray(response.data.subjects)) {
         subjectsData = response.data.subjects;
-      } else {
-        console.warn("Unexpected subjects response format:", response.data);
       }
-      
-      console.log("Subjects data:", subjectsData);
       setSubjects(subjectsData);
     } catch (err: any) {
-      console.error("Error fetching subjects:", err);
-      console.error("Error details:", {
-        message: err.message,
-        response: err.response?.data,
-        status: err.response?.status,
-      });
-      setError(err.response?.data?.message || "Failed to load subjects. Please try again.");
+      setError(getApiErrorMessage(err, "Failed to load subjects. Please try again."));
+      setSubjects([]);
     } finally {
       setLoadingSubjects(false);
     }
@@ -157,19 +174,24 @@ export default function AssignSubjectPage() {
 
   const handleTeacherChange = (teacherUuid: string) => {
     setSelectedTeacherUuid(teacherUuid);
-    setSelectedSessionId(null);
-    setClasses([]);
-    form.setFieldsValue({ session_id: undefined, class_id: undefined });
-    // Fetch sessions when teacher is selected
-    fetchSessions();
+    form.setFieldsValue({ subject_id: undefined });
+    const selectedClass = form.getFieldValue("class_id");
+    if (selectedClass) {
+      fetchSubjectsByClassAndTeacher(selectedClass, teacherUuid);
+    }
   };
 
   const handleSessionChange = (sessionId: number) => {
     setSelectedSessionId(sessionId);
     setClasses([]);
-    form.setFieldsValue({ class_id: undefined });
+    form.setFieldsValue({ class_id: undefined, subject_id: undefined });
     // Fetch classes for the selected session
     fetchClasses(sessionId);
+  };
+
+  const handleClassChange = (classId: number) => {
+    form.setFieldsValue({ class_id: classId, subject_id: undefined });
+    fetchSubjectsByClassAndTeacher(classId, selectedTeacherUuid);
   };
 
   const handleSubmit = async (values: {
@@ -216,19 +238,11 @@ export default function AssignSubjectPage() {
       console.error("Error response:", err.response?.data);
 
       // Handle validation errors
-      let errorMessage = "Failed to assign subject. Please try again.";
-
-      if (err.response?.data) {
-        // Laravel validation errors
-        if (err.response.data.errors) {
-          const errors = err.response.data.errors;
-          const errorMessages = Object.values(errors).flat() as string[];
-          errorMessage = errorMessages.join(", ");
-        } else if (err.response.data.message) {
-          errorMessage = err.response.data.message;
-        }
-      } else if (err.message) {
-        errorMessage = err.message;
+      let errorMessage = getApiErrorMessage(err, "Failed to assign subject. Please try again.");
+      if (err?.response?.status === 403) {
+        errorMessage = getApiErrorMessage(err, "You are not allowed to assign subjects.");
+      } else if (err?.response?.status === 409) {
+        errorMessage = getApiErrorMessage(err, "This subject is already assigned for the selected class/session.");
       }
 
       setError(errorMessage);
@@ -271,6 +285,9 @@ export default function AssignSubjectPage() {
               loading={loadingTeachers}
               value={selectedTeacherUuid}
               onChange={handleTeacherChange}
+              onSearch={setTeacherSearch}
+              showSearch
+              filterOption={false}
               style={{ width: "100%", maxWidth: 400 }}
               options={teachers.map((teacher) => ({
                 value: teacher.uuid,
@@ -308,6 +325,7 @@ export default function AssignSubjectPage() {
               <Select
                 placeholder="Select class"
                 loading={loadingClasses}
+                onChange={handleClassChange}
                 style={{ width: "100%", maxWidth: 400 }}
                 options={classes.map((cls) => ({
                   value: cls.class_id,
@@ -317,7 +335,7 @@ export default function AssignSubjectPage() {
             </Form.Item>
           )}
 
-          {selectedTeacherUuid && (
+          {selectedSessionId && (
             <Form.Item
               name="subject_id"
               label="Select Subject"
@@ -326,10 +344,14 @@ export default function AssignSubjectPage() {
               <Select
                 placeholder="Select subject"
                 loading={loadingSubjects}
+                onSearch={setSubjectSearch}
+                showSearch
+                filterOption={false}
+                disabled={!form.getFieldValue("class_id")}
                 style={{ width: "100%", maxWidth: 400 }}
                 options={subjects.map((subject) => ({
-                  value: subject.id,
-                  label: `${subject.name}${subject.code ? ` (${subject.code})` : ""}`,
+                  value: subject.id ?? subject.subject_id,
+                  label: `${subject.name ?? subject.subject_name ?? "Subject"}${subject.code || subject.subject_code ? ` (${subject.code ?? subject.subject_code})` : ""}`,
                 }))}
               />
             </Form.Item>

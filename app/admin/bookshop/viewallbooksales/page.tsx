@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Table, Spin, Alert, Card } from "antd";
+import { Table, Spin, Alert, Card, Input } from "antd";
 import axios from "axios";
 import { getAuthHeaders } from "@/app/lib/auth";
 import DashboardLayout from "@/app/components/DashboardLayout";
@@ -53,18 +53,33 @@ export default function ViewAllBookSalesPage() {
   const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 20;
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm.trim()), 400);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   useEffect(() => {
     fetchSales();
-  }, []);
+  }, [debouncedSearch]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch]);
 
   const fetchSales = async () => {
     setLoading(true);
     setError("");
 
     try {
+      const params = new URLSearchParams();
+      if (debouncedSearch) {
+        params.set("search", debouncedSearch);
+      }
       const response = await axios.get<BookSale[]>(
-        "http://127.0.0.1:8000/api/bookshop/viewallbooksales",
+        `http://127.0.0.1:8000/api/bookshop/viewallbooksales${params.toString() ? `?${params.toString()}` : ""}`,
         getAuthHeaders()
       );
 
@@ -180,6 +195,13 @@ export default function ViewAllBookSalesPage() {
             style={{ marginBottom: 20 }}
           />
         )}
+        <Input
+          placeholder="Search book sales"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          allowClear
+          style={{ maxWidth: 320, marginBottom: 16 }}
+        />
 
         {loading ? (
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "200px" }}>
@@ -199,7 +221,7 @@ export default function ViewAllBookSalesPage() {
             }}
             scroll={{ x: 1200 }}
             locale={{
-              emptyText: "No sales records found",
+              emptyText: "No results found",
             }}
           />
         )}

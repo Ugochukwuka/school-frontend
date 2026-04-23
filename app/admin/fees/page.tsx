@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Table, Spin, Alert, Card, Select, Tabs } from "antd";
+import { Table, Spin, Alert, Card, Select, Tabs, Input } from "antd";
 import axios from "axios";
 import { getAuthHeaders } from "@/app/lib/auth";
 import DashboardLayout from "@/app/components/DashboardLayout";
@@ -33,10 +33,21 @@ export default function AdminFeesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm.trim()), 400);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   useEffect(() => {
     fetchFees();
-  }, [activeTab, sessionId, termId]);
+  }, [activeTab, sessionId, termId, currentPage, debouncedSearch]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab, sessionId, termId, debouncedSearch]);
 
   const fetchFees = async () => {
     setLoading(true);
@@ -45,13 +56,33 @@ export default function AdminFeesPage() {
     try {
       let url = "";
       if (activeTab === "all") {
-        url = `http://127.0.0.1:8000/api/admin/fees/view`;
+        const params = new URLSearchParams({ page: String(currentPage) });
+        if (debouncedSearch) params.set("search", debouncedSearch);
+        url = `http://127.0.0.1:8000/api/admin/fees/view?${params.toString()}`;
       } else if (activeTab === "paid") {
-        url = `http://127.0.0.1:8000/api/admin/fees/paid?session_id=${sessionId}&term_id=${termId}`;
+        const params = new URLSearchParams({
+          session_id: String(sessionId),
+          term_id: String(termId),
+          page: String(currentPage),
+        });
+        if (debouncedSearch) params.set("search", debouncedSearch);
+        url = `http://127.0.0.1:8000/api/admin/fees/paid?${params.toString()}`;
       } else if (activeTab === "part") {
-        url = `http://127.0.0.1:8000/api/admin/fees/part/paid?session_id=${sessionId}&term_id=${termId}`;
+        const params = new URLSearchParams({
+          session_id: String(sessionId),
+          term_id: String(termId),
+          page: String(currentPage),
+        });
+        if (debouncedSearch) params.set("search", debouncedSearch);
+        url = `http://127.0.0.1:8000/api/admin/fees/part/paid?${params.toString()}`;
       } else if (activeTab === "unpaid") {
-        url = `http://127.0.0.1:8000/api/admin/fees/unpaid?session_id=${sessionId}&term_id=${termId}`;
+        const params = new URLSearchParams({
+          session_id: String(sessionId),
+          term_id: String(termId),
+          page: String(currentPage),
+        });
+        if (debouncedSearch) params.set("search", debouncedSearch);
+        url = `http://127.0.0.1:8000/api/admin/fees/unpaid?${params.toString()}`;
       }
 
       const response = await axios.get<ApiResponse>(url, getAuthHeaders());
@@ -165,6 +196,13 @@ export default function AdminFeesPage() {
             { key: "unpaid", label: "Unpaid" },
           ]}
         />
+        <Input
+          placeholder="Search fees"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          allowClear
+          style={{ maxWidth: 320, marginBottom: 16 }}
+        />
 
         <Table
           dataSource={fees}
@@ -178,9 +216,11 @@ export default function AdminFeesPage() {
                   pageSize: 10,
                   showSizeChanger: false,
                   showTotal: (total) => `Total ${total} fees`,
+                  onChange: (page) => setCurrentPage(page),
                 }
               : false
           }
+          locale={{ emptyText: "No results found" }}
         />
       </Card>
     </DashboardLayout>

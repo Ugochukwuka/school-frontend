@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Table, Spin, Alert, Card } from "antd";
+import { Table, Spin, Alert, Card, Input } from "antd";
 import axios from "axios";
 import { getAuthHeaders } from "@/app/lib/auth";
 import DashboardLayout from "@/app/components/DashboardLayout";
@@ -28,18 +28,35 @@ export default function AdminTeachersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm.trim());
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   useEffect(() => {
     fetchTeachers(currentPage);
-  }, [currentPage]);
+  }, [currentPage, debouncedSearch]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch]);
 
   const fetchTeachers = async (page: number = 1) => {
     setLoading(true);
     setError("");
 
     try {
+      const params = new URLSearchParams({ page: String(page) });
+      if (debouncedSearch) {
+        params.set("search", debouncedSearch);
+      }
       const response = await axios.get<ApiResponse>(
-        `http://127.0.0.1:8000/api/admin/teachers?page=${page}`,
+        `http://127.0.0.1:8000/api/admin/teachers?${params.toString()}`,
         getAuthHeaders()
       );
 
@@ -106,6 +123,14 @@ export default function AdminTeachersPage() {
           />
         )}
 
+        <Input
+          placeholder="Search teachers"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          allowClear
+          style={{ maxWidth: 320, marginBottom: 16 }}
+        />
+
         <Table
           dataSource={teachers}
           columns={columns}
@@ -122,6 +147,7 @@ export default function AdminTeachersPage() {
                 }
               : false
           }
+          locale={{ emptyText: "No results found" }}
         />
       </Card>
     </DashboardLayout>

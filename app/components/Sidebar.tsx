@@ -93,55 +93,26 @@ export default function Sidebar({ role, isDarkMode = false }: SidebarProps) {
     }
   };
 
-  useEffect(() => {
-    setMounted(true);
-    if (pathname) {
-      // Get the best matching menu state for the current pathname
-      const menuState = getMenuStateForPath(pathname);
-      
-      // PRIORITY 1: If pathname is an exact menu item match, use it and update lastSelectedMenuKey
-      if (menuState.selectedKey === pathname && menuState.selectedKey.startsWith("/")) {
-        setSelectedKey(menuState.selectedKey);
-        setOpenKeys(menuState.openKeys);
-        updateLastSelectedMenuKey(menuState.selectedKey);
-        return;
-      }
-      
-      // PRIORITY 2: If we have a lastSelectedMenuKey, keep it selected (for detail pages, etc.)
-      // This ensures the last clicked menu item stays selected when navigating to related pages
-      if (lastSelectedMenuKey) {
-        const lastSelectedState = getMenuStateForPath(lastSelectedMenuKey);
-        setSelectedKey(lastSelectedMenuKey);
-        setOpenKeys(lastSelectedState.openKeys);
-        
-        // Only update lastSelectedMenuKey if we found a better exact match
-        if (menuState.selectedKey.startsWith("/") && menuState.selectedKey === pathname) {
-          updateLastSelectedMenuKey(menuState.selectedKey);
-        }
-        return;
-      }
-      
-      // PRIORITY 3: No lastSelectedMenuKey - use best match from pathname
-      setSelectedKey(menuState.selectedKey);
-      setOpenKeys(menuState.openKeys);
-      
-      // Update last selected if we found a menu item match
-      if (menuState.selectedKey.startsWith("/")) {
-        updateLastSelectedMenuKey(menuState.selectedKey);
-      }
+  // Helper function to get open keys and selected key based on the pathname
+  function getMenuStateForPath(pathname: string): { selectedKey: string; openKeys: string[] } {
+    const menuItems = getMenuItems();
+
+    // First, try to find exact match
+    const exactParentKeys = findParentKeys(menuItems, pathname);
+    if (exactParentKeys !== null) {
+      return { selectedKey: pathname, openKeys: exactParentKeys };
     }
-    
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth >= 768) {
-        setMobileDrawerVisible(false);
-      }
-    };
-    
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, [pathname]);
+
+    // If no exact match, find the best matching menu item
+    const bestMatch = findBestMatchingMenuKey(menuItems, pathname);
+    if (bestMatch) {
+      return { selectedKey: bestMatch.key, openKeys: bestMatch.parentKeys };
+    }
+
+    // Fallback to initial open keys logic
+    const initialKeys = getInitialOpenKeys();
+    return { selectedKey: pathname, openKeys: initialKeys };
+  }
 
   const studentMenuItems = [
     {
@@ -349,6 +320,11 @@ export default function Sidebar({ role, isDarkMode = false }: SidebarProps) {
           key: "/admin/teachers/edit",
           icon: <EditOutlined />,
           label: "Edit Teacher",
+        },
+        {
+          key: "/admin/users/reset-password",
+          icon: <UnlockOutlined />,
+          label: "Reset User Password",
         },
       ],
     },
@@ -826,33 +802,55 @@ key: "academic-session-management",
     return bestMatch ? { key: bestMatch.key, parentKeys: bestMatch.parentKeys } : null;
   };
 
-  // Helper function to get open keys and selected key based on the pathname
-  const getMenuStateForPath = (pathname: string): { selectedKey: string; openKeys: string[] } => {
-    const menuItems = getMenuItems();
-    
-    // First, try to find exact match
-    const exactParentKeys = findParentKeys(menuItems, pathname);
-    if (exactParentKeys !== null) {
-      return { selectedKey: pathname, openKeys: exactParentKeys };
-    }
-    
-    // If no exact match, find the best matching menu item
-    const bestMatch = findBestMatchingMenuKey(menuItems, pathname);
-    if (bestMatch) {
-      return { selectedKey: bestMatch.key, openKeys: bestMatch.parentKeys };
-    }
-    
-    // Fallback to initial open keys logic
-    const initialKeys = getInitialOpenKeys();
-    return { selectedKey: pathname, openKeys: initialKeys };
-  };
-
   // Helper function to get open keys based on the clicked key
   const getOpenKeysForPath = (key: string): string[] => {
     const menuItems = getMenuItems();
     const parentKeys = findParentKeys(menuItems, key);
     return parentKeys || [];
   };
+
+  useEffect(() => {
+    setMounted(true);
+    if (pathname) {
+      const menuState = getMenuStateForPath(pathname);
+
+      if (menuState.selectedKey === pathname && menuState.selectedKey.startsWith("/")) {
+        setSelectedKey(menuState.selectedKey);
+        setOpenKeys(menuState.openKeys);
+        updateLastSelectedMenuKey(menuState.selectedKey);
+        return;
+      }
+
+      if (lastSelectedMenuKey) {
+        const lastSelectedState = getMenuStateForPath(lastSelectedMenuKey);
+        setSelectedKey(lastSelectedMenuKey);
+        setOpenKeys(lastSelectedState.openKeys);
+
+        if (menuState.selectedKey.startsWith("/") && menuState.selectedKey === pathname) {
+          updateLastSelectedMenuKey(menuState.selectedKey);
+        }
+        return;
+      }
+
+      setSelectedKey(menuState.selectedKey);
+      setOpenKeys(menuState.openKeys);
+
+      if (menuState.selectedKey.startsWith("/")) {
+        updateLastSelectedMenuKey(menuState.selectedKey);
+      }
+    }
+
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth >= 768) {
+        setMobileDrawerVisible(false);
+      }
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, [pathname, lastSelectedMenuKey]);
 
   const handleMenuClick = ({ key }: { key: string }) => {
     // Only navigate if it's a valid route (starts with /)

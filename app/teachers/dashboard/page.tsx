@@ -9,6 +9,7 @@ import {
   CalendarOutlined,
   CheckCircleOutlined,
   FileTextOutlined,
+  FormOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
 import DashboardLayout from "@/app/components/DashboardLayout";
@@ -24,6 +25,7 @@ interface TeacherDashboardStats {
   attendance_marked_today: number;
   results_entered: number;
   upcoming_classes: number;
+  total_exams_added: number;
 }
 
 type AnyRecord = Record<string, unknown>;
@@ -35,6 +37,7 @@ const METRIC_KEYS: (keyof TeacherDashboardStats)[] = [
   "attendance_marked_today",
   "results_entered",
   "upcoming_classes",
+  "total_exams_added",
 ];
 
 const defaultStats: TeacherDashboardStats = {
@@ -44,6 +47,7 @@ const defaultStats: TeacherDashboardStats = {
   attendance_marked_today: 0,
   results_entered: 0,
   upcoming_classes: 0,
+  total_exams_added: 0,
 };
 
 function asRecord(value: unknown): AnyRecord | null {
@@ -122,6 +126,7 @@ async function fetchTeacherDashboardStats(): Promise<TeacherDashboardStats> {
     attendance_marked_today: "/teacher/dashboard/metrics/attendance-marked-today",
     results_entered: "/teacher/dashboard/metrics/results-entered",
     upcoming_classes: "/teacher/dashboard/metrics/upcoming-classes",
+    total_exams_added: "/teacher/dashboard/metrics/total-exams-added",
   };
 
   const entries = await Promise.all(
@@ -234,6 +239,13 @@ export default function TeacherDashboard() {
       icon: <CalendarOutlined style={{ fontSize: "32px", color: "#f5222d" }} />,
       color: "#f5222d",
       link: "/teachers/attendance",
+    },
+    {
+      title: "Total Exams Added",
+      value: stats.total_exams_added ?? 0,
+      icon: <FormOutlined style={{ fontSize: "32px", color: "#2f54eb" }} />,
+      color: "#2f54eb",
+      link: "/teachers/cbt/exams",
     },
   ];
 

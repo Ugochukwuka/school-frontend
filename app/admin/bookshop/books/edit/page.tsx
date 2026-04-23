@@ -97,6 +97,20 @@ export default function EditBookPage() {
   const [sessionId, setSessionId] = useState<number | null>(null);
   const [termId, setTermId] = useState<number | null>(null);
   const [classLevelId, setClassLevelId] = useState<number | null>(null);
+  const [bookSearch, setBookSearch] = useState("");
+  const [debouncedBookSearch, setDebouncedBookSearch] = useState("");
+  const [classLevelSearch, setClassLevelSearch] = useState("");
+  const [debouncedClassLevelSearch, setDebouncedClassLevelSearch] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedBookSearch(bookSearch.trim()), 400);
+    return () => clearTimeout(timer);
+  }, [bookSearch]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedClassLevelSearch(classLevelSearch.trim()), 400);
+    return () => clearTimeout(timer);
+  }, [classLevelSearch]);
 
   useEffect(() => {
     fetchSessions();
@@ -136,7 +150,11 @@ export default function EditBookPage() {
       setSelectedBook(null);
       form.resetFields();
     }
-  }, [classLevelId, termId]);
+  }, [classLevelId, termId, debouncedBookSearch]);
+
+  useEffect(() => {
+    fetchClassLevels();
+  }, [debouncedClassLevelSearch]);
 
   const fetchSessions = async () => {
     setLoadingSessions(true);
@@ -219,8 +237,11 @@ export default function EditBookPage() {
     setError("");
 
     try {
+      const query = debouncedClassLevelSearch
+        ? `?search=${encodeURIComponent(debouncedClassLevelSearch)}`
+        : "";
       const response = await axios.get<ClassLevelsResponse>(
-        "http://127.0.0.1:8000/api/class-levels",
+        `http://127.0.0.1:8000/api/class-levels${query}`,
         getAuthHeaders()
       );
 
@@ -251,8 +272,15 @@ export default function EditBookPage() {
     form.resetFields();
 
     try {
+      const params = new URLSearchParams({
+        class_level_id: String(classLevelId),
+        term_id: String(termId),
+      });
+      if (debouncedBookSearch) {
+        params.set("search", debouncedBookSearch);
+      }
       const response = await axios.get<BooksResponse>(
-        `http://127.0.0.1:8000/api/bookshop/books?class_level_id=${classLevelId}&term_id=${termId}`,
+        `http://127.0.0.1:8000/api/bookshop/books?${params.toString()}`,
         getAuthHeaders()
       );
 
@@ -445,6 +473,9 @@ export default function EditBookPage() {
                 setSelectedBook(null);
                 form.resetFields();
               }}
+              onSearch={setClassLevelSearch}
+              showSearch
+              filterOption={false}
               style={{ width: 200 }}
               placeholder="Select Class Level"
               loading={loadingClassLevels}
@@ -462,6 +493,13 @@ export default function EditBookPage() {
           ) : books.length > 0 ? (
             <div style={{ marginBottom: "24px" }}>
               <h3>Select a book to edit:</h3>
+              <Input
+                placeholder="Search books"
+                value={bookSearch}
+                onChange={(e) => setBookSearch(e.target.value)}
+                allowClear
+                style={{ maxWidth: 320, marginBottom: 12 }}
+              />
               <Table
                 dataSource={books}
                 columns={columns}

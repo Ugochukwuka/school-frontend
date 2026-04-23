@@ -214,6 +214,24 @@ export default function AddWeeklyTimetablePage() {
     setError("");
 
     try {
+      const latestSubjectsResponse = await api.get<SubjectsResponse | Subject[]>(`/classes/${selectedClassId}/subjects`);
+      const latestSubjects =
+        Array.isArray(latestSubjectsResponse.data)
+          ? latestSubjectsResponse.data
+          : Array.isArray((latestSubjectsResponse.data as SubjectsResponse)?.subjects)
+          ? (latestSubjectsResponse.data as SubjectsResponse).subjects || []
+          : [];
+      const invalidEntry = values.entries.find((entry) => {
+        const subject = latestSubjects.find((s) => s.subject_id === Number(entry.subject_id));
+        return !subject?.teacher_id || Number(entry.teacher_id) !== Number(subject.teacher_id);
+      });
+      if (invalidEntry) {
+        setLoading(false);
+        setError("Selected teacher is not the assigned teacher for one or more subject/class mappings. Refresh and try again.");
+        message.error("Invalid teacher selection for selected subject.");
+        return;
+      }
+
       const response = await api.post("/students/timetable", values.entries);
       
       // Check if the response indicates some entries were skipped
@@ -280,7 +298,9 @@ export default function AddWeeklyTimetablePage() {
       }
       
       let errorMessage = "Failed to add timetable. Please try again.";
-      if (err.response?.data?.errors) {
+      if (err.response?.status === 422 && err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.response?.data?.errors) {
         const errors = err.response.data.errors;
         const errorMessages = Object.values(errors).flat() as string[];
         errorMessage = errorMessages.join(", ");
@@ -295,9 +315,6 @@ export default function AddWeeklyTimetablePage() {
   };
 
   const selectedClass = classes.find((c) => c.class_id === selectedClassId);
-  const teacherOptions = selectedClass?.class_teacher
-    ? [{ value: selectedClass.class_teacher.id, label: selectedClass.class_teacher.name }]
-    : [];
 
   return (
     <DashboardLayout role="admin">
@@ -400,6 +417,10 @@ export default function AddWeeklyTimetablePage() {
                         >
                           <Select
                             placeholder="Select subject"
+                            onChange={(value) => {
+                              const selectedSubject = subjects.find((subject) => subject.subject_id === value);
+                              form.setFieldValue(["entries", name, "teacher_id"], selectedSubject?.teacher_id || undefined);
+                            }}
                             loading={loadingSubjects}
                             notFoundContent={
                               loadingSubjects 
@@ -461,12 +482,27 @@ export default function AddWeeklyTimetablePage() {
                             {...restField}
                             name={[name, "teacher_id"]}
                             label="Teacher"
-                            initialValue={selectedClass.class_teacher.id}
                             rules={[{ required: true, message: "Please select a teacher" }]}
                           >
                             <Select
                               placeholder="Select teacher"
-                              options={teacherOptions}
+                              disabled
+                              options={[
+                                (() => {
+                                  const selectedSubjectId = form.getFieldValue(["entries", name, "subject_id"]);
+                                  const selectedSubject = subjects.find((subject) => subject.subject_id === selectedSubjectId);
+                                  if (selectedSubject?.teacher_id) {
+                                    return {
+                                      value: selectedSubject.teacher_id,
+                                      label: selectedSubject.teacher_name || `Teacher ${selectedSubject.teacher_id}`,
+                                    };
+                                  }
+                                  return {
+                                    value: selectedClass.class_teacher?.id,
+                                    label: selectedClass.class_teacher?.name || "Class Teacher",
+                                  };
+                                })(),
+                              ]}
                             />
                           </Form.Item>
                         )}

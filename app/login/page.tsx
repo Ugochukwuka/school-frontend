@@ -98,23 +98,26 @@ export default function LoginPage() {
           router.push("/dashboard/student");
         }
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as {
+        code?: string;
+        message?: string;
+        request?: unknown;
+        response?: { status?: number; data?: unknown };
+      };
       // Error details are already logged by the API interceptor in app/lib/api.ts
       // Only log a brief summary here if needed for debugging
-      if (process.env.NODE_ENV === "development" && err.response) {
-        const responseData = err.response.data;
+      if (process.env.NODE_ENV === "development" && error.response) {
+        const responseData = error.response.data;
         const errorMsg = normalizeServerError(responseData);
         // Don't log 401 (invalid credentials) - expected user error; log 500 and other server errors only
-        const status = err.response.status;
+        const status = error.response.status;
         if (status !== 401 && !errorMsg.toLowerCase().includes("sqlstate") && !errorMsg.toLowerCase().includes("connection")) {
           if (status === 500 && responseData) {
-            if (typeof responseData === "string") {
-              console.error("Login error (500):", errorMsg);
-            } else {
-              console.error("Login error (500):", JSON.stringify(responseData, null, 2));
-            }
+            // Avoid Next.js dev error overlay for handled backend failures.
+            console.warn("Login backend returned 500:", errorMsg);
           } else {
-            console.error("Login error:", status, errorMsg);
+            console.warn("Login request failed:", status, errorMsg);
           }
         }
       }
@@ -122,10 +125,10 @@ export default function LoginPage() {
       // Show more detailed error message
       let errorMessage = "Login failed. Please check your credentials.";
       
-      if (err.response) {
+      if (error.response) {
         // Server responded with error
-        const status = err.response.status;
-        const responseData = err.response.data;
+        const status = error.response.status;
+        const responseData = error.response.data;
         
         if (status === 500) {
           // Check if it's a database connection error
@@ -152,40 +155,46 @@ export default function LoginPage() {
           }
         } else if (status === 401) {
           // 401 Unauthorized - could be invalid credentials or authentication required
-          errorMessage = responseData?.message || 
-                        responseData?.error || 
+          const unauthorizedMessage = responseData as { message?: string; error?: string } | null;
+          errorMessage = unauthorizedMessage?.message || 
+                        unauthorizedMessage?.error || 
                         "Invalid email or password. Please check your credentials and try again.";
         } else if (status === 422) {
           // Validation error
-          const validationErrors = responseData?.errors;
+          const validationErrors = (responseData as { errors?: Record<string, unknown> } | null)?.errors;
           if (validationErrors) {
             const errorList = Object.entries(validationErrors)
-              .map(([field, messages]: [string, any]) => 
+              .map(([, messages]: [string, unknown]) => 
                 Array.isArray(messages) ? messages.join(", ") : String(messages)
               )
               .join(". ");
-            errorMessage = errorList || responseData?.message || "Validation error. Please check your input.";
+            errorMessage =
+              errorList ||
+              (responseData as { message?: string } | null)?.message ||
+              "Validation error. Please check your input.";
           } else {
-            errorMessage = responseData?.message || "Validation error. Please check your input.";
+            errorMessage =
+              (responseData as { message?: string } | null)?.message ||
+              "Validation error. Please check your input.";
           }
         } else if (status === 404) {
           errorMessage = "Login endpoint not found. Please contact support.";
         } else if (status === 403) {
           errorMessage = "Access forbidden. Please contact support.";
-        } else if (responseData?.message) {
-          errorMessage = responseData.message;
-        } else if (responseData?.error) {
-          errorMessage = responseData.error;
+        } else if ((responseData as { message?: string } | null)?.message) {
+          errorMessage = (responseData as { message: string }).message;
+        } else if ((responseData as { error?: string } | null)?.error) {
+          errorMessage = (responseData as { error: string }).error;
         }
-      } else if (err.request) {
+      } else if (error.request) {
         // Request was made but no response received - this is a network/connectivity issue
-        const errorCode = err.code;
+        const errorCode = error.code;
         
-        if (errorCode === "ERR_NETWORK" || err.message === "Network Error") {
+        if (errorCode === "ERR_NETWORK" || error.message === "Network Error") {
           errorMessage = "Network error: Unable to connect to the server. Please ensure the backend server is running at http://127.0.0.1:8000 and check for CORS issues.";
         } else if (errorCode === "ECONNREFUSED") {
           errorMessage = "Connection refused: The server at http://127.0.0.1:8000 is not running or not accessible. Please start the backend server and try again.";
-        } else if (errorCode === "ETIMEDOUT" || err.message?.includes("timeout")) {
+        } else if (errorCode === "ETIMEDOUT" || error.message?.includes("timeout")) {
           errorMessage = "Request timed out: The server took too long to respond (30 seconds). Please verify that the backend server is running at http://127.0.0.1:8000 and try again. If the server is running, it may be overloaded or experiencing issues.";
         } else if (errorCode === "ERR_INTERNET_DISCONNECTED") {
           errorMessage = "No internet connection. Please check your network connection and try again.";
@@ -193,7 +202,7 @@ export default function LoginPage() {
           errorMessage = "Unable to connect to server. The backend server may not be running. Please verify the server is running at http://127.0.0.1:8000 and check for CORS or network issues.";
         }
       } else {
-        errorMessage = err.message || "An unexpected error occurred. Please try again.";
+        errorMessage = error.message || "An unexpected error occurred. Please try again.";
       }
       
       setError(errorMessage);

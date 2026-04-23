@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Table, Select, Alert, Spin, Typography, Space, Button, App, Dropdown } from "antd";
+import { Card, Table, Select, Alert, Spin, Typography, Space, Button, App, Dropdown, Input } from "antd";
 import { EyeOutlined, DeleteOutlined, MoreOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -80,6 +80,13 @@ export default function ViewWeeklyTimetablePage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm.trim()), 400);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   // Update URL when filters change
   useEffect(() => {
@@ -106,7 +113,7 @@ export default function ViewWeeklyTimetablePage() {
     } else {
       setTimetable([]);
     }
-  }, [selectedClassId]);
+  }, [selectedClassId, debouncedSearch]);
 
   // Restore filters from URL on mount and when sessions are loaded
   useEffect(() => {
@@ -174,8 +181,12 @@ export default function ViewWeeklyTimetablePage() {
     setLoading(true);
     setError("");
     try {
+      const params = new URLSearchParams({ class_id: String(selectedClassId) });
+      if (debouncedSearch) {
+        params.set("search", debouncedSearch);
+      }
       const response = await api.get<TimetableEntry[] | { data: TimetableEntry[] }>(
-        `/students/viewtimetable?class_id=${selectedClassId}`
+        `/students/viewtimetable?${params.toString()}`
       );
       let timetableData: TimetableEntry[] = [];
       if (Array.isArray(response.data)) {
@@ -357,6 +368,13 @@ export default function ViewWeeklyTimetablePage() {
               }))}
             />
           )}
+          <Input
+            placeholder="Search timetable"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            allowClear
+            style={{ width: 300 }}
+          />
         </Space>
 
         {loading ? (
@@ -368,6 +386,7 @@ export default function ViewWeeklyTimetablePage() {
             rowKey="id"
             pagination={{ pageSize: 20 }}
             scroll={{ x: true }}
+            locale={{ emptyText: "No results found" }}
           />
         )}
       </Card>

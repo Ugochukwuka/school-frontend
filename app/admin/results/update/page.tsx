@@ -381,7 +381,7 @@ export default function AdminUpdateResultsPage() {
     try {
       // Build payload - session_id might be optional, so try without it if validation fails
       // Try with session_id first (as it's used in view page)
-      let payload: any = {
+      const payload: any = {
         term_id: Number(selectedTermId),
         subject_id: Number(selectedSubjectId),
       };
@@ -566,16 +566,30 @@ export default function AdminUpdateResultsPage() {
 
       console.log("Update response:", response.data);
 
-      if (response.data.message) {
-        message.success(response.data.message || "Results updated successfully");
-        
-        // Redirect to admin dashboard after 7 seconds
-        setTimeout(() => {
-          router.push("/admin/dashboard");
-        }, 7000);
+      const updated = Number((response.data as any)?.updated ?? (response.data as any)?.inserted ?? 0);
+      const skipped = Array.isArray((response.data as any)?.skipped) ? (response.data as any).skipped : [];
+      const skippedDetails = skipped.map((item: any) => {
+        const student = students.find((s) => s.uuid === item.student_uuid);
+        return `${student?.name || item.student_uuid || "Unknown student"}: ${item.reason || "Skipped by backend"}`;
+      });
+
+      if (updated > 0 && skipped.length > 0) {
+        const msg = `Results processed. Updated: ${updated}, Skipped: ${skipped.length}.`;
+        setError(`${msg}\n\nSkipped rows:\n${skippedDetails.join("\n")}`);
+        message.warning(msg);
+      } else if (updated > 0) {
+        message.success(response.data.message || `Results updated successfully (${updated}).`);
+      } else if (skipped.length > 0) {
+        const msg = response.data.message || "No results were updated.";
+        setError(`${msg}\n\nSkipped rows:\n${skippedDetails.join("\n")}`);
+        message.warning(msg);
       } else {
-        throw new Error("Failed to update results");
+        message.success(response.data.message || "Results updated successfully.");
       }
+
+      setTimeout(() => {
+        router.push("/admin/dashboard");
+      }, 3000);
     } catch (err: any) {
       console.error("Error updating results:", err);
       console.error("Error response data:", err.response?.data);

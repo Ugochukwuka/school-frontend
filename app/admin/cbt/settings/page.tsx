@@ -5,6 +5,7 @@ import { Card, Select, Spin, Alert, Descriptions, Typography } from "antd";
 import Link from "next/link";
 import DashboardLayout from "@/app/components/DashboardLayout";
 import { cbtAdmin, getAdminSchools } from "@/app/lib/cbtApi";
+import { getApiErrorMessage } from "@/app/lib/api";
 
 const { Text } = Typography;
 
@@ -31,7 +32,7 @@ export default function AdminCBTSettingsPage() {
           }))
         );
       } catch (err: any) {
-        setError(err.response?.data?.message || "Failed to load schools.");
+        setError(getApiErrorMessage(err, "Failed to load schools."));
       } finally {
         setLoadingSchools(false);
       }
@@ -53,7 +54,11 @@ export default function AdminCBTSettingsPage() {
         const data = (res.data as any)?.data ?? res.data;
         setSettings(data ?? null);
       } catch (err: any) {
-        setError(err.response?.data?.message || "Failed to load CBT settings.");
+        if (err?.response?.status === 422) {
+          setError(getApiErrorMessage(err, "School context is missing. Select a school to load CBT settings."));
+        } else {
+          setError(getApiErrorMessage(err, "Failed to load CBT settings."));
+        }
         setSettings(null);
       } finally {
         setLoadingSettings(false);

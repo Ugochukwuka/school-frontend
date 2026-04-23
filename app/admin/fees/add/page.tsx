@@ -242,7 +242,7 @@ export default function AddFeePage() {
         getAuthHeaders()
       );
 
-      if (response.data.message === "Fee created") {
+      if (response.data?.message) {
         message.success("Fee created successfully!");
         form.resetFields();
         setSessionId(null);
@@ -252,8 +252,6 @@ export default function AddFeePage() {
         setTimeout(() => {
           router.push("/admin/dashboard");
         }, 5000);
-      } else {
-        throw new Error("Unexpected response from server");
       }
     } catch (err: any) {
       console.error("Error creating fee:", err);

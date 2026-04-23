@@ -45,16 +45,26 @@ export default function AssignClassPage() {
   const [loadingSessions, setLoadingSessions] = useState(false);
   const [loadingClasses, setLoadingClasses] = useState(false);
   const [error, setError] = useState("");
+  const [teacherSearch, setTeacherSearch] = useState("");
+  const [debouncedTeacherSearch, setDebouncedTeacherSearch] = useState("");
 
   useEffect(() => {
     fetchTeachers();
-  }, []);
+  }, [debouncedTeacherSearch]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedTeacherSearch(teacherSearch.trim()), 400);
+    return () => clearTimeout(timer);
+  }, [teacherSearch]);
 
   const fetchTeachers = async () => {
     setLoadingTeachers(true);
     setError("");
     try {
-      const response = await api.get<any>("/admin/teachers/all");
+      const query = debouncedTeacherSearch
+        ? `?search=${encodeURIComponent(debouncedTeacherSearch)}`
+        : "";
+      const response = await api.get<any>(`/admin/teachers/all${query}`);
       let teachersData: Teacher[] = [];
       if (Array.isArray(response.data)) {
         teachersData = response.data;
@@ -227,6 +237,9 @@ export default function AssignClassPage() {
               loading={loadingTeachers}
               value={selectedTeacherUuid}
               onChange={handleTeacherChange}
+              onSearch={setTeacherSearch}
+              showSearch
+              filterOption={false}
               style={{ width: "100%", maxWidth: 400 }}
               options={teachers.map((teacher) => ({
                 value: teacher.uuid,

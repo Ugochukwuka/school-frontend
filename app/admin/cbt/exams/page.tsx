@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Card, Table, Spin, Alert, Button, Tag, App, Modal, Select, Space } from "antd";
 import DashboardLayout from "@/app/components/DashboardLayout";
 import { cbtAdmin, cbtAdminListExams, getAdminSchools } from "@/app/lib/cbtApi";
+import { getApiErrorMessage } from "@/app/lib/api";
 
 export default function AdminCBTExamsPage() {
   const { message } = App.useApp();
@@ -24,7 +25,7 @@ export default function AdminCBTExamsPage() {
       const data = (res.data as any)?.data ?? res.data;
       setExams(Array.isArray(data) ? data : data?.exams ?? []);
     } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to load exams.");
+      setError(getApiErrorMessage(err, "Failed to load exams."));
       setExams([]);
     } finally {
       setLoading(false);
@@ -67,7 +68,11 @@ export default function AdminCBTExamsPage() {
           message.success("Exam locked.");
           loadExams();
         } catch (e: any) {
-          message.error(e.response?.data?.message || "Failed to lock.");
+          message.error(getApiErrorMessage(e, "Failed to lock."));
+          if (e?.response?.status === 403) {
+            setError(getApiErrorMessage(e, "You are not allowed to lock this exam in the selected school scope."));
+          }
+          loadExams();
         } finally {
           setActionLoading(null);
         }
@@ -86,7 +91,11 @@ export default function AdminCBTExamsPage() {
           message.success("Exam unlocked.");
           loadExams();
         } catch (e: any) {
-          message.error(e.response?.data?.message || "Failed to unlock.");
+          message.error(getApiErrorMessage(e, "Failed to unlock."));
+          if (e?.response?.status === 403) {
+            setError(getApiErrorMessage(e, "You are not allowed to unlock this exam in the selected school scope."));
+          }
+          loadExams();
         } finally {
           setActionLoading(null);
         }

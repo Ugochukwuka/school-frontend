@@ -102,11 +102,25 @@ export default function AssignBooksPage() {
   const [loadingClassLevels, setLoadingClassLevels] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [bookSearch, setBookSearch] = useState("");
+  const [debouncedBookSearch, setDebouncedBookSearch] = useState("");
+  const [classLevelSearch, setClassLevelSearch] = useState("");
+  const [debouncedClassLevelSearch, setDebouncedClassLevelSearch] = useState("");
 
   useEffect(() => {
     fetchSessions();
     fetchClassLevels();
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedBookSearch(bookSearch.trim()), 400);
+    return () => clearTimeout(timer);
+  }, [bookSearch]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedClassLevelSearch(classLevelSearch.trim()), 400);
+    return () => clearTimeout(timer);
+  }, [classLevelSearch]);
 
   useEffect(() => {
     if (sessions.length > 0 && !selectedSessionId) {
@@ -140,7 +154,11 @@ export default function AssignBooksPage() {
       setBooks([]);
       setSelectedBookUuid(null);
     }
-  }, [selectedSessionId, selectedTermId]);
+  }, [selectedSessionId, selectedTermId, debouncedBookSearch]);
+
+  useEffect(() => {
+    fetchClassLevels();
+  }, [debouncedClassLevelSearch]);
 
   const fetchSessions = async () => {
     setLoadingSessions(true);
@@ -215,8 +233,14 @@ export default function AssignBooksPage() {
     setSelectedBookUuid(null);
 
     try {
+      const params = new URLSearchParams({
+        term_id: String(selectedTermId),
+      });
+      if (debouncedBookSearch) {
+        params.set("search", debouncedBookSearch);
+      }
       const response = await axios.get<BooksResponse>(
-        `http://127.0.0.1:8000/api/bookshop/books?term_id=${selectedTermId}`,
+        `http://127.0.0.1:8000/api/bookshop/books?${params.toString()}`,
         getAuthHeaders()
       );
 
@@ -242,8 +266,11 @@ export default function AssignBooksPage() {
     setError("");
 
     try {
+      const query = debouncedClassLevelSearch
+        ? `?search=${encodeURIComponent(debouncedClassLevelSearch)}`
+        : "";
       const response = await axios.get<ClassLevelsResponse>(
-        "http://127.0.0.1:8000/api/class-levels",
+        `http://127.0.0.1:8000/api/class-levels${query}`,
         getAuthHeaders()
       );
 
@@ -365,6 +392,9 @@ export default function AssignBooksPage() {
                 style={{ width: 250 }}
                 value={selectedBookUuid}
                 onChange={setSelectedBookUuid}
+                onSearch={setBookSearch}
+                showSearch
+                filterOption={false}
                 placeholder="Select Book"
                 loading={loadingBooks}
                 disabled={!selectedSessionId || !selectedTermId || loadingBooks}
@@ -380,6 +410,9 @@ export default function AssignBooksPage() {
                 style={{ width: 200 }}
                 value={selectedClassLevelId}
                 onChange={setSelectedClassLevelId}
+                onSearch={setClassLevelSearch}
+                showSearch
+                filterOption={false}
                 placeholder="Select Class Level"
                 loading={loadingClassLevels}
                 disabled={!selectedBookUuid || loadingClassLevels}

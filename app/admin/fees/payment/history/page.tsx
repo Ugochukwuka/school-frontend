@@ -37,6 +37,9 @@ interface Fee {
   amount_paid: string;
   status: string;
   payments: string[];
+  term_id?: number | null;
+  class_id?: number | null;
+  last_payment_date?: string | null;
 }
 
 interface PaymentHistoryResponse {
@@ -297,8 +300,8 @@ export default function PaymentHistoryPage() {
   };
 
   const fetchPaymentHistory = async () => {
-    if (!studentUuid || !sessionId || !termId || !classId) {
-      setError("Please select all required fields: Session, Term, Class, and Student");
+    if (!studentUuid || !sessionId || !termId) {
+      setError("Please select all required fields: Session, Term, and Student");
       return;
     }
 
@@ -306,14 +309,17 @@ export default function PaymentHistoryPage() {
     setError("");
 
     try {
+      const payload: Record<string, string | number> = {
+        student_uuid: studentUuid,
+        session_id: sessionId,
+        term_id: termId,
+      };
+      if (classId) {
+        payload.class_id = classId;
+      }
       const response = await axios.post<PaymentHistoryResponse>(
         `http://127.0.0.1:8000/api/view/child/payment/history`,
-        {
-          student_uuid: studentUuid,
-          session_id: sessionId,
-          term_id: termId,
-          class_id: classId,
-        },
+        payload,
         getAuthHeaders()
       );
 
@@ -410,6 +416,18 @@ export default function PaymentHistoryPage() {
           ))}
         </Space>
       ),
+    },
+    {
+      title: "Term/Class",
+      key: "term_class",
+      render: (_: any, record: Fee) =>
+        `${record.term_id ?? "-"} / ${record.class_id ?? "-"}`,
+    },
+    {
+      title: "Last Payment Date",
+      dataIndex: "last_payment_date",
+      key: "last_payment_date",
+      render: (value?: string | null) => value || "-",
     },
   ];
 
@@ -530,7 +548,7 @@ export default function PaymentHistoryPage() {
                 type="primary"
                 htmlType="submit"
                 loading={loadingHistory}
-                disabled={!studentUuid || !sessionId || !termId || !classId}
+                disabled={!studentUuid || !sessionId || !termId}
               >
                 View Payment History
               </Button>

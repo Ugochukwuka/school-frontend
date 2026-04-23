@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import { Table, Spin, Alert, Card, Empty, Button } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
-import axios from "axios";
-import { getAuthHeaders } from "@/app/lib/auth";
+import api, { getApiErrorMessage } from "@/app/lib/api";
 import DashboardLayout from "@/app/components/DashboardLayout";
 import { useResponsive } from "@/app/lib/responsive";
 
@@ -65,10 +64,7 @@ export default function SubjectsPage() {
     setError("");
 
     try {
-      const response = await axios.get<ApiResponse>(
-        `http://127.0.0.1:8000/api/student/subjects?uuid=${studentUuid}`,
-        getAuthHeaders()
-      );
+      const response = await api.get<ApiResponse>(`/student/subjects?uuid=${studentUuid}`);
 
       console.log("Subjects response:", response.data);
 
@@ -96,19 +92,7 @@ export default function SubjectsPage() {
         status: err.response?.status,
       });
 
-      let errorMessage = "Failed to load subjects. Please try again.";
-      
-      if (err.code === "ERR_NETWORK" || err.message === "Network Error") {
-        errorMessage = "Network Error: Please check if the backend server is running at http://127.0.0.1:8000";
-      } else if (err.response?.data?.message) {
-        errorMessage = err.response.data.message;
-      } else if (err.response?.status === 404) {
-        errorMessage = "No subjects found for this student.";
-      } else if (err.message) {
-        errorMessage = err.message;
-      }
-      
-      setError(errorMessage);
+      setError(getApiErrorMessage(err, "Failed to load subjects. Please try again."));
       setSubjects([]);
     } finally {
       setLoading(false);

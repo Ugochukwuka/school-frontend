@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { Table, Spin, Alert, Card, Empty, Button, Select } from "antd";
+import { Table, Spin, Alert, Card, Empty, Button, Select, Input } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
 import api from "@/app/lib/api";
 
@@ -32,6 +32,13 @@ export default function StudentsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [pageSize, setPageSize] = useState(10);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm.trim()), 400);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   const fetchStudents = useCallback(async () => {
     setLoading(true);
@@ -41,6 +48,9 @@ export default function StudentsPage() {
       const params = new URLSearchParams();
       if (classId) {
         params.append("class_id", classId.toString());
+      }
+      if (debouncedSearch) {
+        params.append("search", debouncedSearch);
       }
       params.append("page", currentPage.toString());
       
@@ -106,7 +116,7 @@ export default function StudentsPage() {
     } finally {
       setLoading(false);
     }
-  }, [classId, currentPage]);
+  }, [classId, currentPage, debouncedSearch]);
 
   useEffect(() => {
     fetchStudents();
@@ -192,6 +202,16 @@ export default function StudentsPage() {
             </Button>
           </div>
         </div>
+        <Input
+          placeholder="Search students"
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1);
+          }}
+          allowClear
+          style={{ maxWidth: 320, marginBottom: 16 }}
+        />
         
         {error && (
           <Alert
@@ -218,7 +238,7 @@ export default function StudentsPage() {
             locale={{
               emptyText: (
                 <Empty
-                  description="No students found"
+                  description="No results found"
                   image={Empty.PRESENTED_IMAGE_SIMPLE}
                 />
               ),

@@ -523,36 +523,30 @@ export default function AdminEnterResultsPage() {
         getAuthHeaders()
       );
 
-      // Check if response indicates no results were entered
-      if (response.data?.message === "No results were entered" || response.data?.skipped) {
-        const skipped = response.data.skipped || [];
-        let errorDetails = response.data.message || "No results were entered";
-        
-        if (skipped.length > 0) {
-          // Map UUIDs to student names
-          const skippedReasons = skipped.map((item: any) => {
-            const student = students.find((s) => s.uuid === item.student_uuid);
-            const studentName = student ? student.name : item.student_uuid;
-            return `${studentName}: ${item.reason}`;
-          }).join("\n");
-          errorDetails = `${errorDetails}\n\nSkipped:\n${skippedReasons}`;
-        }
-        
-        setError(errorDetails);
-        message.warning(response.data.message || "No results were entered");
-        
-        // Redirect to admin dashboard after 12 seconds (10 more seconds) so admin can see skipped students
-        setTimeout(() => {
-          router.push("/admin/dashboard");
-        }, 12000);
+      const inserted = Number(response.data?.inserted ?? response.data?.added ?? 0);
+      const skipped = Array.isArray(response.data?.skipped) ? response.data.skipped : [];
+      const skippedLines = skipped.map((item: any) => {
+        const student = students.find((s) => s.uuid === item.student_uuid);
+        return `${student?.name || item.student_uuid || "Unknown student"}: ${item.reason || "Skipped by backend"}`;
+      });
+
+      if (inserted > 0 && skipped.length > 0) {
+        const partial = `Results processed. Inserted: ${inserted}, Skipped: ${skipped.length}.`;
+        setError(`${partial}\n\nSkipped rows:\n${skippedLines.join("\n")}`);
+        message.warning(partial);
+      } else if (inserted > 0) {
+        message.success(response.data?.message || `Results entered successfully (${inserted}).`);
+      } else if (skipped.length > 0) {
+        const msg = response.data?.message || "No results were entered";
+        setError(`${msg}\n\nSkipped rows:\n${skippedLines.join("\n")}`);
+        message.warning(msg);
       } else {
-        message.success("Results entered successfully! Redirecting to admin dashboard...");
-        
-        // Redirect to admin dashboard after 1.5 seconds
-        setTimeout(() => {
-          router.push("/admin/dashboard");
-        }, 1500);
+        message.success(response.data?.message || "Results entered successfully.");
       }
+
+      setTimeout(() => {
+        router.push("/admin/dashboard");
+      }, 3000);
     } catch (err: any) {
       console.error("Error entering results:", err);
       console.error("Error response:", err.response?.data);
@@ -560,29 +554,17 @@ export default function AdminEnterResultsPage() {
       console.error("Error config:", err.config);
       console.error("Request payload that failed:", err.config?.data);
       
-      // Handle validation errors
       let errorMessage = "Failed to enter results. Please try again.";
       if (err.response?.data) {
-        console.error("Full error response data:", JSON.stringify(err.response.data, null, 2));
-        // Check for "No results were entered" response
-        if (err.response.data.message === "No results were entered" || err.response.data.skipped) {
-          const skipped = err.response.data.skipped || [];
-          errorMessage = err.response.data.message || "No results were entered";
-          
-          if (skipped.length > 0) {
-            // Map UUIDs to student names
-            const skippedDetails = skipped.map((item: any) => {
+        const skipped = Array.isArray(err.response.data.skipped) ? err.response.data.skipped : [];
+        if (skipped.length > 0) {
+          const skippedDetails = skipped
+            .map((item: any) => {
               const student = students.find((s) => s.uuid === item.student_uuid);
-              const studentName = student ? student.name : item.student_uuid;
-              return `${studentName}: ${item.reason}`;
-            }).join("\n");
-            errorMessage = `${errorMessage}\n\nSkipped:\n${skippedDetails}`;
-          }
-          
-          // Redirect to admin dashboard after 12 seconds (10 more seconds) so admin can see skipped students
-          setTimeout(() => {
-            router.push("/admin/dashboard");
-          }, 12000);
+              return `${student?.name || item.student_uuid || "Unknown student"}: ${item.reason || "Skipped by backend"}`;
+            })
+            .join("\n");
+          errorMessage = `${err.response.data.message || "Some records were skipped"}\n\nSkipped rows:\n${skippedDetails}`;
         } else if (err.response.data.errors) {
           // Laravel validation errors
           const errors = err.response.data.errors;

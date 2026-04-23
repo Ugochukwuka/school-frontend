@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Table, Alert, Spin, Typography, Button, App, Dropdown } from "antd";
+import { Card, Table, Alert, Spin, Typography, Button, App, Dropdown, Input } from "antd";
 import { EyeOutlined, DeleteOutlined, MoreOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { useRouter } from "next/navigation";
@@ -54,17 +54,25 @@ export default function ViewExamTimetablePage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [deleting, setDeleting] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm.trim()), 400);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   useEffect(() => {
     fetchTimetable();
-  }, []);
+  }, [debouncedSearch]);
 
   const fetchTimetable = async () => {
     setLoading(true);
     setError("");
     try {
+      const query = debouncedSearch ? `?search=${encodeURIComponent(debouncedSearch)}` : "";
       const response = await api.get<ExamTimetableEntry[] | { data: ExamTimetableEntry[] }>(
-        "/viewexam/timetable"
+        `/viewexam/timetable${query}`
       );
       let timetableData: ExamTimetableEntry[] = [];
       if (Array.isArray(response.data)) {
@@ -246,6 +254,13 @@ export default function ViewExamTimetablePage() {
             style={{ marginBottom: isMobile ? 16 : 24 }}
           />
         )}
+        <Input
+          placeholder="Search exam timetable"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          allowClear
+          style={{ maxWidth: 320, marginBottom: 16 }}
+        />
 
         {loading ? (
           <Spin size="large" style={{ display: "block", textAlign: "center", padding: 50 }} />
@@ -263,6 +278,7 @@ export default function ViewExamTimetablePage() {
             }}
             scroll={{ x: isMobile ? 800 : true }}
             size={isMobile ? "small" : "default"}
+            locale={{ emptyText: "No results found" }}
           />
         )}
       </Card>

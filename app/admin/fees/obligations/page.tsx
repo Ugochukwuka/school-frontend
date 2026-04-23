@@ -135,7 +135,7 @@ export default function FeeObligationsPage() {
   }, [classId, sessionId]);
 
   useEffect(() => {
-    if (studentUuid && sessionId && termId && classId) {
+    if (studentUuid && sessionId && termId) {
       fetchFeeObligations();
     } else {
       setFees([]);
@@ -281,15 +281,23 @@ export default function FeeObligationsPage() {
   };
 
   const fetchFeeObligations = async () => {
-    if (!studentUuid || !sessionId || !termId || !classId) return;
+    if (!studentUuid || !sessionId || !termId) return;
 
     setLoadingFees(true);
     setError("");
     setFees([]);
 
     try {
+      const params = new URLSearchParams({
+        student_uuid: studentUuid,
+        session_id: String(sessionId),
+        term_id: String(termId),
+      });
+      if (classId) {
+        params.set("class_id", String(classId));
+      }
       const response = await axios.get<FeeObligationsResponse>(
-        `http://127.0.0.1:8000/api/view/child/fees/obligations?student_uuid=${studentUuid}&session_id=${sessionId}&term_id=${termId}&class_id=${classId}`,
+        `http://127.0.0.1:8000/api/view/child/fees/obligations?${params.toString()}`,
         getAuthHeaders()
       );
 
@@ -488,7 +496,7 @@ export default function FeeObligationsPage() {
             rowKey="fee_id"
             pagination={false}
           />
-        ) : studentUuid && sessionId && termId && classId ? (
+        ) : studentUuid && sessionId && termId ? (
           <Alert
             title="No fee obligations found for this student"
             type="info"

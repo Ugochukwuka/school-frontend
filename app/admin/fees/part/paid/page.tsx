@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Table, Spin, Alert, Card, Select } from "antd";
+import { Table, Spin, Alert, Card, Select, Input } from "antd";
 import axios from "axios";
 import { getAuthHeaders } from "@/app/lib/auth";
 import DashboardLayout from "@/app/components/DashboardLayout";
@@ -60,6 +60,16 @@ export default function AdminPartPaidFeesPage() {
   const [loadingSessions, setLoadingSessions] = useState(true);
   const [loadingTerms, setLoadingTerms] = useState(false);
   const [total, setTotal] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm.trim()), 400);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   // Fetch sessions on mount
   useEffect(() => {
@@ -105,7 +115,11 @@ export default function AdminPartPaidFeesPage() {
       setStudents([]);
       setTotal(0);
     }
-  }, [sessionId, termId]);
+  }, [sessionId, termId, currentPage, debouncedSearch]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [sessionId, termId, debouncedSearch]);
 
   const fetchSessions = async () => {
     setLoadingSessions(true);
@@ -179,12 +193,24 @@ export default function AdminPartPaidFeesPage() {
     setError("");
 
     try {
-      const response = await axios.get<PartPaidFeesResponse>(
-        `http://127.0.0.1:8000/api/admin/fees/part/paid?session_id=${sessionId}&term_id=${termId}`,
+      const params = new URLSearchParams({
+        session_id: String(sessionId),
+        term_id: String(termId),
+        page: String(currentPage),
+      });
+      if (debouncedSearch) params.set("search", debouncedSearch);
+      const response = await axios.get<any>(
+        `http://127.0.0.1:8000/api/admin/fees/part/paid?${params.toString()}`,
         getAuthHeaders()
       );
 
-      if (response.data.status && response.data.students) {
+      if (response.data?.data && Array.isArray(response.data.data)) {
+        setStudents(response.data.data);
+        setTotal(response.data.total || response.data.data.length);
+        setCurrentPage(response.data.current_page || currentPage);
+        setLastPage(response.data.last_page || 1);
+        setPageSize(response.data.per_page || 10);
+      } else if (response.data.status && response.data.students) {
         setStudents(response.data.students);
         setTotal(response.data.total || response.data.students.length);
       } else {
@@ -292,21 +318,28 @@ export default function AdminPartPaidFeesPage() {
             <strong>Total: {total} student{total !== 1 ? "s" : ""}</strong>
           </div>
         )}
+        <Input
+          placeholder="Search part-paid students"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          allowClear
+          style={{ maxWidth: 320, marginBottom: 16 }}
+        />
 
         <Table
           dataSource={students}
           columns={columns}
           rowKey="id"
           loading={loading}
-          pagination={
-            students.length > 10
-              ? {
-                  pageSize: 10,
-                  showSizeChanger: true,
-                  showTotal: (total) => `Total ${total} students`,
-                }
-              : false
-          }
+          pagination={lastPage > 1 ? {
+            current: currentPage,
+            total,
+            pageSize,
+            showSizeChanger: false,
+            onChange: (page) => setCurrentPage(page),
+            showTotal: (value) => `Total ${value} students`,
+          } : false}
+          locale={{ emptyText: "No results found" }}
         />
       </Card>
     </DashboardLayout>

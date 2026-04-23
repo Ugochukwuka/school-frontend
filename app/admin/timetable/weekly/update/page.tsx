@@ -5,6 +5,7 @@ import { Card, Form, Select, Button, Alert, App, Typography, TimePicker, Space }
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useRouter, useSearchParams } from "next/navigation";
 import api from "@/app/lib/api";
+import { getApiErrorMessage } from "@/app/lib/api";
 import DashboardLayout from "@/app/components/DashboardLayout";
 import dayjs from "dayjs";
 
@@ -31,8 +32,12 @@ interface TimetableData {
 }
 
 interface Subject {
-  id: number;
-  name: string;
+  id?: number;
+  name?: string;
+  subject_id?: number;
+  subject_name?: string;
+  teacher_id?: number | null;
+  teacher_name?: string | null;
 }
 
 export default function UpdateWeeklyTimetablePage() {
@@ -79,7 +84,7 @@ export default function UpdateWeeklyTimetablePage() {
       setTimetableData(data);
       
       // Fetch subjects for the class
-      const subjectsResponse = await api.get<Subject[] | { data: Subject[] }>(
+      const subjectsResponse = await api.get<Subject[] | { data: Subject[]; subjects?: Subject[] }>(
         `/classes/${data.class_id}/subjects`
       );
       let subjectsData: Subject[] = [];
@@ -87,6 +92,8 @@ export default function UpdateWeeklyTimetablePage() {
         subjectsData = subjectsResponse.data;
       } else if (subjectsResponse.data?.data && Array.isArray(subjectsResponse.data.data)) {
         subjectsData = subjectsResponse.data.data;
+      } else if ((subjectsResponse.data as any)?.subjects && Array.isArray((subjectsResponse.data as any).subjects)) {
+        subjectsData = (subjectsResponse.data as any).subjects;
       }
       setSubjects(subjectsData);
     } catch (err: any) {
@@ -118,13 +125,9 @@ export default function UpdateWeeklyTimetablePage() {
       }, 5000);
     } catch (err: any) {
       console.error("Error updating timetable:", err);
-      let errorMessage = "Failed to update timetable. Please try again.";
-      if (err.response?.data?.errors) {
-        const errors = err.response.data.errors;
-        const errorMessages = Object.values(errors).flat() as string[];
-        errorMessage = errorMessages.join(", ");
-      } else if (err.response?.data?.message) {
-        errorMessage = err.response.data.message;
+      let errorMessage = getApiErrorMessage(err, "Failed to update timetable. Please try again.");
+      if (err?.response?.status === 422) {
+        errorMessage = getApiErrorMessage(err, "Invalid teacher for selected class/subject/session.");
       }
       setError(errorMessage);
       message.error(errorMessage);
@@ -173,9 +176,13 @@ export default function UpdateWeeklyTimetablePage() {
           >
             <Select
               placeholder="Select subject"
+              onChange={(value) => {
+                const selected = subjects.find((s) => (s.id ?? s.subject_id) === value);
+                form.setFieldValue("teacher_id", selected?.teacher_id || undefined);
+              }}
               options={subjects.map((subject) => ({
-                value: subject.id,
-                label: subject.name,
+                value: subject.id ?? subject.subject_id,
+                label: subject.name ?? subject.subject_name,
               }))}
             />
           </Form.Item>
@@ -217,7 +224,13 @@ export default function UpdateWeeklyTimetablePage() {
           >
             <Select
               placeholder="Select teacher"
-              options={[]}
+              disabled
+              options={(() => {
+                const selectedSubjectId = form.getFieldValue("subject_id");
+                const selected = subjects.find((s) => (s.id ?? s.subject_id) === selectedSubjectId);
+                if (!selected?.teacher_id) return [];
+                return [{ value: selected.teacher_id, label: selected.teacher_name || `Teacher ${selected.teacher_id}` }];
+              })()}
             />
           </Form.Item>
 

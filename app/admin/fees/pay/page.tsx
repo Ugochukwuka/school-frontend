@@ -579,19 +579,14 @@ export default function PayFeePage() {
     setProcessingPayment(true);
     setError("");
 
-    // Validate request data
-    if (!selectedStudent?.parent_uuid) {
-      message.error("Parent UUID is missing. Please select a student.");
-      setProcessingPayment(false);
-      return;
-    }
-
-    const requestPayload = {
-      parent_uuid: selectedStudent.parent_uuid,
+    const requestPayload: any = {
       student_uuid: studentUuid,
       payment_method: method,
       allocations: allocations,
     };
+    if (selectedStudent?.parent_uuid) {
+      requestPayload.parent_uuid = selectedStudent.parent_uuid;
+    }
 
     console.log("Payment request payload:", requestPayload);
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Table, Spin, Alert, Card, Select, Space } from "antd";
+import { Table, Spin, Alert, Card, Select, Space, Input } from "antd";
 import api from "@/app/lib/api";
 import DashboardLayout from "@/app/components/DashboardLayout";
 
@@ -72,6 +72,13 @@ export default function ViewStudentsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchTerm.trim()), 400);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   // Update URL when filters change
   useEffect(() => {
@@ -119,7 +126,11 @@ export default function ViewStudentsPage() {
     } else {
       setStudents([]);
     }
-  }, [classId, termId]);
+  }, [classId, termId, currentPage, debouncedSearch]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [classId, termId, debouncedSearch]);
 
   const fetchSessions = async () => {
     setLoadingSessions(true);
@@ -193,6 +204,9 @@ export default function ViewStudentsPage() {
       
       if (classId) params.push(`class_id=${classId}`);
       if (termId) params.push(`term_id=${termId}`);
+      params.push(`page=${currentPage}`);
+      params.push("per_page=10");
+      if (debouncedSearch) params.push(`search=${encodeURIComponent(debouncedSearch)}`);
       
       if (params.length > 0) {
         url += `?${params.join("&")}`;
@@ -301,6 +315,13 @@ export default function ViewStudentsPage() {
               />
             </div>
           </Space>
+          <Input
+            placeholder="Search students"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            allowClear
+            style={{ maxWidth: 320 }}
+          />
         </Space>
 
         {loading ? (
@@ -320,9 +341,11 @@ export default function ViewStudentsPage() {
                     pageSize: 10,
                     showSizeChanger: false,
                     showTotal: (total) => `Total ${total} students`,
+                    onChange: (page) => setCurrentPage(page),
                   }
                 : false
             }
+            locale={{ emptyText: "No results found" }}
           />
         )}
       </Card>

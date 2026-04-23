@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import { Table, Spin, Alert, Card, Select, Empty, Button } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
-import axios from "axios";
-import { getAuthHeaders } from "@/app/lib/auth";
+import api, { getApiErrorMessage } from "@/app/lib/api";
 import DashboardLayout from "@/app/components/DashboardLayout";
 import { useResponsive } from "@/app/lib/responsive";
 
@@ -121,10 +120,7 @@ export default function TimetablePage() {
     setError("");
 
     try {
-      const response = await axios.get<CurrentSessionResponse>(
-        "http://127.0.0.1:8000/api/sessions/current",
-        getAuthHeaders()
-      );
+      const response = await api.get<CurrentSessionResponse>("/sessions/current");
 
       if (response.data.status === "success" && response.data.current_session) {
         setCurrentSessionId(response.data.current_session.id);
@@ -136,17 +132,7 @@ export default function TimetablePage() {
       }
     } catch (err: any) {
       console.error("Error fetching current session:", err);
-      let errorMessage = "Failed to load current session. Please try again.";
-      
-      if (err.code === "ERR_NETWORK" || err.message === "Network Error") {
-        errorMessage = "Network Error: Please check if the backend server is running at http://127.0.0.1:8000";
-      } else if (err.response?.data?.message) {
-        errorMessage = err.response.data.message;
-      } else if (err.message) {
-        errorMessage = err.message;
-      }
-      
-      setError(errorMessage);
+      setError(getApiErrorMessage(err, "Failed to load current session. Please try again."));
     } finally {
       setLoadingCurrentSession(false);
     }
@@ -160,10 +146,7 @@ export default function TimetablePage() {
     setTimetable([]); // Clear timetable
 
     try {
-      const response = await axios.get<TermsResponse>(
-        `http://127.0.0.1:8000/api/users/term/${sessionId}`,
-        getAuthHeaders()
-      );
+      const response = await api.get<TermsResponse>(`/users/term/${sessionId}`);
 
       if (response.data.status === "success" && Array.isArray(response.data.terms)) {
         setTerms(response.data.terms);
@@ -175,19 +158,7 @@ export default function TimetablePage() {
       }
     } catch (err: any) {
       console.error("Error fetching terms:", err);
-      let errorMessage = "Failed to load terms. Please try again.";
-      
-      if (err.code === "ERR_NETWORK" || err.message === "Network Error") {
-        errorMessage = "Network Error: Please check if the backend server is running";
-      } else if (err.response?.data?.message) {
-        errorMessage = err.response.data.message;
-      } else if (err.response?.status === 404) {
-        errorMessage = "No terms found for this session.";
-      } else if (err.message) {
-        errorMessage = err.message;
-      }
-      
-      setError(errorMessage);
+      setError(getApiErrorMessage(err, "Failed to load terms. Please try again."));
       setTerms([]);
     } finally {
       setLoadingTerms(false);
@@ -204,10 +175,7 @@ export default function TimetablePage() {
     setError("");
 
     try {
-      const response = await axios.get<TimetableResponse>(
-        `http://127.0.0.1:8000/api/student/timetable?uuid=${studentUuid}&term_id=${termId}`,
-        getAuthHeaders()
-      );
+      const response = await api.get<TimetableResponse>(`/student/timetable?uuid=${studentUuid}&term_id=${termId}`);
 
       console.log("Timetable response:", response.data);
 
@@ -225,19 +193,7 @@ export default function TimetablePage() {
       }
     } catch (err: any) {
       console.error("Error fetching timetable:", err);
-      let errorMessage = "Failed to load timetable. Please try again.";
-      
-      if (err.code === "ERR_NETWORK" || err.message === "Network Error") {
-        errorMessage = "Network Error: Please check if the backend server is running";
-      } else if (err.response?.data?.message) {
-        errorMessage = err.response.data.message;
-      } else if (err.response?.status === 404) {
-        errorMessage = "No timetable found for the selected term.";
-      } else if (err.message) {
-        errorMessage = err.message;
-      }
-      
-      setError(errorMessage);
+      setError(getApiErrorMessage(err, "Failed to load timetable. Please try again."));
       setTimetable([]);
     } finally {
       setLoadingTimetable(false);
